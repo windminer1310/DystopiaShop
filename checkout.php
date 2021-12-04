@@ -1,41 +1,27 @@
 <?php 
     session_start();
-    require_once('moneyPoint.php');
-    
-	$dbhost = 'localhost:33066';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
-    if(isset($_SESSION['name']) && isset($_SESSION['id'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
+
+    require_once('display-function.php');
+    require_once('database/connectDB.php');
+    require_once('session.php');
+    require_once('shop_info/shop-info.php');
+
+    if(hasUserInfoSession($_SESSION['name'], $_SESSION['id'])){
+        $name = displayUserName($_SESSION['name']);
         $user_id = $_SESSION['id'];
-        $countName = count($eachPartName);
-        if($countName == 1){
-            $name = $eachPartName[$countName-1];
-        }
-        else{
-            $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
-        }
     }
     else{
-        header('Location: index.php');
+        headToIndexPage();
     }
 
     $totalProductPrice = 0;
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Dystopia</title>
+        <title>BShop</title>
         <meta charset="UTF-8">
 
         <!-- Favicon -->
@@ -68,13 +54,13 @@
 
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto">
-                        <a href="login.php" class="nav-item nav-link active">Trang chủ</a>
+                        <a href="user-login.php" class="nav-item nav-link active">Trang chủ</a>
                         <a href="product-list.php" class="nav-item nav-link">Sản phẩm</a>
-                        <a href="custom-pc.html" class="nav-item nav-link">Xây dựng cấu hình</a>
+                        <a href="cart.php" class="nav-item nav-link">Giỏ hàng</a>
                     </div>
                     <div class="navbar-nav ml-auto">
                         <div class="header__navbar-item header__navbar-user">
-                            <img class = "avatar-img" src="img/avatar.jpg"/>
+                            <img class = "avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
                             <span class="header__navbar-user-name"><?php echo $name; ?></span>
                     
                             <ul class="header__navbar-user-menu">
@@ -99,7 +85,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-2">
                         <div class="logo">
-                            <a href="login.php">
+                            <a href="user-login.php">
                                 <img src="img/logo.png" alt="Logo">
                             </a>
                         </div>
@@ -119,7 +105,7 @@
         <div class="breadcrumb-wrap">
             <div class="container-fluid">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="login.php">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="user-login.php">Trang chủ</a></li>
                     <li class="breadcrumb-item"><a href="product-list.php">Sản phẩm</a></li>
                     <li class="breadcrumb-item"><a href="cart.php">Giỏ hàng</a></li>
                     <li class="breadcrumb-item active">Xác nhận thanh toán</li>
@@ -154,18 +140,21 @@
                                     <h5 style="margin-top: 30px;" class = "header-checkout_text">Địa chỉ nhận hàng</h5>
                                     <div class = "two-field-checkout">
                                         <div class = "size-s-field">
-                                            <p class = "title-checkout-text">Tỉnh/Thành phố <span class = "must-input-icon">(*)</span></p>
-                                            <input id = "city" name = "city" class = "auth-form__input" type="text" required>
+                                            <p class = "title-checkout-text">Tỉnh/Thành phố <span class = "must-input-icon">(*)</p>
+                                            <select id = "city" name = "city" class="auth-form__input" required 
+                                                onclick="startDistrict(); startWard();">
+                                            </select>
                                         </div>
                                         <div class = "size-s-field left-field">
-                                            <p class = "title-checkout-text">Quận/Huyện</p>
-                                            <input id = "district" name = "district" class = "auth-form__input" type="text">
+                                            <p class = "title-checkout-text">Quận/Huyện <span class = "must-input-icon">(*)</p>
+                                            <select id = "district" name = "district" class="auth-form__input" onclick="startWard();">
+                                            </select>
                                         </div>
                                     </div>
                                     <div class = "two-field-checkout">
                                         <div class = "size-s-field">
                                             <p class = "title-checkout-text">Phường/xã</p>
-                                            <input id = "ward" name = "ward" class = "auth-form__input" type="text">
+                                            <select id = "ward" name = "ward" class="auth-form__input" required></select>
                                         </div>
                                         <div class = "size-s-field left-field">
                                             <p class = "title-checkout-text">Địa chỉ cụ thể <span class = "must-input-icon">(*)</span></p>
@@ -189,21 +178,16 @@
                                     <div class="col-md-12 ">
                                         <div class="cart-summary view-info_checkout">
                                             <?php 
-                                                $sqlCart = "SELECT * FROM `cart` WHERE user_id = $user_id";
-                                                $rs = $conn->query($sqlCart);
-                                                if (!$rs) {
-                                                    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                    exit();
-                                                }
-                                                while ($row = $rs->fetch_array(MYSQLI_ASSOC)){
+                                                $tableCart = 'cart';
+                                                $column = 'user_id';
+                                                $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
+
+                                                foreach ($row = $getCartRow->fetchAll() as $value => $row){
                                                     $id_product = $row['product_id'];
-                                                    $qslProduct = "SELECT * FROM `product` WHERE product_id = '$id_product'";
-                                                    $rs1 = $conn->query($qslProduct);
-                                                    if (!$rs1) {
-                                                        die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                        exit();
-                                                    }
-                                                    $productInfo = $rs1->fetch_array(MYSQLI_ASSOC);
+                                                    $tableName = 'product';
+                                                    $column = 'product_id';
+
+                                                    $productInfo = getRowWithValue( $tableName, $column, $id_product);
                                                     echo "<div class='cart-content-info'>";
                                                         echo "<div><a href='product-detail.php?id=". $productInfo['product_id'] ."' ><img class = 'img-checkout' src='". $productInfo['image_link'] ."' alt='Image'></a></div>";
                                                         echo "<div class = 'right-checkout_info'>";
@@ -217,7 +201,7 @@
                                                             }
                                                             $sumPrice = $price * $row['qty'];
                                                             $totalProductPrice += $sumPrice;
-                                                            echo "<p class = 'header-checkout_text'>".moneyPoint($sumPrice)."đ</p>";
+                                                            echo "<p class = 'header-checkout_text'>".number_format($sumPrice, 0, ',', '.')." đ</p>";
                                                         echo "</div>";
                                                     echo "</div>";
                                                 }
@@ -232,8 +216,31 @@
                                 <div class="table-responsive">
                                     <h5 class = "header-checkout_text">Ghi chú cho đơn hàng</h5>
                                     <div class = "one-field-checkout">
-                                        <input id = "message" name = "message" class = "auth-form__input" type="text" placeholder="Nhập thông tin ghi chú cho nhà bán hàng">
+                                        <input id = "note" name = "note" class = "auth-form__input" type="text" placeholder="Nhập thông tin ghi chú cho nhà bán hàng">
                                     </div>
+                                    <h5 style = "margin-top: 30px;" class = "header-checkout_text">PHƯƠNG THỨC THANH TOÁN <span class = "must-input-icon">(*)</span></h5>
+                                    <div class = "payment-method">
+                                        <label for="banking" class = "payment-method__box checked-hover" id="banking-method" onclick="activePaymentMethod('banking-method')">
+                                            <input hidden type="radio" name = "payment_type" value="banking" id="banking">
+                                            <div>
+                                                <p style = "margin-top: 0px" class = "title-checkout-text">Thanh toán qua Internet Banking</p>
+                                                <p class = "checkout-text payment-method__text">MoMo, Paypal</p>
+                                            </div>  
+                                            <div class = "checked-payment-method">
+                                                <i class="fas fa-money-check-alt payment-icon"></i>
+                                            </div>      
+                                        </label>
+                                        <label for="cash" class = "payment-method__box active-method" id="cash-method" onclick="activePaymentMethod('cash-method')">
+                                            <input hidden type="radio" name = "payment_type" value="cash" id="cash" checked required>
+                                            <div >
+                                                <p style = "margin-top: 0px" class = "title-checkout-text">Thanh toán khi nhận hàng</p>
+                                                <p class = "checkout-text payment-method__text">Thanh toán bằng tiền mặt khi nhận hàng tại nhà hoặc showroom</p>
+                                            </div>     
+                                            <div class = "checked-payment-method">
+                                                <i class="fas fa-money-bill payment-icon"></i>
+                                            </div>     
+                                        </label>
+                                    </div>    
                                 </div>
                             </div>
                         </div>
@@ -243,21 +250,21 @@
                                     <div class="col-md-12">
                                         <div class="cart-summary">
                                             <div class="cart-content">
-                                                <p class = "checkout-text">Tổng giá<span class = "checkout-price"><?php echo moneyPoint($totalProductPrice) ?>đ</span></p>
+                                                <p class = "checkout-text">Tổng giá<span class = "checkout-price"><?php echo number_format($totalProductPrice, 0, ',', '.')?> đ</span></p>
 
                                                 <p class = "checkout-text">Phí vận chuyển<span class = "checkout-price">
                                                     <?php 
                                                         $shippingPrice = 35000;
-                                                        echo moneyPoint($shippingPrice) 
-                                                    ?>đ</span>
+                                                        echo number_format($shippingPrice, 0, ',', '.'); 
+                                                    ?> đ</span>
                                                 </p>
 
                                                 <h2>Thành tiền<span class = "total-checkout-price" >
                                                     <?php 
                                                         $totalPrice = $totalProductPrice + $shippingPrice;
                                                         $_SESSION['totalPrice'] = $totalPrice;
-                                                        echo moneyPoint($totalPrice); 
-                                                    ?>đ</span>
+                                                        echo number_format($totalPrice, 0, ',', '.'); 
+                                                    ?> đ</span>
                                                 </h2>
                                             </div>
                                             <div class="cart-btn">
@@ -283,9 +290,9 @@
                         <div class="footer-widget">
                             <h2>Liên lạc</h2>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
-                                <p><i class="fa fa-envelope"></i>dystopia@gmail.com</p>
-                                <p><i class="fa fa-phone"></i>0969 966 696</p>
+                                <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
+                                <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
+                                <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
                             </div>
                         </div>
                     </div>
@@ -296,7 +303,7 @@
                             <div class="contact-info">
                                 <div class="social">
                                     <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-faceproduct-f"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
                                     <a href=""><i class="fab fa-linkedin-in"></i></a>
                                     <a href=""><i class="fab fa-instagram"></i></a>
                                     <a href=""><i class="fab fa-youtube"></i></a>
@@ -335,6 +342,14 @@
                             <img src="img/payment-method.png" alt="Payment Method" />
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="payment-security">
+                            <h2>Được đảm bảo bởi</h2>
+                            <img src="img/godaddy.svg" alt="Payment Security" />
+                            <img src="img/norton.svg" alt="Payment Security" />
+                            <img src="img/ssl.svg" alt="Payment Security" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -351,5 +366,8 @@
         
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+        <script src="js/paymentMethod.js"></script>
+        <script src="js/getProvinceInVietNamInfo.js"></script>
+        
     </body>
 </html>

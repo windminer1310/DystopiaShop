@@ -1,6 +1,10 @@
 <?php  
     session_start();
-    require_once('moneyPoint.php');
+    require_once('display-function.php');
+    require_once('database/connectDB.php');
+    require_once('session.php');
+    require_once('shop_info/shop-info.php');
+
     if(isset($_GET['id'])){
         $id = $_GET['id'];
     }
@@ -8,50 +12,27 @@
         header('Location: product-list.php?id=page_num=1');
     }
 
-	$dbhost = 'localhost:33066';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
 
-	$sql = "SELECT * FROM `product` WHERE product_id='" . $id . "'";
-	$rs = $conn->query($sql);
-	if (!$rs) {
-	    die("Lỗi không thể truy xuất cơ sỡ dữ liệu!");
-	    exit();
-	}
-	$info = NULL;
-	while ($row = $rs->fetch_array(MYSQLI_ASSOC)) {
+	$table_product = 'product';
+    $column_product = 'product_id';
+    $value = $id;
+	foreach(getAllRowWithValue( $table_product, $column_product, $value)->fetchAll() as $value => $row){
 		$info = $row;
 	}
 
-    if(isset($_SESSION['name']) && isset($_SESSION['id'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
-        $countName = count($eachPartName);
+    if(hasUserInfoSession($_SESSION['name'], $_SESSION['id'])){
+        $name = displayUserName($_SESSION['name']);
         $user_id = $_SESSION['id'];
-        if($countName == 1){
-            $name = $eachPartName[$countName-1];
-        }
-        else{
-            $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
-        }
     }
     else{
-        header('Location: index.php');
+        headToIndexPage();
     }
 
-    $sqlCart = "SELECT * FROM `cart` WHERE user_id = $user_id";
-    $rs = $conn->query($sqlCart);
-    if (!$rs) {
-        die("Lỗi không thể truy xuất cơ sỡ dữ liệu!");
-        exit();
-    }
-    $productInCart = $rs->num_rows;
+    $tableCart = 'cart';
+    $column = 'user_id';
+    $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
+
+    $productInCart = $getCartRow->rowCount();
 
     $_SESSION['cart-product'] = $id;
 ?>
@@ -92,13 +73,13 @@
 
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
-                            <a href="login.php" class="nav-item nav-link active">Trang chủ</a>
-                            <a href="product-list.php" class="nav-item nav-link">Sản phẩm</a>
+                            <a href="user-login.php" class="nav-item nav-link">Trang chủ</a>
+                            <a href="product-list.php" class="nav-item nav-link active">Sản phẩm</a>
                             <a href="custom-pc.html" class="nav-item nav-link">Xây dựng cấu hình</a>
                         </div>
                         <div class="navbar-nav ml-auto">
                             <div class="header__navbar-item header__navbar-user">
-                                <img class = "avatar-img" src="img/avatar.jpg"/>
+                                <img class = "avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
                                 <span class="header__navbar-user-name"><?php echo $name; ?></span>
                         
                                 <ul class="header__navbar-user-menu">
@@ -123,7 +104,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-3">
                         <div class="logo">
-                            <a href="login.php">
+                            <a href="user-login.php">
                                 <img src="img/logo.png" alt="Logo">
                             </a>
                         </div>
@@ -140,9 +121,7 @@
                             <i class="fa fa-shopping-cart"></i>
                             <?php 
                             if($productInCart > 0){
-                                echo "<div class='notify-cart'>";
-                                echo "<span style='color: var(--white-color); font-size: 10px;'>".$productInCart."</span>";
-                                echo "</div>";
+                                notifyCart($productInCart);
                             }
                             ?>
                         </a>
@@ -157,7 +136,7 @@
         <div class="breadcrumb-wrap">
             <div class="container-fluid">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="login.php">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="user-login.php">Trang chủ</a></li>
                     <li class="breadcrumb-item"><a href="product-list.php">Sản phẩm</a></li>
                     <li class="breadcrumb-item active">Chi tiết sản phẩm</li>
                 </ul>
@@ -200,7 +179,7 @@
                                                 <h4 class = "header-checkout_text">Số lượng:</h4>
                                                 <form id = "product-to-cart">
                                                     <div onclick = "minus_qty();" class = "btn-minus"><i class="fa fa-minus"></i></div>
-                                                    <input class = "quantity-product quantity"type="text" value="1" name="amountProduct" id ="amountProduct">
+                                                    <input class = "quantity-product quantity quantity-input"type="text" value="1" name="amountProduct" id ="amountProduct">
                                                     <div onclick = "plus_qty();" class = "btn-plus"><i class="fas fa-plus"></i></div>
                                                 </form>
                                             </div>
@@ -258,13 +237,8 @@
                             <nav class="navbar bg-light">
                                 <ul class="navbar-nav">
                                     <?php                                    
-                                        $sql1 = "SELECT * FROM `category`";
-                                        $rs1 = $conn->query($sql1);
-                                        if (!$rs1) {
-                                            die("Lỗi không thể truy xuất cơ sỡ dữ liệu!");
-                                            exit();
-                                        }
-                                        while ($row = $rs1->fetch_array(MYSQLI_ASSOC)) {
+                                        $table_category = 'category';
+                                        foreach(getRowWithTable($table_category)->fetchAll() as $value => $row) {
                                             echo "<li class='nav-item'><a class='nav-link' href='view-product-list.php?id=1&search=" . $row['category_name'] . "'>" . $row['category_name'] . "</a>";
                                         }
                                     ?>
@@ -276,13 +250,10 @@
                         <div class="sidebar-widget widget-slider">
                             <div class="sidebar-slider normal-slider">
                                 <?php
-                                    $sql3 = "SELECT * FROM `product` ORDER BY sold LIMIT 5";
-                                    $rs3 = $conn->query($sql3);
-                                    if (!$rs3) {
-                                        die("Lỗi không thể truy xuất cơ sỡ dữ liệu!");
-                                        exit();
-                                    }
-                                    while ($row = $rs3->fetch_array(MYSQLI_ASSOC)) {
+                                    $tableName = 'product';
+                                    $column = 'sold';
+                                    $numberOfValues = 5;
+                                    foreach(getRowWithNFeaturedProducts($tableName, $column, $numberOfValues)->fetchAll() as $value => $row){
                                         echo "<div class='product-item'>";
                                         echo "<div class='product-image'>";
                                         echo "<a href='view-product-detail.php?id=" . $row['product_id'] . "'>";
@@ -316,13 +287,8 @@
                             <nav class="navbar bg-light">
                                 <ul class="navbar-nav">
                                     <?php
-                                        $sql2 = "SELECT * FROM `brand`";
-                                        $rs2 = $conn->query($sql2);
-                                        if (!$rs2) {
-                                            die("Lỗi không thể truy xuất cơ sỡ dữ liệu!");
-                                            exit();
-                                        }
-                                        while ($row = $rs2->fetch_array(MYSQLI_ASSOC)) {
+                                        $table_brand = 'brand';
+                                        foreach(getRowWithTable($table_brand)->fetchAll() as $value => $row) {
                                             echo "<li class='nav-item'><a class='nav-link' href='view-product-list.php?id=1&search=" . $row['brand_name'] . "'>" . $row['brand_name'] . "</a>";
                                         }
                                     ?>
@@ -345,9 +311,9 @@
                         <div class="footer-widget">
                             <h2>Liên lạc</h2>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
-                                <p><i class="fa fa-envelope"></i>dystopia@gmail.com</p>
-                                <p><i class="fa fa-phone"></i>0969 966 696</p>
+                                <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
+                                <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
+                                <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
                             </div>
                         </div>
                     </div>
@@ -358,7 +324,7 @@
                             <div class="contact-info">
                                 <div class="social">
                                     <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-faceproduct-f"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
                                     <a href=""><i class="fab fa-linkedin-in"></i></a>
                                     <a href=""><i class="fab fa-instagram"></i></a>
                                     <a href=""><i class="fab fa-youtube"></i></a>

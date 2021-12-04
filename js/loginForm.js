@@ -48,10 +48,10 @@ function login()
         {
             document.getElementById('submit').disable = false;
             document.getElementById('submit').classList.remove('btns--disabled');
-            document.getElementById('login-form').reset();
+            // document.getElementById('login-form').reset();
 
             if(ajax_request.responseText == ""){
-                window.location.href = "login.php";
+                window.location.href = "user-login.php";
             }
             else{
                 document.getElementById('auth-form__notify-text').innerHTML = ajax_request.responseText;

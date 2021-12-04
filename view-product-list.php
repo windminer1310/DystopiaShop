@@ -1,6 +1,14 @@
 <?php
     session_start();
-    require_once('moneyPoint.php');
+    require_once('display-function.php');
+    require_once('database/connectDB.php');
+    require_once('session.php');
+    require_once('search-product-with-link.php');
+    require_once('shop_info/shop-info.php');
+
+    if(isset($_SESSION['name']) && isset($_SESSION['id'])){
+        headToPage('product-list.php');
+    }
 
     $sort = 0;
     $price_from = 0;
@@ -23,7 +31,7 @@
         $page_number = 1;
     }
 
-    $dbhost = 'localhost:33066';
+    $dbhost = 'localhost';
     $dbuser = 'root';
     $dbpass = '';
 
@@ -33,9 +41,7 @@
     if ($conn->connect_error) {
         die("Không thể kết nối!");
         exit();
-    }
-
-    
+    } 
 ?>
  <!DOCTYPE html>
 <html lang="en">
@@ -74,12 +80,12 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
                             <a href="index.php" class="nav-item nav-link">Trang chủ</a>
-                            <a href="product-list.php" class="nav-item nav-link active">Sản phẩm</a>
+                            <a href="view-product-list.php" class="nav-item nav-link active">Sản phẩm</a>
                             <a href="" onclick="mustInput();" class="nav-item nav-link">Giỏ hàng</a>
                         </div>
                             <div class="navbar-nav ml-auto">
                                 <a href="register.html" class="nav-item nav-link ">Đăng ký</a>
-                                <a href="login.html" class="nav-item nav-link ">Đăng nhập</a>
+                                <a href="login.php" class="nav-item nav-link ">Đăng nhập</a>
                             </div>
                     </div>
                 </nav>
@@ -140,45 +146,11 @@
                                             <div class="product-short">
                                                 <div class="dropdown">
                                                     <?php
-                                                        if (isset($_GET['sort'])) {
-                                                            $sort_name = "";
-                                                            if ($sort == 1) {
-                                                                $sort_name = "Mới nhất";
-                                                            }
-                                                            elseif ($sort == 3) {
-                                                                $sort_name = "Giá từ thấp đến cao";
-                                                            }
-                                                            elseif ($sort == 4) {
-                                                                $sort_name = "Giá từ cao đến thấp";
-                                                            }
-                                                            else {
-                                                                $sort_name = "Bán chạy nhất";
-                                                            }
-                                                            echo "<div class='dropdown-toggle' data-toggle='dropdown'>". $sort_name ."</div>";
-                                                        }
-                                                        else {
-                                                            echo "<div class='dropdown-toggle' data-toggle='dropdown'>Sắp xếp theo</div>";
-                                                        }
+                                                        displayDescribeDropdownTag($sort);
                                                     ?>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <?php
-                                                            $link1 = "view-product-list.php?id=1";
-                                                            if (isset($_GET['price_from'])) {
-                                                                $link1 = $link1 . "&price_from=" . $price_from;
-                                                                if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
-                                                                    $link1 = $link1 . "&search=" . $search;
-                                                                }
-                                                            }
-                                                            else {
-                                                                if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
-                                                                    $link1 = $link1 . "&search=" . $search;
-                                                                }
-                                                                
-                                                            }
-                                                            echo "<a href='" . $link1 . "&sort=1' class='dropdown-item'>Mới nhất</a>";
-                                                            echo "<a href='" . $link1 . "&sort=2' class='dropdown-item'>Bán chạy nhất</a>";
-                                                            echo "<a href='" . $link1 . "&sort=3' class='dropdown-item'>Giá từ thấp đến cao</a>";
-                                                            echo "<a href='" . $link1 . "&sort=4' class='dropdown-item'>Giá từ cao đến thấp</a>";
+                                                            searchProductWithDescribeDropdownTag($price_from, $search);
                                                         ?>
                                                     </div>
                                                 </div>
@@ -188,44 +160,11 @@
                                             <div class="product-price-range">
                                                 <div class="dropdown">
                                                     <?php
-                                                        if (isset($_GET['price_from'])) {
-                                                            $price_from_name = "";
-                                                            if ($price_from == 1) {
-                                                                $price_from_name = "Dưới 1.000.000đ";
-                                                            }
-                                                            elseif ($price_from == 2) {
-                                                                $price_from_name = "1.000.000đ - 10.000.000đ";
-                                                            }
-                                                            elseif ($price_from == 3) {
-                                                                $price_from_name = "10.000.000đ - 50.000.000đ";
-                                                            }
-                                                            else {
-                                                                $price_from_name = "Trên 50.000.000đ";
-                                                            }
-                                                            echo "<div class='dropdown-toggle' data-toggle='dropdown'>". $price_from_name ."</div>";
-                                                        }
-                                                        else {
-                                                            echo "<div class='dropdown-toggle' data-toggle='dropdown'>Tầm giá</div>";
-                                                        }
+                                                        displayDropdownTagPriceArea($price_from);
                                                     ?>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <?php
-                                                            $link2 = "view-product-list.php?id=1";
-                                                            if (isset($_GET['sort'])) {
-                                                                $link2  = $link2 . "&sort=" . $sort;
-                                                                if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
-                                                                    $link2 = $link2 . "&search=" . $search;
-                                                                }
-                                                            }
-                                                            else {
-                                                                if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
-                                                                    $link2 = $link2 . "&search=" . $search;
-                                                                }
-                                                            }
-                                                            echo "<a href='" . $link2 . "&price_from=1' class='dropdown-item'>Dưới 1.000.000đ</a>";
-                                                            echo "<a href='" . $link2 . "&price_from=2' class='dropdown-item'>1.000.000đ - 10.000.000đ</a>";
-                                                            echo "<a href='" . $link2 . "&price_from=3' class='dropdown-item'>10.000.000đ - 50.000.000đ</a>";
-                                                            echo "<a href='" . $link2 . "&price_from=4' class='dropdown-item'>Trên 50.000.000đ</a>";
+                                                            searchProductWithDropdownTagPriceArea($sort, $search);
                                                         ?>
                                                     </div>
                                                 </div>
@@ -289,9 +228,7 @@
                                     if($count_product >= ($page_number-1)*$numProductInAPage && $count_product < ($page_number-1)*$numProductInAPage + $numProductInAPage){
                                         echo "<div class='col-md-3'>";
                                         if ($row['discount'] != 0) {
-                                        echo "<div class='product-item__sale-off'>";
-                                        echo "<span class = 'product-item__sale-off-percent'>".$row['discount']."%</span>";
-                                        echo "</div>";
+                                            displayDiscountTagWithHtml($row['discount']);
                                         }
                                         echo "<div class='product-item'>";                                            
                                         echo "<div class='product-image'>";
@@ -302,21 +239,15 @@
                                         echo "<a href='view-product-detail.php?id=" . $row['product_id'] . "'><i class='fa fa-search'></i></a>";
                                         echo "</div>";
                                         echo "</div>";
-                                        echo "<div class='product-price' style='height: 100px;'>";
-                                        echo "<h2 style = 'line-height: 20px;
-                                        max-height: 40px;
-                                        overflow: hidden;
-                                        flex: 1;
-                                        display: -webkit-box;
-                                        -webkit-box-orient: vertical;
-                                        -webkit-line-clamp: 2;'>" . $row['product_name'] . "</h2>";
+                                        echo "<div class='product-price'>";
+                                        echo "<h2 class = 'product-tag__name'>" . $row['product_name'] . "</h2>";
                                         if ($row['discount'] != 0) {
                                             $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
-                                            echo "<h3 style = 'position: absolute; bottom: 27px; '><span>" . number_format($discount, 0, ',','.') . " đ</span></h3>";
-                                            echo "<h3 style='position: absolute; bottom: 7px; text-decoration: line-through; color: #888888; font-size:13px; font-weight: 500;'><span>" .  number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
+                                            echo "<h3 class = 'product-current__price'><span>" . number_format($discount, 0, ',','.') . " đ</span></h3>";
+                                            echo "<h3 class = 'product-discount__price'><span>" .  number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
                                         }
                                         else{
-                                            echo "<h3 style = 'position: absolute; bottom: 27px; '><span>" . number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
+                                            echo "<h3 class = 'product-current__price'><span>" . number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
                                         }
                                         echo "</div>";
                                         echo "</div>";
@@ -335,42 +266,7 @@
                                     <?php
                                         $totalProduct = mysqli_num_rows($rs);
                                         $totalPage = $totalProduct/$numProductInAPage;
-                                        if($totalPage > floor($totalPage)){
-                                            for($count = 1; $count <= floor($totalPage)+1; $count++){
-                                                $link = "view-product-list.php?page_num=" . $count;
-                                                if (isset($_GET['sort'])) {
-                                                    $link = $link . "&sort=" . $sort;
-                                                }
-                                                if (isset($_GET['price_from'])) {
-                                                    $link = $link . "&price_from=" . $price_from;
-                                                }
-                                                if (isset($_GET['search']) && strlen($_GET['search'])>0) {
-                                                   $link = $link . "&search=" . $search;
-                                                }
-                                                if($count == $page_number) 
-                                                    echo "<li class='page-item active'><a class='page-link' href='" . $link . "'>" . $count . "</a></li>";
-                                                else 
-                                                    echo "<li class='page-item'><a class='page-link' href='" . $link . "'>" . $count . "</a></li>";
-                                            }
-                                        }
-                                        else {
-                                            for($count = 1; $count < floor($totalPage)+1; $count++){
-                                                $link = "view-product-list.php?page_num=" . $count;
-                                                if (isset($_GET['sort'])) {
-                                                    $link = $link . $sort;
-                                                }
-                                                if (isset($_GET['price_from'])) {
-                                                    $link = $link . $price_from;
-                                                }
-                                                if (isset($_GET['search']) && strlen($_GET['search'])>0) {
-                                                   $link = $link . "&search=" . $search;
-                                                }
-                                                if($count == $page_number) 
-                                                    echo "<li class='page-item active'><a class='page-link' href='" . $link . "'>" . $count . "</a></li>";
-                                                else 
-                                                    echo "<li class='page-item'><a class='page-link' href='" . $link . "'>" . $count . "</a></li>";
-                                            }
-                                        }
+                                        displayListPageButton($totalPage, $sort, $search, $price_from, $page_number)
                                     ?>
                                 </ul>
                             </nav>
@@ -383,15 +279,12 @@
                             <h2 class="title">Loại sản phẩm</h2>
                             <nav class="navbar bg-light">
                                 <ul class="navbar-nav">
-                                    <?php                                    
-                                        $sql1 = "SELECT * FROM `category`";
-                                        $rs1 = $conn->query($sql1);
-                                        if (!$rs1) {
-                                            die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                            exit();
-                                        }
-                                        while ($row = $rs1->fetch_array(MYSQLI_ASSOC)) {
-                                            echo "<li class='nav-item'><a class='nav-link' href='view-product-list.php?id=1&search=" . $row['category_name'] . "'>" . $row['category_name'] . "</a>";
+                                    <?php    
+                                        $table_category = 'category';
+                                        foreach(getRowWithTable($table_category)->fetchAll() as $value => $row) {
+                                            echo "<li class='nav-item'><a class='nav-link' href='view-product-list.php?id=1&search=" . 
+                                            $row['category_name'] . "'>" . 
+                                            $row['category_name'] . "</a>";
                                         }
                                     ?>
                                 </ul>
@@ -402,31 +295,28 @@
                         <div class="sidebar-widget widget-slider">
                             <div class="sidebar-slider normal-slider">
                                 <?php
-                                    $sql3 = "SELECT * FROM `product` ORDER BY sold LIMIT 5";
-                                    $rs3 = $conn->query($sql3);
-                                    if (!$rs3) {
-                                        die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                        exit();
-                                    }
-                                    while ($row = $rs3->fetch_array(MYSQLI_ASSOC)) {
+                                    $tableName = 'product';
+                                    $column = 'sold';
+                                    $numberOfValues = 5;
+                                    foreach(getRowWithNFeaturedProducts($tableName, $column, $numberOfValues)->fetchAll() as $value => $row) {
                                         echo "<div class='product-item'>";
                                         echo "<div class='product-image'>";
                                         echo "<a href='view-product-detail.php?id=" . $row['product_id'] . "'>";
                                         echo "<img src='" . $row['image_link'] . "' alt='Product Image'>";
                                         echo "</a>";
                                         echo "<div class='product-action'>";
-                                        echo "<a href='#'><i class='fa fa-cart-plus'></i></a>";
                                         echo "<a href='view-product-detail.php?id=" . $row['product_id'] . "'><i class='fa fa-search'></i></a>";
                                         echo "</div>";
                                         echo "</div>";
                                         echo "<div class='product-price'>";
-                                        echo "<h2>" . $row['product_name'] . "</h2>";
+                                        echo "<h2 class = 'product-tag__name' style = 'font-size: 20px;'>" . $row['product_name'] . "</h2>";
                                         if ($row['discount'] != 0) {
                                             $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
-                                            echo "<h3><span>" . number_format($discount, 0, ',', '.') . "đ - Giảm " . $row['discount'] . "%</span></h3>";
+                                            echo "<h3 class = 'product-current__price' style = 'font-size: 17px;'><span>" . number_format($discount, 0, ',','.') . " đ</span></h3>";
+                                            echo "<h3 class = 'product-discount__price' style = 'font-size: 15px;'><span>" .  number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
                                         }
-                                        else {
-                                            echo "<h3><span>" . number_format($row['price'], 0, ',', '.') . "đ</span></h3>";
+                                        else{
+                                            echo "<h3 class = 'product-current__price ' style = 'font-size: 17px;'><span>" . number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
                                         }
                                         echo "</div>";
                                         echo "</div>";
@@ -442,14 +332,11 @@
                             <nav class="navbar bg-light">
                                 <ul class="navbar-nav">
                                     <?php
-                                        $sql2 = "SELECT * FROM `brand`";
-                                        $rs2 = $conn->query($sql2);
-                                        if (!$rs2) {
-                                            die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                            exit();
-                                        }
-                                        while ($row = $rs2->fetch_array(MYSQLI_ASSOC)) {
-                                            echo "<li class='nav-item'><a class='nav-link' href='view-product-list.php?id=1&search=" . $row['brand_name'] . "'>" . $row['brand_name'] . "</a>";
+                                        $table_brand = 'brand';
+                                        foreach(getRowWithTable($table_brand)->fetchAll() as $value => $row) {
+                                            echo "<li class='nav-item'><a class='nav-link' 
+                                            href='view-product-list.php?id=1&search=" . $row['brand_name'] . "'>" . 
+                                            $row['brand_name'] . "</a>";
                                         }
                                     ?>
                                 </ul>
@@ -470,9 +357,9 @@
                         <div class="footer-widget">
                             <h2>Liên lạc</h2>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
-                                <p><i class="fa fa-envelope"></i>dystopia@gmail.com</p>
-                                <p><i class="fa fa-phone"></i>0969 966 696</p>
+                                <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
+                                <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
+                                <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
                             </div>
                         </div>
                     </div>
@@ -483,7 +370,7 @@
                             <div class="contact-info">
                                 <div class="social">
                                     <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-faceproduct-f"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
                                     <a href=""><i class="fab fa-linkedin-in"></i></a>
                                     <a href=""><i class="fab fa-instagram"></i></a>
                                     <a href=""><i class="fab fa-youtube"></i></a>

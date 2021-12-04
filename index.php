@@ -1,15 +1,15 @@
 <?php
-    require_once('moneyPoint.php');
-	$dbhost = 'localhost:33066';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
+    session_start();
+    require_once('display-function.php');
+    require_once('database/connectDB.php');
+    require_once('session.php');
+    require_once('shop_info/shop-info.php');
 
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
+    if(isset($_SESSION['name']) && isset($_SESSION['id'])){
+        headToPage('user-login.php');
     }
-    mysqli_set_charset($conn,"utf8");
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,13 +47,13 @@
                     </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto">
-                        <a href="index.php" class="nav-item nav-link">Trang chủ</a>
+                        <a href="index.php" class="nav-item nav-link active">Trang chủ</a>
                         <a href="view-product-list.php?page_num=1" class="nav-item nav-link">Sản phẩm</a>
                         <a href="custom-pc.html" class="nav-item nav-link">Xây dựng cấu hình</a>
                     </div>
                     <div class="navbar-nav ml-auto">
                         <a href="register.html" class="nav-item nav-link ">Đăng ký</a>
-                        <a href="login.html" class="nav-item nav-link ">Đăng nhập</a>
+                        <a href="login.php" class="nav-item nav-link ">Đăng nhập</a>
                     </div>
                 </div>
             </nav>
@@ -172,13 +172,11 @@
             </div>
             <div class="row align-items-center product-slider product-slider-4">
             	<?php
-                    $sql3 = "SELECT * FROM `product` ORDER BY sold DESC LIMIT 10";
-                    $rs3 = $conn->query($sql3);
-                    if (!$rs3) {
-                        die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                        exit();
-                    }
-                    while ($row = $rs3->fetch_array(MYSQLI_ASSOC)) {
+                    $tableName = 'product';
+                    $column = 'sold';
+                    $numberOfValues = 10;
+                    
+                    foreach(getRowWithNFeaturedProducts($tableName, $column, $numberOfValues)->fetchAll() as $value => $row) {
                     	echo "<div class='col-lg-3'>";
                         if ($row['discount'] != 0) {
                         echo "<div class='product-item__sale-off'>";
@@ -191,29 +189,24 @@
                         echo "<img src='" . $row['image_link'] . "?>' alt='Product Image'>";
                         echo "</a>";
                         echo "<div class='product-action'>";
-                        echo "<a href='view-product-detail.php?id=" . $row['product_id'] . "'><i class='fa fa-search'></i></a>";
+                        echo "<a href='view-product-detail.php?id=" . $row['product_id'] . "'></a>";
                         echo "</div>";
                         echo "</div>";
                         echo "<div class='product-price' style='height: 100px; padding:10px 50px 0;'>";
-                        echo "<h2 style = 'line-height: 20px;
-                        max-height: 40px;
-                        overflow: hidden;
-                        flex: 1;
-                        display: -webkit-box;
-                        -webkit-box-orient: vertical;
-                        -webkit-line-clamp: 2;'>" . $row['product_name'] . "</h2>";
+                        echo "<h2 class = 'product-tag__name'>" . $row['product_name'] . "</h2>";
                         if ($row['discount'] != 0) {
                             $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
-                            echo "<h3 style = 'position: absolute; bottom: 27px; '><span>" . number_format($discount, 0, ',','.') . " đ</span></h3>";
-                            echo "<h3 style='position: absolute; bottom: 7px; text-decoration: line-through; color: #888888; font-size:13px; font-weight: 500;'><span>" .  number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
+                            echo "<h3 class = 'product-current__price'><span>" . number_format($discount, 0, ',','.') . " đ</span></h3>";
+                            echo "<h3 class = 'product-discount__price'><span>" .  number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
                         }
                         else{
-                            echo "<h3 style = 'position: absolute; bottom: 27px; '><span>" . number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
+                            echo "<h3 class = 'product-current__price'><span>" . number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
                         }
                     	echo "</div>";
                     	echo "</div>";
                     	echo "</div>";
                     }
+                    
             	?>
             </div>
         </div>
@@ -337,7 +330,7 @@
                     <h1>Liên hệ với Dystopia</h1>
                 </div>
                 <div class="col-md-6">
-                    <a href="tel:0123456789">0966-696-969</a>
+                    <a href="tel:0123456789"><?php echo SHOP_PHONE ?></a>
                 </div>
             </div>
         </div>
@@ -351,7 +344,7 @@
             
                 <div class="col-lg-12">
                     <div class="contact-map">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.0835321075647!2d106.71489441488534!3d10.804914192302194!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528a405e4245f%3A0x64cd17debf114781!2zMiBWw7UgT2FuaCwgUGjGsOG7nW5nIDI1LCBCw6xuaCBUaOG6oW5oLCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1627547869109!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe src=<?php echo ADDRESS_GOOGLE_URL ?> width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
             </div>
@@ -367,9 +360,9 @@
                     <div class="footer-widget">
                         <h2>Liên lạc</h2>
                         <div class="contact-info">
-                            <p><i class="fa fa-map-marker"></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
-                            <p><i class="fa fa-envelope"></i>dystopia@gmail.com</p>
-                            <p><i class="fa fa-phone"></i>0966-696-969</p>
+                            <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
+                            <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
+                            <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
                         </div>
                     </div>
                 </div>
@@ -380,7 +373,7 @@
                         <div class="contact-info">
                             <div class="social">
                                 <a href=""><i class="fab fa-twitter"></i></a>
-                                <a href=""><i class="fab fa-faceproduct-f"></i></a>
+                                <a href=""><i class="fab fa-facebook-f"></i></a>
                                 <a href=""><i class="fab fa-linkedin-in"></i></a>
                                 <a href=""><i class="fab fa-instagram"></i></a>
                                 <a href=""><i class="fab fa-youtube"></i></a>
@@ -435,11 +428,6 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <script>
-        function mustInput(){
-            alert('Vui lòng đăng nhập!');
-        }
-    </script>
     
 </body>
 

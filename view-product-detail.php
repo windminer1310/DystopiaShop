@@ -1,6 +1,14 @@
 <?php  
     session_start();
-    require_once('moneyPoint.php');
+    require_once('display-function.php');
+    require_once('database/connectDB.php');
+    require_once('session.php');
+    require_once('shop_info/shop-info.php');
+
+    if(isset($_SESSION['name']) && isset($_SESSION['id'])){
+        headToPage('product-list.php');
+    }
+
 
     if(isset($_GET['id'])){
         $id = $_GET['id'];
@@ -9,25 +17,12 @@
         header('Location: view-product-list.php?id=page_num=1');
     }
 
-	$dbhost = 'localhost:33066';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
-
-	$sql = "SELECT * FROM `product` WHERE product_id='" . $id . "'";
-	$rs = $conn->query($sql);
-	if (!$rs) {
-	    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-	    exit();
-	}
 	$info = NULL;
-	while ($row = $rs->fetch_array(MYSQLI_ASSOC)) {
+
+    $table_product = 'product';
+    $column_product = 'product_id';
+    $value = $id;
+	foreach(getAllRowWithValue( $table_product, $column_product, $value)->fetchAll() as $value => $row){
 		$info = $row;
 	}
 
@@ -75,7 +70,7 @@
                         </div>
                         <div class="navbar-nav ml-auto">
                             <a href="register.html" class="nav-item nav-link ">Đăng ký</a>
-                            <a href="login.html" class="nav-item nav-link ">Đăng nhập</a>
+                            <a href="login.php" class="nav-item nav-link ">Đăng nhập</a>
                         </div>
                     </div>
                 </nav>
@@ -139,27 +134,40 @@
                                 <div class="col-md-7">
                                     <div class="product-content">
                                         <div class="title-product"><h2><?php echo $info['product_name'] ?></h2></div>
-                                        <div class="price">
-                                            <h4 class="header-checkout_text">Giá gốc:</h4>
-                                            <p style="color: black"><?php echo number_format($info['price'], 0, ',', '.') ."đ";?></p>
-                                        </div>
-                                        <div class="price">
-                                            <h4 class = "header-checkout_text">Giá mới:</h4>
-                                            <p><?php
-                                                    if ($info['discount'] == 0){
-                                                        echo number_format($info['price'], 0, ',', '.') ."đ"; 
-                                                    }else{
-                                                        $discount = $info['price'] - ($info['price'] * $info['discount'] * 0.01);
-                                                        echo number_format($discount, 0, ',', '.') ."đ - GIảm " . $info['discount'] . "%";
-                                                    }
-                                                ?>
-                                            </p>
-                                        </div>
+                                        <?php
+                                            if ($info['discount'] == 0)
+                                            {
+                                                echo "<div class='price'>
+                                                <h4 class = 'header-checkout_text'>Giá:</h4>
+                                                <p>" . number_format($info['price'], 0, ',', '.') . "đ</p>
+                                                </div>
+                                                <div class='price'>
+                                                    <h4 class = 'header-checkout_text' style='color: white;'>G:</h4>
+                                                </div>";
+
+                                            }
+                                            else
+                                            {
+                                                $discount = $info['price'] - ($info['price'] * $info['discount'] * 0.01);
+                                                echo "<div class='price'>
+                                                    <h4 class='header-checkout_text'>Giá mới:</h4>
+                                                    <p>" .
+                                                        number_format($discount, 0, ',', '.') 
+                                                        .
+                                                        "đ
+                                                    </p>
+                                                </div>
+                                                <div class='price'>
+                                                    <h4 class = 'header-checkout_text'>Giá gốc:</h4>
+                                                    <p class='product-discount__none'>" .number_format($info['price'], 0, ',', '.') ."đ;</p>
+                                                </div>";
+                                            }
+                                        ?>
                                             <div class="quantity">
                                                 <h4 class = "header-checkout_text">Số lượng:</h4>
                                                 <form id = "product-to-cart">
                                                     <div onclick = "minus_qty();" class = "btn-minus"><i class="fa fa-minus"></i></div>
-                                                    <input class = "quantity-product quantity"type="text" value="1" name="amountProduct" id ="amountProduct">
+                                                    <input class = "quantity-product quantity quantity-input"type="text" value="1" name="amountProduct" id ="amountProduct">
                                                     <div onclick = "plus_qty();" class = "btn-plus"><i class="fas fa-plus"></i></div>
                                                 </form>
                                             </div>
@@ -216,13 +224,8 @@
                             <nav class="navbar bg-light">
                                 <ul class="navbar-nav">
                                     <?php                                    
-                                        $sql1 = "SELECT * FROM `category`";
-                                        $rs1 = $conn->query($sql1);
-                                        if (!$rs1) {
-                                            die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                            exit();
-                                        }
-                                        while ($row = $rs1->fetch_array(MYSQLI_ASSOC)) {
+                                        $table_category = 'category';
+                                        foreach(getRowWithTable($table_category)->fetchAll() as $value => $row) {
                                             echo "<li class='nav-item'><a class='nav-link' href='view-product-list.php?id=1&search=" . $row['category_name'] . "'>" . $row['category_name'] . "</a>";
                                         }
                                     ?>
@@ -234,13 +237,10 @@
                         <div class="sidebar-widget widget-slider">
                             <div class="sidebar-slider normal-slider">
                                 <?php
-                                    $sql3 = "SELECT * FROM `product` ORDER BY sold LIMIT 5";
-                                    $rs3 = $conn->query($sql3);
-                                    if (!$rs3) {
-                                        die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                        exit();
-                                    }
-                                    while ($row = $rs3->fetch_array(MYSQLI_ASSOC)) {
+                                    $tableName = 'product';
+                                    $column = 'sold';
+                                    $numberOfValues = 5;
+                                    foreach(getRowWithNFeaturedProducts($tableName, $column, $numberOfValues)->fetchAll() as $value => $row) {
                                         echo "<div class='product-item'>";
                                         echo "<div class='product-image'>";
                                         echo "<a href='view-product-detail.php?id=" . $row['product_id'] . "'>";
@@ -274,13 +274,8 @@
                             <nav class="navbar bg-light">
                                 <ul class="navbar-nav">
                                     <?php
-                                        $sql2 = "SELECT * FROM `brand`";
-                                        $rs2 = $conn->query($sql2);
-                                        if (!$rs2) {
-                                            die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                            exit();
-                                        }
-                                        while ($row = $rs2->fetch_array(MYSQLI_ASSOC)) {
+                                        $table_brand = 'brand';
+                                        foreach(getRowWithTable($table_brand)->fetchAll() as $value => $row) {
                                             echo "<li class='nav-item'><a class='nav-link' href='view-product-list.php?id=1&search=" . $row['brand_name'] . "'>" . $row['brand_name'] . "</a>";
                                         }
                                     ?>
@@ -304,9 +299,9 @@
                         <div class="footer-widget">
                             <h2>Liên lạc</h2>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
-                                <p><i class="fa fa-envelope"></i>dystopia@gmail.com</p>
-                                <p><i class="fa fa-phone"></i>0969 966 696</p>
+                                <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
+                                <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
+                                <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
                             </div>
                         </div>
                     </div>
@@ -317,7 +312,7 @@
                             <div class="contact-info">
                                 <div class="social">
                                     <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-faceproduct-f"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
                                     <a href=""><i class="fab fa-linkedin-in"></i></a>
                                     <a href=""><i class="fab fa-instagram"></i></a>
                                     <a href=""><i class="fab fa-youtube"></i></a>
@@ -384,9 +379,6 @@
             }
             function plus_qty(){
                 document.getElementById("amountProduct").value = Number(document.getElementById("amountProduct").value) + 1;
-            }
-            function mustInput(){
-                alert('Vui lòng đăng nhập');
             }
         </script>
     </body>

@@ -1,43 +1,84 @@
 function success() {
-    if (checkUserEmail() && checkUserName() && checkUserPhone() && checkUserPassword()) {
+    if(!checkUserName() && !checkUserEmail() && !checkUserPhone() && !checkUserPassword()) {
+        displayInvalidInfo();
+    }
+    else if(checkUserName() && checkUserEmail() && checkUserPhone() && checkUserPassword()) {
         save_data();
-    } else {
-        document.getElementById('auth-form__notify-text').innerHTML = '<div class="fail-auth__form">Nhập thông tin chưa đúng định dạng!</div>';
-        setTimeout(function() {
-            document.getElementById('auth-form__notify-text').innerHTML = '';
-        }, 2000);
+    }
+    else{
+        displayInvalidInfo();
+        var arrayCheckFunction = [checkUserName(), checkUserEmail(), checkUserPhone(), checkUserPassword()];
+        arrayCheckFunction.forEach(element => element);
     }
 }
 
+function displayInvalidInfo(){
+    document.getElementById('auth-form__notify-text').innerHTML = '<div class="fail-auth__form">Vui lòng nhập đầy đủ thông tin!</div>';
+        setTimeout(function() {
+            document.getElementById('auth-form__notify-text').innerHTML = '';
+        }, 5000);
+    return 0;
+}
+
+
+function clearWarningInput(id){
+    type = "instruction-box__" + id;
+    document.getElementById(id).style.borderColor = "#dbdbdb";
+    document.getElementById(type).style.display = "block";
+}
+
 function checkUserPhone() {
+    hideInstructionBox("phone");
     var getPhone = document.getElementById("phone").value;
     var numberPattern = /^\d+$/;
     if (getPhone.match(numberPattern) && getPhone.length >= 10 && getPhone.length <= 12) {
+        document.getElementById('phone').style.borderColor = "#dbdbdb";
         return true;
-    } else return false;
+    }
+    document.getElementById('phone').style.borderColor = "red";
+    return false;
 }
 
+
 function checkUserName() {
+    hideInstructionBox("name");
     var getName = document.getElementById("name").value;
     var namePattern = /^([^0-9]*)$/;
     if (namePattern.test(getName) && getName.length >= 5) {
+        document.getElementById('name').style.borderColor = "#dbdbdb";
         return true;
-    } else return false;
+    }
+    document.getElementById('name').style.borderColor = "red";
+    return false;
 }
 
+
 function checkUserEmail() {
+    hideInstructionBox("email");
     var getEmail = document.getElementById("email").value;
     var emailPattern = /\S+@\S+\.\S+/;
     if (emailPattern.test(getEmail) && getEmail.length >= 5) {
+        document.getElementById('email').style.borderColor = "#dbdbdb";
         return true;
-    } else return false;
+    } 
+    document.getElementById('email').style.borderColor = "red";
+    return false;
 }
 
 function checkUserPassword() {
+    hideInstructionBox("password");
     var getPassword = document.getElementById("password").value;
     if (getPassword.length >= 5) {
+        document.getElementById('password').style.borderColor = "#dbdbdb";
         return true;
-    } else return false;
+    }
+    document.getElementById('password').style.borderColor = "red";
+    return false;
+}
+
+function hideInstructionBox(type){
+    type = "instruction-box__" + type;
+    document.getElementById(type).style.display = "none";
 }
 
 function save_data() {

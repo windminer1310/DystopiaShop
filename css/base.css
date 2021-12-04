@@ -8,10 +8,10 @@
 :root {
     --border-color: #dbdbdb;
     --text-color: #333;
-    --primary-color: #00b3b3;
+    --primary-color: #1435c3;
     --white-color: white;
 }
-/* #5f83e7 */
+
 .must-input-icon {
     color: red;
 }

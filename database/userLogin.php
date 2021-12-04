@@ -1,40 +1,51 @@
 <?php
-session_start();
-$servername = "localhost:33066";
-$username = "root";
-$password = "";
-$dbname = "database";
+    session_start();
+    include('connectDB.php');
 
-if (isset($_POST["phone"])){
-    $getPhone =  $_POST["phone"];
-}
+    if (isset($_POST["phone"])){
+        $getPhone =   $_POST["phone"];
+    }
 
-if (isset($_POST["password"])){
-    $getPassword =  $_POST["password"];
-}
+    if (isset($_POST["password"])){
+        $getPassword =  $_POST["password"];
+    }
+
+    $databaseNameTable = 'user';
+    $column = 'user_phone';
+    $userInfoWithPhone = getRowWithValue( $databaseNameTable, $column, $getPhone );
+
+    displayStatusAfterLoginWithPassword($userInfoWithPhone, $getPassword);
 
 
-$md5Password = md5($getPassword);
 
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-// Check connection
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
 
-mysqli_set_charset($conn,"utf8");
+    function displayStatusAfterLoginWithPassword($userInfoWithPhone, $getPassword){
+        if($userInfoWithPhone) {
+            $passHash = $userInfoWithPhone['user_password'];
+            if(password_verify($getPassword, $passHash)){
+                setLoginValueToSession($userInfoWithPhone);
+                echo '';
+            }
+            else{
+                displayFailPassword();
+            }
+        }
+        else{
+            displayFailInfomation();
+        }
+    }
 
-$sql = "SELECT * FROM user WHERE user_phone = '$getPhone' AND user_password = '$md5Password' ";
-$result = $conn->query($sql);
+    function setLoginValueToSession($userInfoWithPhone){
+        $_SESSION['name'] = $userInfoWithPhone['user_name'];
+        $_SESSION['id'] = $userInfoWithPhone['user_id'];
+    }
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $_SESSION['name'] = $row['user_name'];
-    $_SESSION['id'] = $row['user_id'];
-    echo '';
-} else {
-    echo '<div class="fail-auth__form">Đăng nhập thất bại, vui lòng kiểm tra lại các thông tin!</div>';
-}
-$conn->close();
- 
+    function displayFailInfomation(){
+        echo '<div class="fail-auth__form">Đăng nhập thất bại, vui lòng kiểm tra lại các thông tin!</div>';
+    }
+
+    function displayFailPassword(){
+        echo '<div class="fail-auth__form">Đăng nhập thất bại, vui lòng kiểm tra lại mật khẩu đăng nhập!</div>';
+    }
+
 ?>

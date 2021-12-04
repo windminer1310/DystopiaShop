@@ -1,7 +1,9 @@
 <?php
     session_start();
-    require_once('moneyPoint.php');
-    $servername = "localhost:33066";
+    require_once('display-function.php');
+    require_once('shop_info/shop-info.php');
+
+    $servername = "localhost";
     $username = "root";
     $password = "";
     $dbname = "database";
@@ -25,10 +27,7 @@
 
     $id_transaction = $_GET['id_transaction'];
     
-    $dbhost = 'localhost:33066';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
+    $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
     if ($conn->connect_error) {
         die("Lỗi không thể kết nối!");
         exit();
@@ -89,7 +88,7 @@
                     </div>
                     <div class="navbar-nav ml-auto">
                         <div class="header__navbar-item header__navbar-user">
-                            <img class = "avatar-img" src="img/avatar.jpg"/>
+                            <img class = "avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
                             <span class="header__navbar-user-name"><?php echo $name; ?></span>
                     
                             <ul class="header__navbar-user-menu">
@@ -193,15 +192,15 @@
                                                     $amountOfProduct = $amountArray[$count];
                                                     echo "<td>" . $amountOfProduct ."</td>";
                                                     $sumPrice = $price * $amountOfProduct;
-                                                    echo "<td>" . moneyPoint($sumPrice) . "đ</td>";
+                                                    echo "<td>" . $sumPrice . "đ</td>";
                                                     }  
                                                     echo "<tr>";
                                                     echo "<td></td>";
                                                     echo "<td></td>";
                                                     echo "<td class = 'header-checkout_text'>Tổng</td>";
                                                     $shipCost = 35000;
-                                                    echo "<td><p class = 'title-checkout-text' style = 'margin: 5px 0px;'>(Ship: ".moneyPoint($shipCost)."đ)</p>
-                                                    <h5 style ='font-size: 18px; font-weight: 600;  color: rgb(235, 33, 1);'>". moneyPoint($totalPrice) ."đ</h5></td>";
+                                                    echo "<td><p class = 'title-checkout-text' style = 'margin: 5px 0px;'>(Ship: ".$shipCost."đ)</p>
+                                                    <h5 style ='font-size: 18px; font-weight: 600;  color: rgb(235, 33, 1);'>". $totalPrice ."đ</h5></td>";
                                                     echo "</tr>";
                                             echo "</tbody>";
                                         echo "</table>";
@@ -224,9 +223,9 @@
                     <div class="footer-widget">
                         <h2>Liên lạc</h2>
                         <div class="contact-info">
-                            <p><i class="fa fa-map-marker"></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
-                            <p><i class="fa fa-envelope"></i>dystopia@gmail.com</p>
-                            <p><i class="fa fa-phone"></i>0969 966 696</p>
+                                <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
+                                <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
+                                <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
                         </div>
                     </div>
                 </div>
@@ -237,7 +236,7 @@
                         <div class="contact-info">
                             <div class="social">
                                 <a href=""><i class="fab fa-twitter"></i></a>
-                                <a href=""><i class="fab fa-faceproduct-f"></i></a>
+                                <a href=""><i class="fab fa-facebook-f"></i></a>
                                 <a href=""><i class="fab fa-linkedin-in"></i></a>
                                 <a href=""><i class="fab fa-instagram"></i></a>
                                 <a href=""><i class="fab fa-youtube"></i></a>

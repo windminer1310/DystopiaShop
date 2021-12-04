@@ -103,7 +103,27 @@ a:focus {
     box-shadow: none;
 }
 
+.instruction-box {
+    position: absolute; 
+    right: 990px; 
+    background-color: #be4b49;
+    border: 0;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgb(139 3 0 / 75%), 0 1px 10px rgb(0 0 0 / 35%); max-width: 250px; padding: 10px;
+    display: none;
+}
 
+.instruction-box p {
+    font-size: 13px; 
+    margin-bottom: 0px; 
+    color: var(--white-color);
+}
+
+#instruction-box__password,
+#instruction-box__email,
+#instruction-box__phone {
+    margin-top: 16px;
+}
 /**********************************/
 
 
@@ -329,6 +349,8 @@ a:focus {
     font-weight: 600;
     margin-bottom: 15px;
 }
+
+
 
 .bottom-bar {
     padding: 15px 0;
@@ -763,7 +785,6 @@ header .img-text:hover {
 
 .product-item:hover .product-title {
     background: var(--primary-color);
-    ;
 }
 
 .product-item .product-title a,
@@ -781,7 +802,6 @@ header .img-text:hover {
 .product-item .product-title .ratting i {
     font-size: 14px;
     color: var(--primary-color);
-    ;
 }
 
 .product-item .product-content .price span {
@@ -807,7 +827,6 @@ header .img-text:hover {
 
 .product-item .product-image a {
     display: block;
-    background: var(--white-color);
     transition: .3s;
 }
 
@@ -817,7 +836,7 @@ header .img-text:hover {
 }
 
 .product-item:hover .product-image img {
-    transform: scale(1.2);
+    transform: scale(1.05);
 }
 
 .product-item .product-image .product-action {
@@ -842,19 +861,8 @@ header .img-text:hover {
 
 .product-item .product-image .product-action a {
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    margin-right: 5px;
-    padding: 7px 0 10px 0;
-    font-size: 16px;
-    text-align: center;
-    color: var(--white-color);
-    background: var(--primary-color);
-    ;
-    border: 1px solid var(--white-color);
-    border-radius: 4px;
-    transition: all .3s;
-    margin-top: 50px;
+    width: 100%;
+    height: 100%;
 }
 
 .product-item:hover .product-image .product-action a {
@@ -866,11 +874,12 @@ header .img-text:hover {
 }
 
 .product-item .product-image .product-action a:hover {
-    color: var(--primary-color);
-    ;
-    background: var(--white-color);
-    border: 1px solid var(--primary-color);
-    ;
+    cursor: pointer;
+    opacity: 0.1;
+}
+
+.product-price {
+    height: 100px;
 }
 
 .product-item .product-price {
@@ -881,16 +890,15 @@ header .img-text:hover {
 
 .product-item:hover .product-price {
     background: var(--primary-color);
-    ;
 }
 
-.product-item .product-price h3 {
+/* .product-item .product-price h3 {
     display: inline-block;
     color: black;
     margin: 0;
     font-size: 15px;
     font-weight: 600;
-}
+} */
 
 .product-item .product-price h2 {
     font-size: 14px;
@@ -901,15 +909,13 @@ header .img-text:hover {
     border: none;
     color: #000000;
     background: var(--primary-color);
-    ;
 }
 
-.product-item:hover .product-price .btn,
+/* .product-item:hover .product-price .btn,
 .product-item .product-price .btn:hover {
     color: var(--primary-color);
-    ;
     background: var(--white-color);
-}
+} */
 
 .product-item .product-price .btn i {
     margin-right: 5px;
@@ -942,6 +948,44 @@ header .img-text:hover {
     font-weight: 600;
     font-size: 14px;
 }
+
+.product-tag__name {
+    line-height: 20px;
+    max-height: 40px;
+    overflow: hidden;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.product-current__price {
+    position: absolute;
+    bottom: 35px;
+    display: inline-block;
+    color: black;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.product-discount__price{
+    position: absolute; 
+    bottom: 10px; 
+    text-decoration: line-through; 
+    color: #888888; 
+    font-size:13px; 
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.product-discount__none{
+    text-decoration: line-through; 
+    color: #888888 !important;
+}
+
+
+
 /**********************************/
 
 
@@ -964,7 +1008,6 @@ header .img-text:hover {
     margin-bottom: 30px;
     padding: 20px 30px 15px 30px;
     color: var(--primary-color);
-    ;
     background: var(--white-color);
 }
 
@@ -1113,9 +1156,7 @@ header .img-text:hover {
 .product-view .product-short .dropdown .dropdown-toggle:hover,
 .product-view .product-price-range .dropdown .dropdown-toggle:hover {
     color: var(--primary-color);
-    ;
     border-color: var(--primary-color);
-    ;
 }
 
 .product-view .product-short .dropdown .dropdown-toggle::after,
@@ -1222,7 +1263,6 @@ header .img-text:hover {
 
 .product-detail .product-content .quantity {
     position: relative;
-    width: 100%;
     display: flex;
 }
 
@@ -1295,7 +1335,7 @@ header .img-text:hover {
     top: -6px;
 }
 
-.product-detail .product-content .quantity div {
+/* .product-detail .product-content .quantity div {
     width: 30px;
     height: 30px;
     padding: 2px 0;
@@ -1303,33 +1343,33 @@ header .img-text:hover {
     text-align: center;
     color: var(--white-color);
     background: var(--primary-color);
-    ;
     border: none;
+} */
+
+
+
+.btn-minus,
+.btn-plus {
+    background: var(--white-color);
+    color: #adadad;
+    border: 1px solid #adadad;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    padding: 2px 0;
+    font-size: 16px;
+    text-align: center;
 }
 
-.product-detail .product-content .quantity div.btn-minus {
-    position: absolute;
-    left: 85px;
-    top: -6px;
+.btn-minus {
     border-radius: 4px 0 0 4px;
-    background: var(--white-color);
-    color: #adadad;
-    border: 1px solid #adadad;
-    cursor: pointer;
 }
 
-.product-detail .product-content .quantity div.btn-plus {
-    position: absolute;
-    left: 155px;
-    top: -6px;
+.btn-plus{
     border-radius: 0 4px 4px 0;
-    background: var(--white-color);
-    color: #adadad;
-    border: 1px solid #adadad;
-    cursor: pointer;
 }
 
-.product-detail .product-content .quantity input {
+.quantity-input{
     width: 40px;
     height: 30px;
     background-color: var(--white-color);
@@ -1338,9 +1378,28 @@ header .img-text:hover {
     color: var(--text-color);
     border-top: 1px solid #adadad;
     border-bottom: 1px solid #adadad;
+}
+
+.product-detail .product-content .quantity div.btn-plus {
+    position: absolute;
+    left: 155px;
+    top: -6px;
+}
+
+.product-detail .product-content .quantity div.btn-minus {
+    position: absolute;
+    left: 85px;
+    top: -6px;
+}
+
+.product-detail .product-content .quantity input.quantity-input {
     position: absolute;
     left: 115px;
     top: -6px;
+}
+
+.cart-page .cart-page-inner .quantity .minus-plus-product {
+    margin-left: 25px;
 }
 
 .product-detail .product-content .action a:first-child {
@@ -1507,6 +1566,8 @@ header .img-text:hover {
     outline: none;
 }
 
+
+
 .auth-form__input:focus {
     border-color: #888;
 }
@@ -1547,12 +1608,11 @@ header .img-text:hover {
 
 .btns.btns--primary {
     color: var(--white-color);
-    ;
     background: var(--primary-color);
 }
 
 .btns.btns--primary:hover {
-    background-color: #80963e;
+    background-color: #049b9b;
 }
 
 .btns--disabled {
@@ -1576,7 +1636,7 @@ header .img-text:hover {
     font-size: 14px;
 }
 
-.auth-form__socials--faceproduct {
+.auth-form__socials--facebook {
     color: var(--white-color);
     background-color: #3A5A98;
     padding-left: 10px;
@@ -1722,7 +1782,6 @@ p.minus-button {
 
 .sidebar-widget.brands ul li a:hover {
     color: var(--primary-color);
-    ;
 }
 
 .sidebar-widget.brands ul li a:hover::before {
@@ -1862,12 +1921,11 @@ p.minus-button {
     text-align: center;
     color: var(--white-color);
     background: var(--primary-color);
-    ;
     border: none;
     border-radius: 4px;
 }
 
-.cart-page .table button.btn-minus {
+.table button.btn-minus {
     border-radius: 4px 0 0 4px;
 }
 
@@ -1879,7 +1937,7 @@ p.minus-button {
     width: auto;
 }
 
-.cart-page .table input {
+/* .cart-page .table input {
     width: 40px;
     height: 30px;
     font-size: 16px;
@@ -1887,7 +1945,7 @@ p.minus-button {
     text-align: center;
     background: #000000;
     border: none;
-}
+} */
 
 .cart-page .coupon {
     position: relative;
@@ -1907,6 +1965,11 @@ p.minus-button {
     border-radius: 4px;
     margin-right: 15px;
     transition: all .3s;
+}
+
+.minus-plus-product {
+    display: flex;
+    text-align: center;
 }
 
 .cart-page .coupon input:focus {
@@ -2014,6 +2077,153 @@ p.minus-button {
     width: 80px;
 }
 
+
+.payment-method {
+    display:flex; 
+    max-width: 90%; 
+    padding: 10px 30px; 
+    justify-content: space-around;
+    cursor: pointer;
+}
+
+.payment-method__box {
+    border: 1px solid var(--border-color); 
+    width: 47%; 
+    border-radius: 4px; 
+    padding: 10px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.checked-hover:hover {
+    background-color: #ececec;
+    cursor: pointer;
+}
+
+
+.payment-method__text {
+    margin-bottom: 0px; 
+    margin-top: 15px; 
+    line-height: 20px;
+}
+
+.active-method {
+    border-color: var(--primary-color);
+
+}
+
+.active-method__payment {
+    background-color: #ececec;
+}
+
+.checked-hover__payment:hover {
+    background-color: var(--white-color);
+    cursor: pointer;
+}
+
+
+.checked-payment-method {
+    position: absolute;
+    top: 4px;
+    right: -1px;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0px 45px 45px 0px;
+    border-color: transparent var(--primary-color) transparent transparent;
+    display: none;
+}
+
+.payment-icon {
+    position: absolute;
+    color: var(--white-color);
+    top: 4px;
+    right: -20px;
+    width: 0px;
+}
+
+.active-method .checked-payment-method{
+    display: block;
+}
+
+.payment-form {
+    background-color: var(--white-color);
+    width: 45%;
+    height: 480px;
+    margin: auto;
+    border: 1px solid rgb(160, 159, 159);
+}
+
+.payment-method-background {
+    background-color: #e8ebef;
+    padding: 100px 100px 300px 100px;
+}
+
+.text-introduce {
+    padding: 40px;
+    text-align: center;
+}
+
+.text-introduce h4{
+    color: #2188c9;
+}
+
+.text-method {
+    padding: 30px;
+    display: flex;
+    margin-bottom: 0px;
+}
+
+.text-method h5 {
+    color: #083175;
+    margin-bottom: 0px;
+    line-height: 100%;
+    margin-top: 19px;
+    margin-left: 20px;
+}
+
+.text-introduce,
+.text-method {
+    border-bottom: 1px solid rgb(253, 200, 200);
+}
+
+.payment__banking {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px 70px 0px 70px;
+}
+
+.button__banking {
+    padding: 8px 30px;
+    border-radius: 6px;
+    background-color: #e7e7e7;
+}
+
+.button__banking:hover {
+    background-color: rgb(218, 216, 216);
+}
+
+.img-payment__method {
+    height: 60px;
+    width: 60px;
+    border: 1px solid #e8ebef;
+}
+
+.img-payment__momo {
+    height: 30px;
+    width: 30px;
+    margin-top: 10px;
+    margin-left: 8px;
+}
+
+.img-payment__paypal {
+    height: 24px;
+    width: 80px;
+    margin-top: 19px;
+    margin-left: 8px;
+}
+
+
 /**********************************/
 
 
@@ -2096,7 +2306,19 @@ p.minus-button {
     display: flex;
 }
 
+.continue-checkout {
+    margin-top: 30px; border-radius: 22px;
+    padding: 10px 30px 10px 30px; font-size: 14px;
+    font-weight: 600; background: linear-gradient(90deg,rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    color: var(--white-color);    
+}
 
+#text-cart__empty {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgb(67, 70, 87);
+    text-align: center;
+}
 /**********************************/
 
 
@@ -2295,7 +2517,7 @@ p.minus-button {
 .brand {
     position: relative;
     margin-bottom: 30px;
-    padding: 30px 0;
+    padding: 15px 0;
     background: var(--white-color);
 }
 
@@ -2667,7 +2889,7 @@ p.minus-button {
 }
 
 @media (max-width: 767.98px) {
-    .auth-form__socials .auth-form__socials--faceproduct,
+    .auth-form__socials .auth-form__socials--facebook,
     .auth-form__socials .auth-form__socials--google {
         text-align: center;
         height: 50px;

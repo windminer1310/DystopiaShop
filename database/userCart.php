@@ -1,50 +1,41 @@
 <?php
     session_start();
-    $servername = "localhost:33066";
-    $username = "root";
-    $password = "";
-    $dbname = "database";
-
+    include('connectDB.php');
 
     if (isset($_POST["amountProduct"])){
         $getQuantity =  $_POST["amountProduct"];
     }
 
-
     $user_id = $_SESSION['id'];
     $product_id = $_SESSION['cart-product'];
 
 
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    // Check connection
-    if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-    }
+    // $sql = "SELECT * FROM cart WHERE user_id = $user_id and product_id = '$product_id'";
+    // $rs = $conn->query($sql);
 
-    $sql = "SELECT * FROM cart WHERE user_id = $user_id and product_id = '$product_id'";
-    $rs = $conn->query($sql);
-    $sql1 = "";
+    $tableName = 'cart';
+    $userColumn = 'user_id';
+    $productIdColumn = 'product_id';
+
+    $userCartInfo = getRowWithTwoValue($tableName, $userColumn, $user_id, $productIdColumn, $product_id);
+
+    $tableProduct = 'product';
+    $productIdInfo = getRowWithValue($tableProduct, $productIdColumn, $product_id);
+
     
-    $sqlB = "SELECT * FROM product WHERE product_id = '$product_id'";
-    $rsB = $conn->query($sqlB);
-    $sqlB1 = "";
-    
-    if ($rsB->num_rows > 0) {
-        $rowB = $rsB->fetch_assoc();
-        $amountB = $rowB['amount'];
+
+
+    if ($productIdInfo) {
+        $amountB = $productIdInfo['amount'];
         if($amountB >= $getQuantity){
-            if($rs->num_rows > 0){
-                $row = $rs->fetch_assoc();
-                $qty = $row['qty'] + $getQuantity;
-                $sql1 = "UPDATE cart SET qty = $qty WHERE user_id = $user_id and product_id = '$product_id'";
+            if($userCartInfo){
+                $qty = $userCartInfo['qty'] + $getQuantity;
+                $updateStatusCart = updateCartInfo($user_id , $product_id, $qty);
+                alertUpdateCartStatus(!$updateStatusCart);
             }
             else{
-                $sql1 = "INSERT INTO cart (user_id, product_id, qty) VALUES($user_id, '$product_id', $getQuantity)";
-            }
-            if ($conn->multi_query($sql1) === TRUE) {
-                echo "Thêm sản phẩm vào giỏ hàng thành công!";
-            }else {
-                echo 'Thêm sản phẩm vào giỏ hàng thất bại!';
+                $statusCart = insertCart($user_id, $product_id, $getQuantity);
+                alertUpdateCartStatus($statusCart);
             }
         }else{
             echo "Số lượng sách không đủ để cung cấp.";
@@ -54,6 +45,62 @@
         echo "Vui lòng liên hệ bộ phận CSKH.";
     }
 
-    $conn->close();
+    function insertCart($user_id, $product_id, $getQuantity){
+        $databaseConnection = getDatabaseConnection();
 
+        // create our sql statment
+        $statement = $databaseConnection->prepare( '
+            INSERT INTO
+            cart (
+                user_id,
+                product_id,
+                qty
+            )
+            VALUES (
+                :user_id,
+                :product_id,
+                :qty
+            )
+        ' );
+
+        // execute sql with actual values
+        $success = $statement->execute( array(
+            'user_id' => trim( $user_id ),
+            'product_id' => trim( $product_id ),
+            'qty' => $getQuantity,
+        ) );
+        return $success;
+    }
+
+    function updateCartInfo( $user_id , $product_id, $quantity) {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+		// create our sql statment adding in password only if change password was checked
+		$statement = $databaseConnection->prepare( '
+			UPDATE
+				cart
+			SET
+                qty = :qty
+			WHERE
+                user_id = :user_id and 
+                product_id = :product_id
+		' );
+
+		$params = array( //params 
+			'user_id' => trim( $user_id ),
+			'product_id' => trim( $product_id ),
+            'qty' => $quantity
+		);
+		// run the sql statement
+		$statement->execute( $params );
+	}
+
+    function alertUpdateCartStatus($statusCart){
+        if ($statusCart) {
+            echo "Cập nhật giỏ hàng thành công!";
+        }else {
+            echo 'Cập nhật giỏ hàng thất bại!';
+        }
+    }
 ?>

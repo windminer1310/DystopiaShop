@@ -1,56 +1,20 @@
 <?php 
     session_start();
-	$dbhost = 'localhost:33066';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
-    if(isset($_SESSION['name']) && isset($_SESSION['id'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
+    require_once('display-function.php');
+    require_once('database/connectDB.php');
+    require_once('session.php');
+    require_once('shop_info/shop-info.php');
+
+    if(hasUserInfoSession($_SESSION['name'], $_SESSION['id'])){
+        $name = displayUserName($_SESSION['name']);
         $user_id = $_SESSION['id'];
-        $countName = count($eachPartName);
-        if($countName == 1){
-            $name = $eachPartName[$countName-1];
-        }
-        else{
-            $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
-        }
     }
     else{
-        header('Location: index.php');
+        headToIndexPage();
     }
 
     $totalPrice = 0;
 
-    function moneyPoint($money){
-        $caseString = "";
-
-        $thousandPoint = 3;
-        $milionPoint = 6;
-        $bilionPoint = 9;
-        $thousandBilionPoint = 12;
-        $milionBilionPoint = 15;
-
-        $money_str = (string)$money;
-        $money_str = strrev($money_str);
-
-        $moneyLength = strlen($money_str);
-        for($i = 0; $i < $moneyLength; $i++){
-            if($i == $thousandPoint or $i == $milionPoint or $i == $bilionPoint or $i == $thousandBilionPoint or $i == $milionBilionPoint){
-                $caseString .= ("." . $money_str[$i] ) ;
-            }
-            else{
-                $caseString .= $money_str[$i];
-            }
-        }
-        $money_point = strrev($caseString);
-        return $money_point ;
-    }
 ?>
 
 <!DOCTYPE html>
@@ -89,13 +53,13 @@
 
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
-                            <a href="login.php" class="nav-item nav-link ">Trang chủ</a>
+                            <a href="user-login.php" class="nav-item nav-link ">Trang chủ</a>
                             <a href="product-list.php" class="nav-item nav-link">Sản phẩm</a>
                             <a href="custom-pc.html" class="nav-item nav-link">Xây dựng cấu hình</a>
                         </div>
                         <div class="navbar-nav ml-auto">
                             <div class="header__navbar-item header__navbar-user">
-                                <img class = "avatar-img" src="img/avatar.jpg"/>
+                                <img class = "avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
                                 <span class="header__navbar-user-name"><?php echo $name; ?></span>
                         
                                 <ul class="header__navbar-user-menu">
@@ -120,7 +84,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-3">
                         <div class="logo">
-                            <a href="login.php">
+                            <a href="user-login.php">
                                 <img src="img/logo.png" alt="Logo">
                             </a>
                         </div>
@@ -140,7 +104,7 @@
         <div class="breadcrumb-wrap">
             <div class="container-fluid">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="login.php">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="user-login.php">Trang chủ</a></li>
                     <li class="breadcrumb-item"><a href="product-list.php">Sản phẩm</a></li>
                     <li class="breadcrumb-item active">Giỏ hàng</li>
                 </ul>
@@ -153,14 +117,12 @@
             <?php
                 echo "<div class='container-fluid'>";
                     echo "<div class='row'>";
-                        $sqlCart = "SELECT * FROM `cart` WHERE user_id = $user_id";
-                        $rs = $conn->query($sqlCart);
-                        if (!$rs) {
-                            die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                            exit();
-                        }
-                        $count = $rs->num_rows;
-                        if($count > 0){
+                        $tableCart = 'cart';
+                        $column = 'user_id';
+                        $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
+                    
+                        $count = $getCartRow->rowCount();
+                        if(cartIsEmpty($count)){
                             echo "<div class='col-lg-8'>";
                                 echo "<div class='cart-page-inner'>";
                                         echo "<div class='table-responsive'>";
@@ -175,18 +137,16 @@
                                                     echo "</tr>";
                                                 echo "</thead>";
                                                 echo "<tbody class='align-middle'>";
-                                                    while ($row = $rs->fetch_array(MYSQLI_ASSOC)) {
+                                                    foreach ($row = $getCartRow->fetchAll() as $value => $row) {
                                                         echo "<tr>";
                                                         echo "<td>";
                                                         echo "<div class='img'>";
+
                                                         $id_product = $row['product_id'];
-                                                        $qslProduct = "SELECT * FROM `product` WHERE product_id = '$id_product'";
-                                                        $rs1 = $conn->query($qslProduct);
-                                                        if (!$rs1) {
-                                                            die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                            exit();
-                                                        }
-                                                        $productInfo = $rs1->fetch_array(MYSQLI_ASSOC);
+                                                        $tableName = 'product';
+                                                        $column = 'product_id';
+
+                                                        $productInfo = getRowWithValue( $tableName, $column, $id_product);
                                                         echo "<a href='product-detail.php?id=".$productInfo['product_id']."'><img src='" . $productInfo['image_link'] . "' alt='Image'></a>";
                                                         echo "<p>" . $productInfo['product_name'] . "</p>";
                                                         echo "</div>";
@@ -197,8 +157,16 @@
                                                         }else{
                                                             $price = ($productInfo['price'] - ($productInfo['price'] * $productInfo['discount'] * 0.01));
                                                         }
-                                                        echo "<td>" .number_format($row['price'], 0, ',', '.')."đ". "</td>";
-                                                        echo "<td>" . $row['qty'] ."</td>";
+                                                        echo "<td>" .number_format($price, 0, ',', '.')."đ". "</td>";
+                                                        echo "<td>";
+                                                        echo "<div class='quantity'>";
+                                                        echo "<form  class='minus-plus-product'>";
+                                                            echo "<div onclick = 'minus_qty();' class = 'btn-minus' ><i class='fa fa-minus'></i></div>";
+                                                            echo "<input class = 'quantity-product quantity quantity-input'type='text' value='". $row['qty'] ."' name='amountProduct' id ='amountProduct' onclick='addToCart();'>";
+                                                            echo "<div onclick = 'plus_qty();' class = 'btn-plus'><i class='fas fa-plus'></i></div>";
+                                                        echo "</form>";
+                                                        echo "</div>";
+                                                        "</td>";
                                                         $sumPrice = $price * $row['qty'];
                                                         $totalPrice += $sumPrice;
                                                         echo "<td>" . number_format($sumPrice, 0, ',', '.') . "đ</td>";
@@ -246,17 +214,9 @@
                                                             margin-top: 40px; margin-bottom: 60px;'>";
                                             echo "<img src='img/emptycart.svg' alt=''>";
                                         echo "</div>";
-                                        echo "<p style = 'font-size: 13px;
-                                        font-weight: 600;
-                                        color: rgb(67, 70, 87);
-                                        text-align: center;'>Chưa có sản phẩm trong giỏ hàng của bạn!</p>";
+                                        echo "<p id='text-cart__empty'>Chưa có sản phẩm trong giỏ hàng của bạn!</p>";
                                         echo "<div style = 'text-align: center;'>";
-                                        echo " <a style = 'margin-top: 30px; border-radius: 22px;
-                                                            padding: 10px 30px 10px 30px; font-size: 14px;
-                                                            font-weight: 600; background: linear-gradient(90deg
-                                                            , rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
-                                                            color: var(--white-color);    ' 
-                                                            class='btn' href='product-list.php'></i>TIẾP TỤC MUA SẮM</a>";
+                                        echo " <a class='btn continue-checkout' href='product-list.php'></i>TIẾP TỤC MUA SẮM</a>";
                                         echo "</div>";
                                     echo "</div>";
                                 echo "</div>";
@@ -276,9 +236,9 @@
                         <div class="footer-widget">
                             <h2>Liên lạc</h2>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
-                                <p><i class="fa fa-envelope"></i>dystopia@gmail.com</p>
-                                <p><i class="fa fa-phone"></i>0969 966 696</p>
+                                <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
+                                <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
+                                <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
                             </div>
                         </div>
                     </div>
@@ -289,7 +249,7 @@
                             <div class="contact-info">
                                 <div class="social">
                                     <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-faceproduct-f"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
                                     <a href=""><i class="fab fa-linkedin-in"></i></a>
                                     <a href=""><i class="fab fa-instagram"></i></a>
                                     <a href=""><i class="fab fa-youtube"></i></a>
@@ -344,5 +304,21 @@
         
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+        <script src="js/addCart.js"></script>
+        <script>
+            function minus_qty(){
+                if(document.getElementById("amountProduct").value > 1){
+                    document.getElementById("amountProduct").value -= 1;
+                    console.log(document.getElementById("amountProduct").value);
+                    // minusToCartOneByOne();
+                }
+                
+            }
+            function plus_qty(){
+                document.getElementById("amountProduct").value = Number(document.getElementById("amountProduct").value) + 1;
+                console.log(document.getElementById("amountProduct").value);
+                // addToCartOneByOne();
+            }
+        </script>
     </body>
 </html>

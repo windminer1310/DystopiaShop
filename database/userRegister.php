@@ -1,50 +1,65 @@
 
 <?php
-
-$servername = "localhost:33066";
-$username = "root";
-$password = "";
-$dbname = "database";
+    include('connectDB.php');
 
 
-if (isset($_POST["name"])){
-    $getName =  $_POST["name"];
-}
+    if (isset($_POST["name"])){
+        $getName =  $_POST["name"];
+    }
 
-if (isset($_POST["email"])){
-    $getEmail =  $_POST["email"];
-}
+    if (isset($_POST["email"])){
+        $getEmail =  $_POST["email"];
+    }
 
-if (isset($_POST["phone"])){
-    $getPhone =  $_POST["phone"];
-}
+    if (isset($_POST["phone"])){
+        $getPhone =  $_POST["phone"];
+    }
 
-if (isset($_POST["password"])){
-    $getPassword =  $_POST["password"];
-}
+    if (isset($_POST["password"])){
+        $getPassword =  $_POST["password"];
+    }
 
-$md5Password = md5($getPassword);
+    $options = [
+        'cost' => 10,
+    ];
+    $hash = password_hash($getPassword, PASSWORD_BCRYPT, $options);
 
+    $databaseConnection = getDatabaseConnection();
 
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-// Check connection
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
+    // create our sql statment
+    $statement = $databaseConnection->prepare( '
+        INSERT INTO
+        user (
+            user_name,
+            user_email,
+            user_phone,
+            user_password,
+            fb_user_id
+        )
+        VALUES (
+            :user_name,
+            :user_email,
+            :user_phone,
+            :user_password,
+            :fb_user_id
+        )
+    ' );
 
-mysqli_set_charset($conn,"utf8");
+    // execute sql with actual values
+    $success = $statement->execute( array(
+        'user_email' => trim( $getEmail ),
+        'user_name' => trim( $getName ),
+        'user_phone' => $getPhone,
+        'user_password' => $hash,
+        'fb_user_id' => '',
+    ) );
 
-
-$sql = "INSERT INTO user (user_name, user_email, user_phone, user_password) 
-    VALUES('$getName', '$getEmail', '$getPhone', '$md5Password')";
-
-
-if ($conn->multi_query($sql) === TRUE) {
-    echo '<div class="succes-auth__form">Đăng ký thành công!</div>';
-} else {
-    echo '<div class="fail-auth__form">Số điện thoại đã được sử dụng!</div>';
-}
-
-$conn->close();    
+    if ($success) {
+        echo '<div class="succes-auth__form">Đăng ký thành công!</div>';
+    } else {
+        echo '<div class="fail-auth__form">Số điện thoại đã được sử dụng!</div>';
+    } 
  
 ?>
+
+

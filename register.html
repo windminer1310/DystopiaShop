@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Dystopia</title>
+    <title>BShop</title>
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
@@ -41,22 +41,34 @@
             <div class="auth-form__container">
                 <div class="auth-form__header">
                     <h3 class="auth-form__heading">Đăng ký</h3>
-                    <a href="login.html" class="auth-form__switch-btn">Đăng nhập</a>
+                    <a href="login.php" class="auth-form__switch-btn">Đăng nhập</a>
                 </div>
                 <div id="auth-form__notify-text"></div>
                 <form id="register-form">
                     <div class="auth-form__form">
-                        <div class="auth-form__group">
-                            <input id="name" name="name" type="text" onkeyup="checkUserName()" class="auth-form__input form_data" placeholder="Họ và tên">
+                        <div class="auth-form__group" style="display: flex;">
+                            <div class = "instruction-box" id = "instruction-box__name">
+                                <p>Nhập đầy đủ họ tên của bạn, không được chứa kí tự đặc biệt</p>
+                            </div>
+                            <input id="name" name="name" type="text" onfocus="clearWarningInput('name')" onfocusout="checkUserName()" class="auth-form__input form_data" placeholder="Họ và tên" required>
+                        </div>
+                        <div class="auth-form__group" style="display: flex;">
+                            <div class = "instruction-box" id = "instruction-box__email">
+                                <p>VD: viethoang@gmail.com</p>
+                            </div>
+                            <input id="email" name="email" type="text" onfocus="clearWarningInput('email')" onfocusout="checkUserEmail()" class="auth-form__input form_data" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" placeholder="Email của bạn" required>
+                        </div>
+                        <div class="auth-form__group" style="display: flex;">
+                            <div class = "instruction-box" id = "instruction-box__phone">
+                                <p>SĐT có độ dài từ 10 đến 12 kí tự</p>
+                            </div>
+                            <input id="phone" name="phone" type="text" onfocus="clearWarningInput('phone')" onfocusout="checkUserPhone()" class="auth-form__input form_data" placeholder="Số điện thoại" required>
                         </div>
                         <div class="auth-form__group">
-                            <input id="email" name="email" type="text" onkeyup="checkUserEmail()" class="auth-form__input form_data" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" placeholder="Email của bạn">
-                        </div>
-                        <div class="auth-form__group">
-                            <input id="phone" name="phone" type="text" onkeyup="checkUserPhone()" class="auth-form__input form_data" placeholder="Số điện thoại">
-                        </div>
-                        <div class="auth-form__group">
-                            <input id="password" name="password" type="password" onkeyup="checkUserPassword()" class="auth-form__input form_data" placeholder="Mật khẩu của bạn">
+                            <div class = "instruction-box" id = "instruction-box__password">
+                                <p>Mật khẩu phải có độ dài hơn 5 kí tự</p>
+                            </div>
+                            <input id="password" name="password" type="password" onfocus="clearWarningInput('password')" onfocusout="checkUserPassword()" class="auth-form__input form_data" placeholder="Mật khẩu của bạn" required>
                         </div>
                     </div>
                     <div class="auth-form__aside">
@@ -75,18 +87,7 @@
                 </form>
             </div>
 
-            <div class="auth-form__socials ">
-                <a href=" " class="auth-form__socials--faceproduct btns--size-s btn--with-icon ">
-                    <i class="auth-form__socials-icon fab fa-faceproduct-square "></i>
-                    <span class="auth-form__socials-text ">Kết nối với Faceproduct</span>
-
-                </a>
-                <a href=" " class="auth-form__socials--google btns--size-s btn--with-icon ">
-                    <i class="auth-form__socials-icon fab fa-google "></i>
-                    <span class="auth-form__socials-text ">Kết nối với Google</span>
-                </a>
-
-            </div>
+        
 
         </div>
     </div>
@@ -151,8 +152,8 @@
                         <h2>Liên lạc</h2>
                         <div class="contact-info ">
                             <p><i class="fa fa-map-marker "></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
-                            <p><i class="fa fa-envelope "></i>dystopia@gmail.com</p>
-                            <p><i class="fa fa-phone "></i>0969 966 696</p>
+                            <p><i class="fa fa-envelope "></i>email@example.com</p>
+                            <p><i class="fa fa-phone "></i>+123-456-7890</p>
                         </div>
                     </div>
                 </div>
@@ -163,7 +164,7 @@
                         <div class="contact-info ">
                             <div class="social ">
                                 <a href=" "><i class="fab fa-twitter "></i></a>
-                                <a href=" "><i class="fab fa-faceproduct-f "></i></a>
+                                <a href=" "><i class="fab fa-facebook-f "></i></a>
                                 <a href=" "><i class="fab fa-linkedin-in "></i></a>
                                 <a href=" "><i class="fab fa-instagram "></i></a>
                                 <a href=" "><i class="fab fa-youtube "></i></a>
@@ -200,6 +201,14 @@
                     <div class="payment-method ">
                         <h2>Chấp nhận thanh toán</h2>
                         <img src="img/payment-method.png " alt="Payment Method " />
+                    </div>
+                </div>
+                <div class="col-md-6 ">
+                    <div class="payment-security ">
+                        <h2>Được đảm bảo bởi</h2>
+                        <img src="img/godaddy.svg " alt="Payment Security " />
+                        <img src="img/norton.svg " alt="Payment Security " />
+                        <img src="img/ssl.svg " alt="Payment Security " />
                     </div>
                 </div>
             </div>
