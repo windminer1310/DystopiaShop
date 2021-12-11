@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Dystopia</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+
+    <!-- CSS Libraries -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="lib/slick/slick.css" rel="stylesheet">
+    <link href="lib/slick/slick-theme.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Nav Bar Start -->
+    <div class="nav">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+            <a href="#" class="navbar-brand">MENU</a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav mr-auto">
+                        <a href="index.php" class="nav-item nav-link">Trang chủ</a>
+                        <a href="view-product-list.php?page_num=1" class="nav-item nav-link">Sản phẩm</a>
+                        <a href="" class="nav-item nav-link">Xây dựng cấu hình</a>
+                    </div>
+                    <div class="navbar-nav ml-auto">
+                        <a href="register.html" class="nav-item nav-link ">Đăng ký</a>
+                        <a href="login.php" class="nav-item nav-link ">Đăng nhập</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Nav Bar End -->
+    
+
+    <!-- Bottom Bar Start -->
+    <div class="bottom-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <div class="logo">
+                        <a href="index.php">
+                            <img src="img/logo.png" alt="Logo">
+                        </a>
+                    </div>
+                </div>
+                <form method="get" action="view-product-list.php?" class="col-md-6">
+                    <div class="search">
+                        <input type="text" placeholder="Tìm kiếm" name="search">
+                        <button><i class="fa fa-search" type="submit"></i></button>
+                    </div>
+                </form>
+                <div class="col-md-3">
+                    <div class="user">
+                        <a href="" onclick="mustInput();" class="btn cart">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span>Giỏ hàng</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom Bar End -->
+
+    <!--Build Table Start-->
+    <div class='cart-page-inner'>
+        <div class='table-responsive'>
+            <table class='table table-bordered'>
+                <tr>
+                    <th class="col-md-3">
+                        1.Vi xử lý
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=vi+xử+lý" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        2. Bo mạch chủ
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=bo+mạch+chủ" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        3. Ram
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=ram" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        4. HDD
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=hdd" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        5. SSD   
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=ssd" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        6. VGA   
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=vga" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        7. Nguồn   
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=nguồn" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        8. Vỏ case
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=vỏ+case" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        9. Màn hình   
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=màn+hình" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        10. Chuột   
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=chuột" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        11. Bàn phím  
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=bàn+phím" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        12. Tai nghe   
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=tai+nghe" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        13. Loa
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=loa" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        14. Tản nhiệt
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=tản+nhiệt" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-md-3">
+                        15. Quạt
+                    </th>
+                    <td class="col-md-7">
+                        <a href="view-product-list.php?type=build&search=quạt" class="btn cart">                    
+                            <i class="fas fa-plus" type="submit"></i>
+                            <span>Thêm</span>
+                        </a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa</span></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!--Build Table End-->
+
+    <!-- Send To Cart Start -->
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <a href="" class="btn cart"><i class='fa fa-trash'></i><span> Xóa toàn bộ</span></a>
+            </div>
+            <div class="col">
+                <a href="" class="btn cart"><i class='fa fa-shopping-cart'></i><span> Thêm vào giỏ hàng</span></a>
+            </div>
+            <div class="col-7">
+                <h3 class="cart-btn">Tạm tính <span class = 'total-checkout-price'>0000đ</span></h3>
+            </div>
+        </div>
+        <br>
+    </div>
+    <!-- Send To Cart End -->
+
+    <!-- Footer Start -->
+    <div class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h2>Liên lạc</h2>
+                        <div class="contact-info">
+                            <p><i class="fa fa-map-marker"></i>Số 2 đường Võ Oanh phường 25 quận Bình Thạnh</p>
+                            <p><i class="fa fa-envelope"></i>bshop@gmail.com</p>
+                            <p><i class="fa fa-phone"></i>0969 966 696</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h2>Theo dõi chúng tôi</h2>
+                        <div class="contact-info">
+                            <div class="social">
+                                <a href=""><i class="fab fa-twitter"></i></a>
+                                <a href=""><i class="fab fa-facebook-f"></i></a>
+                                <a href=""><i class="fab fa-linkedin-in"></i></a>
+                                <a href=""><i class="fab fa-instagram"></i></a>
+                                <a href=""><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h2>Thông tin về cửa hàng</h2>
+                        <ul>
+                            <li><a href="#">Về chúng tôi</a></li>
+                            <li><a href="#">Chính sách bảo mật</a></li>
+                            <li><a href="#">Điều khoản và điều kiện</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h2>Thông tin mua hàng</h2>
+                        <ul>
+                            <li><a href="#">Chính sách thanh toán</a></li>
+                            <li><a href="#">Chính sách giao hàng</a></li>
+                            <li><a href="#">Chính sách hoàn trả</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row payment align-items-center">
+                <div class="col-md-6">
+                    <div class="payment-method">
+                        <h2>Chấp nhận thanh toán</h2>
+                        <img src="img/payment-method.png" alt="Payment Method" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/slick/slick.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script>
+        function mustInput(){
+            alert('Vui lòng đăng nhập!');
+        }
+    </script>
+    
+</body>

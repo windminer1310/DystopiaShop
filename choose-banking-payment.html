@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>BShop</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+
+    <!-- CSS Libraries -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="lib/slick/slick.css" rel="stylesheet">
+    <link href="lib/slick/slick-theme.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class ="payment-method-background">
+        <div class = "payment-form">
+            <div class="text-introduce">
+                <h4>Chọn Phương thức thanh toán</h4>
+            </div>
+            <form action="">
+                <label  for="momo" class="text-method checked-hover__payment" id="momo-method" onclick="activeChooseMethod('momo-method')">
+                    <input hidden type="radio" name = "payment_type" value="momo" id="momo">
+                    <img class = "img-payment__method" src="https://sundaysea.com/wp-content/uploads/2019/07/logo-momo.png" alt="">
+                    <h5>Thanh toán quét mã</h5>
+                    <img class = "img-payment__momo" src="https://play-lh.googleusercontent.com/dQbjuW6Jrwzavx7UCwvGzA_sleZe3-Km1KISpMLGVf1Be5N6hN6-tdKxE5RDQvOiGRg" alt="">
+                </label>
+                <label for="paypal" class="text-method checked-hover__payment" id="paypal-method" onclick="activeChooseMethod('paypal-method');">
+                    <input hidden type="radio" name = "payment_type" value="paypal" id="paypal">
+                    <img class = "img-payment__method" src="https://play-lh.googleusercontent.com/Y2_nyEd0zJftXnlhQrWoweEvAy4RzbpDah_65JGQDKo9zCcBxHVpajYgXWFZcXdKS_o" alt="">
+                    <h5>Thanh toán qua</h5>
+                    <img class = "img-payment__paypal" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQFn7dz9szG2Q5_em4veVYcMMn_DOJos9nZg&usqp=CAU" alt="">
+                </label>
+            </form>
+            <div class="payment__banking">
+                <button class = "button__banking">QUAY LẠI</button>
+                <button type="submit" class = "button__banking">THANH TOÁN</button>
+            </div>
+        </div>
+    </div>
+    
+
+    <script src="js/paymentMethod.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Dystopia</title>
+
+    <!-- Favicon -->
+    <link href="../img/favicon.ico" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+
+    <!-- CSS Libraries -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="../lib/slick/slick.css" rel="stylesheet">
+    <link href="../lib/slick/slick-theme.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="header-auth-form">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-2">
+                    <div class="logo">
+                        <a href="">
+                            <img src="../img/logo.png" alt="Logo">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div>
+                        <h3>ADMIN</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="body-auth-form">
+        <div class="auth-form">
+            <div class="auth-form__container">
+                <div class="auth-form__header">
+                    <h3 class="auth-form__heading">Đăng nhập</h3>
+                </div>
+                <div id="auth-form__notify-text"></div>
+                <form id="login-form">
+                    <div class="auth-form__form">
+                        <div class="auth-form__group">
+                            <input id="phone" name="phone" type="text" class="auth-form__input form_data" placeholder="Số điện thoại">
+                        </div>
+                        <div class="auth-form__group">
+                            <input id="password" name="password" type="password" onkeyup="success()" class="auth-form__input form_data" placeholder="Mật khẩu của bạn">
+                        </div>
+                    </div>
+
+                    <div class="auth-form__controls">
+                        <input type="button" class="btns auth-form__controls-back btns--normal" onclick="location.href='../index.php'" value="TRỞ LẠI">
+                        <input class="btns btns--disabled btns--primary " type="submit" name="submit" id="submit" onclick="login(); return false" value="ĐĂNG NHẬP" disabled>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- Template Javascript -->
+    <script src="../js/adminLogin.js"></script>
+
+</body>
+
+</html>
