@@ -609,8 +609,9 @@ body {
     margin: 10px 0;
     border-radius: 8px;
     overflow: hidden;
-    height: 320px;
+    min-height: 320px;
     outline: none;
+    padding-bottom: 12px;
 }
 
 .product-item:hover {
@@ -666,6 +667,24 @@ body {
     line-height: 28px;
     font-weight: 600;
     color: var(--primary-color);
+}
+
+
+/**********************************/
+
+
+/******* SALE PRODUCT CSS ********/
+
+
+/**********************************/
+
+.sale-product {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sale-product__list-item {
+    padding: 10px 20px;
 }
 
 

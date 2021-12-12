@@ -161,5 +161,27 @@
 		$result = $statement->fetch();
 		return $result;
 	}
+
+	// Lấy sản phẩm đang giảm giá
+	function getDiscountProducts() {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+		// create our sql statment
+		$statement = $databaseConnection->prepare('
+			SELECT
+				*
+			FROM
+				product
+			WHERE
+				discount > 0
+		');
+
+		// execute sql with actual values
+		$statement->setFetchMode( PDO::FETCH_ASSOC );
+
+		$statement->execute();
+		return $statement;
+	}
     
     

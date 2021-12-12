@@ -210,10 +210,10 @@
             <div class="col l-2">
                 <div class="left-img">
                     <div class="img-item">
-                        <img src="img/msi-rtx-3090.png"/>
+                        <img src="./img/msi-rtx-3090.png" alt="Hình ảnh"/>
                     </div>
                     <div class="img-item">
-                        <img src="img/msi-meg-z590-godlike.jpg"/>
+                        <img src="./img/msi-meg-z590-godlike.jpg" alt="Hình ảnh"/>
                     </div>
                 </div>
             </div>
@@ -251,7 +251,7 @@
                     $numberOfValues = 10;
                     
                     foreach(getRowWithNFeaturedProducts($tableName, $column, $numberOfValues)->fetchAll() as $value => $row) {
-                    	echo "<div class='col l-2-10'>";
+                    	echo "<div class='col l-10-2'>";
                             echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
                                 echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
                                 echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
@@ -275,6 +275,37 @@
     </div>
     <!-- Featured Product End -->
     
+    <!-- Sản phẩm đang giảm giá -->
+    <div class="product sale-product">
+        <div class="grid wide">
+            <div class="section-header">
+                <div class="section-header-title">
+                    Đang khuyến mãi
+                </div>
+                <div class="sale-product__list-item">
+                    <div class="row">
+                    <?php
+                        
+                        foreach(getDiscountProducts()->fetchAll() as $value => $row) {
+                            echo "<div class='col l-10-2'>";
+                                echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
+                                    echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
+                                    echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
+                                    echo "<div class='product-item__price'>";  
+                                        $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
+                                        echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
+                                        echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                    echo "</div>";
+                                echo "</a>";
+                            echo "</div>";
+                        }
+                    ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MAP & FEATURE -->
     <!-- Cần fix giao diện :( -->
     <div class="map-and-feature">
@@ -283,7 +314,7 @@
                 <div class="col l-9">
                     <!-- Google Map Start -->
                     <div class="contact-map-wrap">
-                        <iframe class="contact-map" src="<?php echo ADDRESS_GOOGLE_URL ?>"></iframe>
+                        <iframe title="google-map" class="contact-map" src="<?php echo ADDRESS_GOOGLE_URL ?>"></iframe>
                     </div>
                     <!-- Google Map End -->
                 </div>
@@ -310,8 +341,6 @@
             </div>
         </div>
     </div>
-
-    
 
     <!-- Footer Start -->
     <footer class="footer">
@@ -347,7 +376,7 @@
                             </a>
                         </li>
                         <li class="footer-item">
-                            <a href="mailto:<?php echo SHOP_PHONE ?>" class="footer-item__link">
+                            <a href="mailto:<?php echo SHOP_EMAIL ?>" class="footer-item__link">
                                 <i class="footer-item__icon fas fa-envelope"></i><?php echo SHOP_EMAIL ?>
                         </a>
                         </li>
@@ -454,7 +483,7 @@
     <script>
         document.addEventListener("DOMContentLoaded",function() {
             // Bắt sự kiện cuộn chuột
-            var trangthai="duoi120";
+            var trangthai="under120";
             var cartList = document.querySelectorAll('div.header__cart-list');
             cartList = cartList[0];
             var menu = document.querySelectorAll('header.header');
@@ -462,18 +491,18 @@
             window.addEventListener("scroll",function(){
                 var x = pageYOffset;
                 if(x > 120){
-                    if(trangthai == "duoi120")
+                    if(trangthai == "under120")
                     {
-                        trangthai="tren120";
+                        trangthai="over120";
                         menu.classList.add('header-shrink');
                         cartList.classList.add('header__cart-fix-shrink');
                     }
                 }
                 else if(x <= 120){
-                    if(trangthai=="tren120"){
+                    if(trangthai=="over120"){
                     menu.classList.remove('header-shrink');
                     cartList.classList.remove('header__cart-fix-shrink');
-                    trangthai="duoi120";}
+                    trangthai="under120";}
                 }
             
             })
