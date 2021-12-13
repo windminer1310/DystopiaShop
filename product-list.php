@@ -296,7 +296,7 @@
                                     <?php
                                         $totalProduct = mysqli_num_rows($rs);
                                         $totalPage = $totalProduct/$numProductInAPage;
-                                        displayListPageButton($totalPage, $sort, $search, $price_from, $page_number)
+                                        displayListPageButton($totalPage, $sort, $search, $price_from, $page_number);
                                     ?>
                                 </ul>
                             </nav>

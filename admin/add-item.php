@@ -22,7 +22,7 @@
     }
 
     function add2DB($sql) {
-        $dbhost = 'localhost:33066';
+        $dbhost = 'localhost ';
         $dbuser = 'root';
         $dbpass = '';
         $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
@@ -184,7 +184,7 @@
                                     <input class="form-control" type="text" placeholder="Mã" name="category_id" list="category_list">
                                     <datalist id="category_list">
                                         <?php 
-                                            $dbhost = 'localhost:33066';
+                                            $dbhost = 'localhost ';
                                             $dbuser = 'root';
                                             $dbpass = '';
                                             $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
@@ -211,7 +211,7 @@
                                     <input class="form-control" type="text" placeholder="Mã" name="brand_id" list="brand_list">
                                     <datalist id="brand_list">
                                         <?php 
-                                            $dbhost = 'localhost:33066';
+                                            $dbhost = 'localhost ';
                                             $dbuser = 'root';
                                             $dbpass = '';
                                             $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");

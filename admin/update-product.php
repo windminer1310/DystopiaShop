@@ -1,7 +1,7 @@
 <?php
     session_start();
 	$id = $_GET['id'];
-	$dbhost = 'localhost:33066';
+	$dbhost = 'localhost ';
     $dbuser = 'root';
     $dbpass = '';
     $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
@@ -135,7 +135,7 @@
                                 <input class="form-control" type="text" value="<?php echo $info['category_id'] ?>" name="category_id" list="category_list">
                                 <datalist id="category_list">
                                     <?php 
-                                        $dbhost = 'localhost:33066';
+                                        $dbhost = 'localhost ';
                                         $dbuser = 'root';
                                         $dbpass = '';
                                         $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
@@ -163,7 +163,7 @@
                                 <input class="form-control" type="text" value="<?php echo $info['brand_id'] ?>" name="brand_id" list="brand_list">
                                 <datalist id="brand_list">
                                     <?php 
-                                        $dbhost = 'localhost:33066';
+                                        $dbhost = 'localhost ';
                                         $dbuser = 'root';
                                         $dbpass = '';
                                         $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");

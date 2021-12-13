@@ -140,6 +140,27 @@
         }
     }
 
+    function displayListPageButtonHome($totalPage,$page_number){
+        if($totalPage > floor($totalPage)){
+            for($count = 1; $count <= floor($totalPage)+1; $count++){
+                if($count == $page_number) 
+                    echo "<li class='page-item active'><a class='page-link' href='./index.php'>" . $count . "</a></li>";
+                else 
+                    echo "<li class='page-item' onlick='<?php ". $_GET['page_num_home'] = $page_number ." ?>' ><a class='page-link' href='./index.php'>" . $count . "</a></li>";
+            }
+        }
+        else {
+            for($count = 1; $count < floor($totalPage)+1; $count++){
+                if($count == $page_number) 
+                    echo "<li class='page-item active'><a class='page-link' href='./index.php'>" . $count . "</a></li>";
+                else 
+                    echo "<li class='page-item' onlick='<?php ". $_GET['page_num_home'] = $page_number ." ?>' ><a class='page-link' href='./index.php'>" . $count . "</a></li>";
+            }
+        }
+    }
+
+     
+
     function displayUserName($nameSession){
         $eachPartName = preg_split("/\ /",$nameSession);
         $countName = count($eachPartName);

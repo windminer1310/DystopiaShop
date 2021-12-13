@@ -515,8 +515,6 @@ a:focus {
 }
 
 .header .navbar i {
-    color: var(--primary-color);
-    ;
     width: 20px;
     text-align: center;
     margin-right: 8px;
@@ -1039,7 +1037,6 @@ header .img-text:hover {
 .product .slick-next:hover,
 .product .slick-next:focus {
     background: var(--primary-color);
-    ;
 }
 
 .product .slick-prev::before,

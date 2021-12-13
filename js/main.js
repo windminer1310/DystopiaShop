@@ -1,41 +1,39 @@
-function mustInput(){
+function mustInput() {
     alert('Vui lòng đăng nhập!');
 }
 
-(function ($) {
+(function($) {
     // Back to top button
-    $(window).scroll(function () {
+    $(window).scroll(function() {
         if ($(this).scrollTop() > 100) {
             $('.back-to-top').fadeIn('slow');
         } else {
             $('.back-to-top').fadeOut('slow');
         }
     });
-    $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
+    $('.back-to-top').click(function() {
+        $('html, body').animate({ scrollTop: 0 }, 1500, 'easeInOutExpo');
         return false;
     });
-    
-    
+
+
     // Header slider
-    $('.header-slider').slick({
+    $('.main-slider').slick({
         autoplay: true,
         dots: true,
         infinite: true,
         slidesToShow: 1,
         slidesToScroll: 1
     });
-    
-    
-    // Product Slider 4 Column
-    $('.product-slider-4').slick({
+
+    // Product Slider 5 Column
+    $('.product-slider-5').slick({
         autoplay: true,
         infinite: true,
         dots: false,
-        slidesToShow: 4,
+        slidesToShow: 5,
         slidesToScroll: 1,
-        responsive: [
-            {
+        responsive: [{
                 breakpoint: 1200,
                 settings: {
                     slidesToShow: 4,
@@ -61,16 +59,20 @@ function mustInput(){
             },
         ]
     });
-    
-    
-    // Product Slider 3 Column
-    $('.product-slider-3').slick({
+
+    // Product Slider 4 Column
+    $('.product-slider-4').slick({
         autoplay: true,
         infinite: true,
         dots: false,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 1,
-        responsive: [
+        responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 4,
+                }
+            },
             {
                 breakpoint: 992,
                 settings: {
@@ -91,8 +93,37 @@ function mustInput(){
             },
         ]
     });
-    
-    
+
+
+    // Product Slider 3 Column
+    $('.product-slider-3').slick({
+        autoplay: true,
+        infinite: true,
+        dots: false,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        responsive: [{
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 3,
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 576,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+        ]
+    });
+
+
     // Product Detail Slider
     $('.product-slider-single').slick({
         infinite: true,
@@ -111,8 +142,8 @@ function mustInput(){
         focusOnSelect: true,
         asNavFor: '.product-slider-single'
     });
-    
-    
+
+
     // Brand Slider
     $('.brand-slider').slick({
         speed: 5000,
@@ -127,8 +158,7 @@ function mustInput(){
         focusOnSelect: false,
         arrows: false,
         dots: false,
-        responsive: [
-            {
+        responsive: [{
                 breakpoint: 992,
                 settings: {
                     slidesToShow: 4,
@@ -154,8 +184,8 @@ function mustInput(){
             }
         ]
     });
-    
-    
+
+
     // Widget slider
     $('.sidebar-slider').slick({
         autoplay: true,
@@ -164,10 +194,10 @@ function mustInput(){
         slidesToShow: 1,
         slidesToScroll: 1
     });
-    
-    
+
+
     // Quantity
-    $('.qty button').on('click', function () {
+    $('.qty button').on('click', function() {
         var $button = $(this);
         var oldValue = $button.parent().find('input').val();
         if ($button.hasClass('btn-plus')) {
@@ -181,20 +211,20 @@ function mustInput(){
         }
         $button.parent().find('input').val(newVal);
     });
-    
-    
+
+
     // Shipping address show hide
-    $('.checkout #shipto').change(function () {
-        if($(this).is(':checked')) {
+    $('.checkout #shipto').change(function() {
+        if ($(this).is(':checked')) {
             $('.checkout .shipping-address').slideDown();
         } else {
             $('.checkout .shipping-address').slideUp();
         }
     });
-    
-    
+
+
     // Payment methods show hide
-    $('.checkout .payment-method .custom-control-input').change(function () {
+    $('.checkout .payment-method .custom-control-input').change(function() {
         if ($(this).prop('checked')) {
             var checkbox_id = $(this).attr('id');
             $('.checkout .payment-method .payment-content').slideUp();
@@ -202,6 +232,3 @@ function mustInput(){
         }
     });
 })(jQuery);
-
-
-

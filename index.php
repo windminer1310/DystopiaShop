@@ -9,6 +9,13 @@
         headToPage('user-login.php');
     }
 
+    if (isset($_GET['page_num_home'])) {
+        $page_number = $_GET['page_num_home'];    
+    }
+    else {
+        $page_number = 1;
+    }
+
 
 ?>
 <!DOCTYPE html>
@@ -22,141 +29,198 @@
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
     <!-- CSS Libraries -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link href="lib/slick/slick.css" rel="stylesheet">
     <link href="lib/slick/slick-theme.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/grid.css">
+    
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="./css/home.css">
 </head>
 
 <body>
-    <!-- Nav Bar Start -->
-    <div class="nav">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-            <a href="#" class="navbar-brand">MENU</a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav mr-auto">
-                        <a href="index.php" class="nav-item nav-link active">Trang chủ</a>
-                        <a href="view-product-list.php?page_num=1" class="nav-item nav-link">Sản phẩm</a>
-                        <a href="custom-pc.html" class="nav-item nav-link">Xây dựng cấu hình</a>
-                    </div>
-                    <div class="navbar-nav ml-auto">
-                        <a href="register.html" class="nav-item nav-link ">Đăng ký</a>
-                        <a href="login.php" class="nav-item nav-link ">Đăng nhập</a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <!-- Nav Bar End -->
-    
 
-    <!-- Bottom Bar Start -->
-    <div class="bottom-bar">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-md-3">
-                    <div class="logo">
-                        <a href="index.php">
-                            <img src="img/logo.png" alt="Logo">
-                        </a>
-                    </div>
+    <!-- Header Start -->
+    <header class="header">
+        <div class="grid wide">
+            <div class="header-with-search">
+                <div class="header__logo">
+                    <a href="index.php" class="header__logo-link">
+                        <img src="img/logo.png" alt="Logo" class="header__logo-img">
+                    </a>
                 </div>
-                <form method="get" action="view-product-list.php?" class="col-md-6">
-                    <div class="search">
-                        <input type="text" placeholder="Tìm kiếm" name="search">
-                        <button><i class="fa fa-search" type="submit"></i></button>
-                    </div>
+                <form class="header__search" method="get" action="view-product-list.php?">
+                    <input type="text" class="header__search-input" placeholder="Tìm kiếm sản phẩm" name="search">
+                    <button class="header__search-btn">
+                        <i class="header__search-btn-icon bi bi-search" type="submit"></i>
+                    </button>
                 </form>
-                <div class="col-md-3">
-                    <div class="user">
-                        <a href="" onclick="mustInput();" class="btn cart">
-                            <i class="fa fa-shopping-cart"></i>
-                            <span>Giỏ hàng</span>
-                        </a>
+                <div class="header__item">
+                    <a href="" class="header__icon-link">
+                        <i class="header__icon bi bi-tags"></i>
+                    </a>
+                    <a href="" class="header__link">
+                        Khuyến mãi
+                    </a>
+                </div>
+                <div class="header__item">
+                    <a href="" class="header__icon-link">
+                        <i class="header__icon bi bi-pc-display"></i>
+                    </a>
+                    <a href="" class="header__link">
+                        Cấu hình PC
+                    </a>
+                </div>
+
+                <!-- Chưa đăng nhập -->
+                <div class="header__item">
+                    <a class="header__icon-link" href="./register.html">
+                        <i class="header__icon bi bi-person-plus"></i>
+                    </a>
+                    <a href="./register.html" class="header__link header__user-register">Đăng ký</a>
+                </div>
+
+                <div class="header__item">
+                    <a class="header__icon-link" href="./login.php">
+                        <i class="header__icon bi bi-person"></i>
+                    </a>
+                    <a href="./login.php" class="header__link header__user-login">Đăng nhập</a>
+                </div>
+
+                <!-- Đã đăng nhập -->
+                <!-- <div class="header__item">
+                    <a class="header__icon-link" href="">
+                        <i class="header__icon bi bi-clipboard-check"></i>
+                    </a>
+                    <a href="" class="header__link header__user-orders">Đơn hàng</a>
+                </div>
+                <div class="header__item">
+                    <a class="header__icon-link" href="">
+                        <i class="header__icon bi bi-person"></i>
+                    </a>
+                    <a href="" class="header__link header__user-login">Hữu Lộc</a>
+                </div> -->
+
+
+                <div class="header__item header__cart-wrap">
+                    <a href="" class="header__icon-link">
+                        <i class="header__icon bi bi-cart3"></i>
+                    </a>
+                    <a href="" class="header__link">
+                        Giỏ hàng
+                    </a>
+
+                    <!-- <span class="header__cart-notice">3</span> -->
+                    <!-- No cart: header__cart-list--no-cart -->
+                    <div class="header__cart-list header__cart-list--no-cart">
+                        <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
+                        <span class="header__cart-list-no-cart-msg">
+                                    Chưa có sản phẩm
+                                </span>
+
+                        <!-- <h4 class="header__cart-heading">Sản phẩm đã thêm</h4> -->
+                        <!-- <ul class="header__cart-list-item">
+                                <li class="header__cart-item">
+                                    <img src="https://hanoicomputercdn.com/media/product/58177_asus_strix_lc_360_rgb_black_8.png" alt="" class="header__cart-img">
+                                    <div class="header__cart-item-info">
+                                        <div class="header__cart-item-head">
+                                            <h4 class="header__cart-item-name">Asus ROG Strix</h4>
+                                            <div class="header__cart-item-price-wrap">
+                                                <span class="header__cart-item-price">10.000.000đ</span>
+                                                <span class="header__cart-item-multiply">x</span>
+                                                <span class="header__cart-item-qnt">2</span>
+                                            </div>
+                                        </div>
+                                        <div class="header__cart-item-body">
+                                            <span class="header__cart-item-description">
+                                                    Phân loại: Bạc
+                                                </span>
+                                            <span class="header__cart-item-remove">Xóa</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul> -->
+
+                        <!-- <a href="/" onclick="mustInput();" class="header__cart-view-cart btn btn--primary">Xem giỏ hàng</a> -->
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Bottom Bar End -->
-
+    </header>
+    <!-- Header End -->
+    
     <!-- Main Slider Start -->
-    <div class="header">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3">
-                    <nav class="navbar bg-light">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=laptop"><i class="bi bi-laptop"></i>Laptop</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=vi xử lý"><i class="bi bi-cpu"></i>Vi xử lý</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=vga"><i class="bi bi-cpu"></i>VGA</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=ổ+cứng"><i class="bi bi-hdd"></i>Ổ cứng</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=màn+hình"><i class="bi bi-display"></i>Màn hình</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=chuột"><i class="bi bi-mouse2"></i>Chuột</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=bàn+phím"><i class="bi bi-keyboard"></i>Bàn phím</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=tai+nghe"><i class="bi bi-headphones"></i>Tai nghe</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="view-product-list.php?page_num=1&search=loa"><i class="bi bi-speaker"></i>Loa</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-md-6">
-                    <div class="header-slider normal-slider">
-                        <div class="header-slider-item">
-                            <img class="header-img" src="img/ad-img/asus-tuf-ads.jpg" alt="Slider Image" />
-                        </div>
-                        <div class="header-slider-item ">
-                            <img class="header-img" src="img/ad-img/acer-predator-triton-300-ads.jpg" alt="Slider Image" />
-                        </div>
-                        <div class="header-slider-item">
-                            <img class="header-img" src="img/ad-img/msi-raider-ge66-ads.jpg" alt="Slider Image" />
-                        </div>
-                        <div class="header-slider-item">
-                            <img class="header-img" src="img/ad-img/lenovo-yoga-9-ads.jpg" alt="Slider Image" />
-                        </div>
+    <div class="homepage grid wide">
+        <div class="row">
+            <div class="col l-2">
+                <nav class="home-category">
+                    <ul class="category-list">
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=laptop"><i class="category-item__icon bi bi-laptop"></i>Laptop & Macbook</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=vi xử lý"><i class="category-item__icon bi bi-cpu"></i>Bộ vi xử lý</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=vga"><i class="category-item__icon bi bi-cpu"></i>Card màn hình</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=ổ+cứng"><i class="category-item__icon bi bi-motherboard"></i>Bo mạch chủ</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=chuột"><i class="category-item__icon bi bi-hdd"></i>Ổ cứng</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=chuột"><i class="category-item__icon bi bi-memory"></i>RAM - Bộ nhớ</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=màn+hình"><i class="category-item__icon bi bi-display"></i>Màn hình máy tính</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=bàn+phím"><i class="category-item__icon bi bi-pc"></i>Thùng máy tính</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=tai+nghe"><i class="category-item__icon bi bi-mouse2"></i>Chuột & Bàn phím</a>
+                        </li>
+                        <li class="category-item">
+                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=loa"><i class="category-item__icon bi bi-speaker"></i>Thiết bị âm thanh</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col l-8">
+                <div class="main-slider normal-slider">
+                    <div class="main-slider-item">
+                        <img class="main-img" src="img/ad-img/asus-tuf-ads.jpg" alt="Slider Image" />
+                    </div>
+                    <div class="main-slider-item">
+                        <img class="main-img" src="img/ad-img/acer-predator-triton-300-ads.jpg" alt="Slider Image" />
+                    </div>
+                    <div class="main-slider-item">
+                        <img class="main-img" src="img/ad-img/msi-raider-ge66-ads.jpg" alt="Slider Image" />
+                    </div>
+                    <div class="main-slider-item">
+                        <img class="main-img" src="img/ad-img/lenovo-yoga-9-ads.jpg" alt="Slider Image" />
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="header-img">
-                        <div class="img-item">
-                        	<img src="img/msi-rtx-3090.png"/>
-                            <div class="img-text">
-                            </div>
-                        </div>
-                        <div class="img-item">
-                        	<img src="img/msi-meg-z590-godlike.jpg"/>
-                            <a class="img-text">
-                            </a>
-                        </div>
+            </div>
+            <div class="col l-2">
+                <div class="left-img">
+                    <div class="img-item">
+                        <img src="./img/msi-rtx-3090.png" alt="Hình ảnh"/>
+                    </div>
+                    <div class="img-item">
+                        <img src="./img/msi-meg-z590-godlike.jpg" alt="Hình ảnh"/>
                     </div>
                 </div>
             </div>
@@ -164,261 +228,318 @@
     </div>
     <!-- Main Slider End -->
 
-    <!-- Featured Product Start -->
-    <div class="featured-product product">
-        <div class="container-fluid">
-            <div class="section-header">
-                <h1>Sản phẩm nổi bật</h1>
-            </div>
-            <div class="row align-items-center product-slider product-slider-4">
-            	<?php
-                    $tableName = 'product';
-                    $column = 'sold';
-                    $numberOfValues = 10;
-                    
-                    foreach(getRowWithNFeaturedProducts($tableName, $column, $numberOfValues)->fetchAll() as $value => $row) {
-                    	echo "<div class='col-lg-3'>";
-                        if ($row['discount'] != 0) {
-                        echo "<div class='product-item__sale-off'>";
-                        echo "<span class = 'product-item__sale-off-percent'>".$row['discount']."%</span>";
-                        echo "</div>";
-                        }
-                    	echo "<div class='product-item'>";                                            
-                        echo "<div class='product-image'>";
-                        echo "<a href='view-product-detail.html?id=" . $row['product_id'] . "'>";
-                        echo "<img src='" . $row['image_link'] . "?>' alt='Product Image'>";
-                        echo "</a>";
-                        echo "<div class='product-action'>";
-                        echo "<a href='view-product-detail.php?id=" . $row['product_id'] . "'></a>";
-                        echo "</div>";
-                        echo "</div>";
-                        echo "<div class='product-price' style='height: 100px; padding:10px 50px 0;'>";
-                        echo "<h2 class = 'product-tag__name'>" . $row['product_name'] . "</h2>";
-                        if ($row['discount'] != 0) {
-                            $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
-                            echo "<h3 class = 'product-current__price'><span>" . number_format($discount, 0, ',','.') . " đ</span></h3>";
-                            echo "<h3 class = 'product-discount__price'><span>" .  number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
-                        }
-                        else{
-                            echo "<h3 class = 'product-current__price'><span>" . number_format($row['price'], 0, ',', '.') . " đ</span></h3>";
-                        }
-                    	echo "</div>";
-                    	echo "</div>";
-                    	echo "</div>";
-                    }
-                    
-            	?>
-            </div>
-        </div>
-    </div>
-    <!-- Featured Product End -->
-
     <!-- Brand Start -->
     <div class="brand">
-        <div class="container-fluid">
+        <div class="grid no-padding">
             <div class="brand-slider">
                 <div class="brand-item"><img src="img/brand/msi-logo.png" alt=""></div>
-                <div class="brand-item"><img src="" alt=""></div>
                 <div class="brand-item"><img src="img/brand/acer-logo.jpg" alt=""></div>
-                <div class="brand-item"><img src="" alt=""></div>
                 <div class="brand-item"><img src="img/brand/asus-logo.png" alt=""></div>
-                <div class="brand-item"><img src="" alt=""></div>
                 <div class="brand-item"><img src="img/brand/cooler-master-logo.png" alt=""></div>
-                <div class="brand-item"><img src="" alt=""></div>
-                <div class="brand-item"><img src="img/brand/lenovo-logo.png" alt=""></div>
-                <div class="brand-item"><img src="" alt=""></div>  
-                <div class="brand-item"><img src="img/brand/gigabyte-logo.png" alt=""></div>
-                <div class="brand-item"><img src="" alt=""></div>  
+                <div class="brand-item"><img src="img/brand/lenovo-logo.png" alt=""></div>  
                 <div class="brand-item"><img src="img/brand/hp-logo.png" alt=""></div>
-                <div class="brand-item"><img src="" alt=""></div>              
+                <div class="brand-item"><img src="img/brand/gigabyte-logo.png" alt=""></div>                
             </div>
         </div>
     </div>
     <!-- Brand End -->
 
-    <!-- Category Start-->
-    <div class="category">
-        <div class="container-fluid">
+    <!-- Featured Product Start -->
+    <div class="product featured-product">
+        <div class="grid wide">
+            <div class="section-header">
+                <div class="section-header-title">
+                    Sản phẩm nổi bật
+                </div>
+                <div class="featured-product__list-item row align-items-center product-slider product-slider-5">
+                <?php
+                    $tableName = 'product';
+                    $column = 'sold';
+                    $numberOfValues = 10;
+                    
+                    foreach(getRowWithNFeaturedProducts($tableName, $column, $numberOfValues)->fetchAll() as $value => $row) {
+                    	echo "<div class='col l-10-2'>";
+                            echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
+                                echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
+                                echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
+                                echo "<div class='product-item__price'>";
+                                    if ($row['discount'] != 0) {
+                                        $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
+                                        echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
+                                        echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                    }
+                                    else{
+                                        echo "<span class = 'product-item__current-price'>" . number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                    }
+                                echo "</div>";
+                            echo "</a>";
+                    	echo "</div>";
+                    }
+            	?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Featured Product End -->
+    
+
+    <!-- Sản phẩm đang giảm giá -->
+    <?php 
+    $numProductInAPage = 15;
+    $count_product = 0;
+    $allDiscountProduct = getDiscountProducts();
+    $firstPage = 1;
+              
+    echo "<div class='product sale-product product-page-". $firstPage ." product-page__active'>
+        <div class='grid wide'>
+            <div class='section-header'>
+                <div class='section-header-title'>
+                    Đang khuyến mãi
+                </div>
+                    <div class='sale-product__list-item'>
+                        <div class='row'>";
+                        foreach(getDiscountProductsInPage($count_product, $numProductInAPage)->fetchAll() as $value => $row) {
+                            echo "<div class='col l-10-2'>";
+                                echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
+                                    echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
+                                    echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
+                                    echo "<div class='product-item__price'>";  
+                                        $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
+                                        echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
+                                        echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                    echo "</div>";
+                                echo "</a>";
+                            echo "</div>";            
+                            $count_product++; 
+                        }  
+                    echo "</div>";
+                echo "</div>";
+            echo "</div>";
+        echo "</div>";
+    echo "</div>";
+    ?>
+
+
+    <!-- Sản phẩm đang giảm giá -->
+    <?php 
+    $numProductInAPage = 15;
+    $count_product = $numProductInAPage;
+    $allDiscountProduct = getDiscountProducts();
+
+    $totalProduct = $allDiscountProduct->rowCount();
+    $totalPage = $totalProduct/$numProductInAPage;
+              
+    if($totalPage > floor($totalPage)){
+        for($count = 2; $count <= floor($totalPage)+1; $count++){
+        echo "<div class='product sale-product product-page-".$count."'>
+            <div class='grid wide'>
+                <div class='section-header'>
+                    <div class='section-header-title'>
+                        Đang khuyến mãi
+                    </div>
+                        <div class='sale-product__list-item'>
+                            <div class='row'>";
+                            foreach(getDiscountProductsInPage($count_product, $numProductInAPage)->fetchAll() as $value => $row) {
+                                echo "<div class='col l-10-2'>";
+                                    echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
+                                        echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
+                                        echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
+                                        echo "<div class='product-item__price'>";  
+                                            $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
+                                            echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
+                                            echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                        echo "</div>";
+                                    echo "</a>";
+                                echo "</div>";            
+                                $count_product++; 
+                            }  
+                        echo "</div>";
+                    echo "</div>";
+                echo "</div>";
+            echo "</div>";
+        echo "</div>";
+        }
+    }
+    ?>
+
+    <div class="list-product_btn">
+        <div class="grid wide">
+            <ul class="pagination justify-content-center">
+                <?php
+                    $totalProduct = $allDiscountProduct->rowCount();
+                    $totalPage = $totalProduct/$numProductInAPage;
+                    displayListPageButtonHome($totalPage, $page_number);
+                ?>
+            </ul>
+        </div>
+    </div>                    
+
+    <!-- MAP & FEATURE -->
+    <!-- Cần fix giao diện :( -->
+    <div class="map-and-feature">
+        <div class="grid wide">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="category-item ch-400">
-                    	<img src="img/ad-img/case.jpg"/>
-                        <a class="category-name" href="view-product-list.php?search=vỏ+case">
-                            <p>CASE</p>
-                        </a>
+                <div class="col l-9">
+                    <!-- Google Map Start -->
+                    <div class="contact-map-wrap">
+                        <iframe title="google-map" class="contact-map" src="<?php echo ADDRESS_GOOGLE_URL ?>"></iframe>
                     </div>
+                    <!-- Google Map End -->
                 </div>
-                <div class="col-md-3">
-                    <div class="category-item ch-250">
-                    	<img src="img/ad-img/mainboard.jpg"/>
-                        <a class="category-name" href="view-product-list.php?search=bo+mạch+chủ">
-                            <p>MAINBOARD</p>
-                        </a>
-                    </div>
-                    <div class="category-item ch-150">
-                    	<img src="img/ad-img/vga.jpg"/>
-                        <a class="category-name" href="view-product-list.php?search=vga">
-                            <p>VGA</p>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="category-item ch-150">
-                    	<img src="img/ad-img/monitor.jpg"/>
-                        <a class="category-name" href="view-product-list.php?search=màn+hình">
-                            <p>MONITOR</p>
-                        </a>
-                    </div>
-                    <div class="category-item ch-250">
-                    	<img src="img/ad-img/cpu.png"/>
-                        <a class="category-name" href="view-product-list.php?search=vi+xử+lý">
-                            <p>CPU</p>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="category-item ch-400">
-                    	<img src="img/ad-img/laptop.jpg"/>
-                        <a class="category-name" href="view-product-list.php?search=latop">
-                            <p>LAPTOP</p>
-                        </a>
+                <div class="col l-3">
+                    <div class="features">
+                        <div class="feature-content">
+                            <i class="fab fa-cc-mastercard"></i>
+                            Thanh toán an toàn
+                        </div>
+                        <div class="feature-content">
+                            <i class="fa fa-truck"></i>
+                            Giao hàng toàn quốc
+                        </div>
+                        <div class="feature-content">
+                            <i class="fa fa-sync-alt"></i>
+                            Đổi trả trong vòng 7 ngày
+                        </div>
+                        <div class="feature-content">
+                            <i class="fa fa-comments"></i>
+                            Hổ trợ 24/7
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Category End-->
-
-    <!-- Feature Start-->
-    <div class="feature">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-lg-3 col-md-6 feature-col">
-                    <div class="feature-content">
-                        <i class="fab fa-cc-mastercard"></i>
-                        <h2>Thanh toán an toàn</h2>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 feature-col">
-                    <div class="feature-content">
-                        <i class="fa fa-truck"></i>
-                        <h2>Giao hàng toàn quốc</h2>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 feature-col">
-                    <div class="feature-content">
-                        <i class="fa fa-sync-alt"></i>
-                        <h2>Đổi trả trong vòng 7 ngày</h2>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 feature-col">
-                    <div class="feature-content">
-                        <i class="fa fa-comments"></i>
-                        <h2>Hổ trợ 24/7</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Feature End-->
-
-    <!-- Call to Action Start -->
-    <div class="call-to-action">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h1>Liên hệ với Dystopia</h1>
-                </div>
-                <div class="col-md-6">
-                    <a href="tel:0123456789"><?php echo SHOP_PHONE ?></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Call to Action End -->
-
-    <!-- Google Map Start -->
-    <div class="contact">
-        <div class="container-fluid">
-            <div class="row">
-            
-                <div class="col-lg-12">
-                    <div class="contact-map">
-                        <iframe src=<?php echo ADDRESS_GOOGLE_URL ?> width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Google Map End -->
 
     <!-- Footer Start -->
-    <div class="footer">
-        <div class="container-fluid">
+    <footer class="footer">
+        <div class="grid wide">
             <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-widget">
-                        <h2>Liên lạc</h2>
-                        <div class="contact-info">
-                            <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
-                            <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
-                            <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
+                <div class="col l-10-2">
+                    <h3 class="footer__heading">Chăm sóc khách hàng</h3>
+                    <ul class="footer-list">
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Trung tâm trợ giúp</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Hướng dẫn mua hàng</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Chính sách thanh toán</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Chính sách giao hàng</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Chính sách hoàn trả</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col l-10-2">
+                    <h3 class="footer__heading">Liên lạc</h3>
+                    <ul class="footer-list">
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">
+                                <i class="footer-item__icon fas fa-map-marked-alt"></i><?php echo SHOP_ADDRESS ?>
+                            </a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="mailto:<?php echo SHOP_EMAIL ?>" class="footer-item__link">
+                                <i class="footer-item__icon fas fa-envelope"></i><?php echo SHOP_EMAIL ?>
+                        </a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="tel:<?php echo SHOP_PHONE ?>" class="footer-item__link">
+                                <i class="footer-item__icon fa fa-phone"></i><?php echo SHOP_PHONE ?>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col l-10-2">
+                    <h3 class="footer__heading">Về Dystopia</h3>
+                    <ul class="footer-list">
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Giới thiệu</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Tuyển dụng</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Chính sách bảo mật</a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">Điều khoản</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col l-10-2">
+                    <h3 class="footer__heading">Theo dõi</h3>
+                    <ul class="footer-list">
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">
+                                <i class="footer-item__icon fab fa-twitter-square"></i> Twitter
+                            </a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">
+                                <i class="footer-item__icon fab fa-facebook-square"></i> Facebook
+                            </a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">
+                                <i class="footer-item__icon fab fa-linkedin"></i> LinkedIn
+                            </a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">
+                                <i class="footer-item__icon fab fa-instagram"></i> Instagram
+                            </a>
+                        </li>
+                        <li class="footer-item">
+                            <a href="" class="footer-item__link">
+                                <i class="footer-item__icon fab fa-youtube-square"></i> Youtube
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col l-10-2">
+                    <h3 class="footer__heading">Vào cửa hàng trên ứng dụng</h3>
+                    <div class="footer__download">
+                        <img src="./img/download/qr_code.png" alt="QR Code" class="footer__download-qr">
+                        <div class="footer__download-apps">
+                            <a href="" class="footer__download-app-link">
+                                <img src="./img/download/google_play.png" alt="Google play" class="footer__download-app-img">
+                            </a>
+                            <a href="" class="footer__download-app-link">
+                                <img src="./img/download/app_store.png" alt="App store" class="footer__download-app-img">
+                            </a>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-widget">
-                        <h2>Theo dõi chúng tôi</h2>
-                        <div class="contact-info">
-                            <div class="social">
-                                <a href=""><i class="fab fa-twitter"></i></a>
-                                <a href=""><i class="fab fa-facebook-f"></i></a>
-                                <a href=""><i class="fab fa-linkedin-in"></i></a>
-                                <a href=""><i class="fab fa-instagram"></i></a>
-                                <a href=""><i class="fab fa-youtube"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-widget">
-                        <h2>Thông tin về cửa hàng</h2>
-                        <ul>
-                            <li><a href="#">Về chúng tôi</a></li>
-                            <li><a href="#">Chính sách bảo mật</a></li>
-                            <li><a href="#">Điều khoản và điều kiện</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-widget">
-                        <h2>Thông tin mua hàng</h2>
-                        <ul>
-                            <li><a href="#">Chính sách thanh toán</a></li>
-                            <li><a href="#">Chính sách giao hàng</a></li>
-                            <li><a href="#">Chính sách hoàn trả</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row payment align-items-center">
-                <div class="col-md-6">
-                    <div class="payment-method">
-                        <h2>Chấp nhận thanh toán</h2>
-                        <img src="img/payment-method.png" alt="Payment Method" />
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="footer__bottom">
+            <div class="grid wide">
+                <p class="footer__text">© 2021 Bản quyền thuộc về Team ... </p>
+            </div>
+        </div>
+        <!-- <div class="row payment align-items-center">
+            <div class="col-md-6">
+                <div class="payment-method">
+                    <h2>Chấp nhận thanh toán</h2>
+                    <img src="img/payment-method.png" alt="Payment Method" />
+                </div>
+            </div>
+        </div> -->
+    </footer>
     <!-- Footer End -->
 
     <!-- Back to Top -->
     <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -428,6 +549,34 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded",function() {
+            // Bắt sự kiện cuộn chuột
+            var trangthai="under120";
+            var cartList = document.querySelectorAll('div.header__cart-list');
+            cartList = cartList[0];
+            var menu = document.querySelectorAll('header.header');
+            var menu = menu[0];
+            window.addEventListener("scroll",function(){
+                var x = pageYOffset;
+                if(x > 120){
+                    if(trangthai == "under120")
+                    {
+                        trangthai="over120";
+                        menu.classList.add('header-shrink');
+                        cartList.classList.add('header__cart-fix-shrink');
+                    }
+                }
+                else if(x <= 120){
+                    if(trangthai=="over120"){
+                    menu.classList.remove('header-shrink');
+                    cartList.classList.remove('header__cart-fix-shrink');
+                    trangthai="under120";}
+                }
+            
+            })
+        })
+    </script>
     
 </body>
 

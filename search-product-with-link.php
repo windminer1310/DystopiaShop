@@ -1,4 +1,5 @@
 <?php  
+
     function searchProductWithDescribeDropdownTag($price_from, $search){
         $link = "view-product-list.php?id=1";
         if (isset($_GET['price_from'])) {
