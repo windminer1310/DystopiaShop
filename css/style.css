@@ -1548,7 +1548,6 @@ header .img-text:hover {
     font-size: 16px;
     font-weight: 500;
     color: var(--primary-color);
-    ;
     cursor: pointer;
 }
 

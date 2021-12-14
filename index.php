@@ -9,14 +9,6 @@
         headToPage('user-login.php');
     }
 
-    if (isset($_GET['page_num_home'])) {
-        $page_number = $_GET['page_num_home'];    
-    }
-    else {
-        $page_number = 1;
-    }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +26,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
     <!-- CSS Libraries -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link href="lib/slick/slick.css" rel="stylesheet">
@@ -55,7 +46,7 @@
         <div class="grid wide">
             <div class="header-with-search">
                 <div class="header__logo">
-                    <a href="index.php" class="header__logo-link">
+                    <a href="#" class="header__logo-link">
                         <img src="img/logo.png" alt="Logo" class="header__logo-img">
                     </a>
                 </div>
@@ -66,10 +57,10 @@
                     </button>
                 </form>
                 <div class="header__item">
-                    <a href="" class="header__icon-link">
+                    <a href="#sale" class="header__icon-link">
                         <i class="header__icon bi bi-tags"></i>
                     </a>
-                    <a href="" class="header__link">
+                    <a href="#sale" class="header__link">
                         Khuyến mãi
                     </a>
                 </div>
@@ -84,10 +75,10 @@
 
                 <!-- Chưa đăng nhập -->
                 <div class="header__item">
-                    <a class="header__icon-link" href="./register.html">
+                    <a class="header__icon-link" href="./register.php">
                         <i class="header__icon bi bi-person-plus"></i>
                     </a>
-                    <a href="./register.html" class="header__link header__user-register">Đăng ký</a>
+                    <a href="./register.php" class="header__link header__user-register">Đăng ký</a>
                 </div>
 
                 <div class="header__item">
@@ -247,8 +238,8 @@
     <!-- Featured Product Start -->
     <div class="product featured-product">
         <div class="grid wide">
-            <div class="section-header">
-                <div class="section-header-title">
+            <div class="section">
+                <div class="section-title">
                     Sản phẩm nổi bật
                 </div>
                 <div class="featured-product__list-item row align-items-center product-slider product-slider-5">
@@ -259,7 +250,10 @@
                     
                     foreach(getRowWithNFeaturedProducts($tableName, $column, $numberOfValues)->fetchAll() as $value => $row) {
                     	echo "<div class='col l-10-2'>";
-                            echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
+                            echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";  
+                                if ($row['discount'] != 0) {
+                                    displayDiscountTagWithHtml($row['discount']);
+                                }                                         
                                 echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
                                 echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
                                 echo "<div class='product-item__price'>";
@@ -282,97 +276,69 @@
     </div>
     <!-- Featured Product End -->
     
-
     <!-- Sản phẩm đang giảm giá -->
-    <?php 
-    $numProductInAPage = 15;
-    $count_product = 0;
-    $allDiscountProduct = getDiscountProducts();
-    $firstPage = 1;
-              
-    echo "<div class='product sale-product product-page-". $firstPage ." product-page__active'>
-        <div class='grid wide'>
-            <div class='section-header'>
-                <div class='section-header-title'>
-                    Đang khuyến mãi
-                </div>
-                    <div class='sale-product__list-item'>
-                        <div class='row'>";
-                        foreach(getDiscountProductsInPage($count_product, $numProductInAPage)->fetchAll() as $value => $row) {
-                            echo "<div class='col l-10-2'>";
-                                echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
-                                    echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
-                                    echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
-                                    echo "<div class='product-item__price'>";  
-                                        $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
-                                        echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
-                                        echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
-                                    echo "</div>";
-                                echo "</a>";
-                            echo "</div>";            
-                            $count_product++; 
-                        }  
-                    echo "</div>";
-                echo "</div>";
-            echo "</div>";
-        echo "</div>";
-    echo "</div>";
-    ?>
+    <div id="sale">
+        <?php 
+        $numProductInAPage = 10;
+        $count_product = 0;
+        $allDiscountProduct = getDiscountProducts();
 
-
-    <!-- Sản phẩm đang giảm giá -->
-    <?php 
-    $numProductInAPage = 15;
-    $count_product = $numProductInAPage;
-    $allDiscountProduct = getDiscountProducts();
-
-    $totalProduct = $allDiscountProduct->rowCount();
-    $totalPage = $totalProduct/$numProductInAPage;
-              
-    if($totalPage > floor($totalPage)){
-        for($count = 2; $count <= floor($totalPage)+1; $count++){
-        echo "<div class='product sale-product product-page-".$count."'>
-            <div class='grid wide'>
-                <div class='section-header'>
-                    <div class='section-header-title'>
-                        Đang khuyến mãi
-                    </div>
-                        <div class='sale-product__list-item'>
-                            <div class='row'>";
-                            foreach(getDiscountProductsInPage($count_product, $numProductInAPage)->fetchAll() as $value => $row) {
-                                echo "<div class='col l-10-2'>";
-                                    echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
-                                        echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
-                                        echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
-                                        echo "<div class='product-item__price'>";  
-                                            $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
-                                            echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
-                                            echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
-                                        echo "</div>";
-                                    echo "</a>";
-                                echo "</div>";            
-                                $count_product++; 
-                            }  
+        $totalProduct = $allDiscountProduct->rowCount();
+        $totalPage = $totalProduct/$numProductInAPage;
+                    
+        if($totalPage > floor($totalPage)){
+            for($count = 1; $count <= floor($totalPage)+1; $count++){
+                if($count == 1){
+                    echo "<div class='product sale-product product-page__active'>";
+                }
+                else{
+                    echo "<div class='product sale-product'>";
+                }
+                echo "<div class='grid wide'>
+                    <div class='section'>
+                        <div class='section-title'>
+                            Đang khuyến mãi
+                        </div>
+                            <div class='sale-product__list-item'>
+                                <div class='row'>";
+                                foreach(getDiscountProductsInPage($count_product, $numProductInAPage)->fetchAll() as $value => $row) {
+                                    echo "<div class='col l-10-2'>";
+                                        echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>"; 
+                                            if ($row['discount'] != 0) {
+                                                displayDiscountTagWithHtml($row['discount']);
+                                            }                                
+                                            echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
+                                            echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
+                                            echo "<div class='product-item__price'>";  
+                                                $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
+                                                echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
+                                                echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                            echo "</div>";
+                                        echo "</a>";
+                                    echo "</div>";            
+                                    $count_product++; 
+                                }  
+                            echo "</div>";
                         echo "</div>";
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
-        echo "</div>";
+            }
         }
-    }
-    ?>
+        ?>
 
-    <div class="list-product_btn">
-        <div class="grid wide">
-            <ul class="pagination justify-content-center">
-                <?php
-                    $totalProduct = $allDiscountProduct->rowCount();
-                    $totalPage = $totalProduct/$numProductInAPage;
-                    displayListPageButtonHome($totalPage, $page_number);
-                ?>
-            </ul>
-        </div>
-    </div>                    
+        <div class="list-product_btn">
+            <div class="grid wide">
+                <ul class="pagination justify-content-center">
+                    <?php
+                        $totalProduct = $allDiscountProduct->rowCount();
+                        $totalPage = $totalProduct/$numProductInAPage;
+                        displayListPageButtonHome($totalPage);
+                    ?>
+                </ul>
+            </div>
+        </div>           
+    </div>                   
 
     <!-- MAP & FEATURE -->
     <!-- Cần fix giao diện :( -->
@@ -550,6 +516,26 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
+        // Bắt sự kiện nhấn nút chuyển trang khuyến mãi sản phẩm
+        const $ = document.querySelector.bind(document);
+        const $$ = document.querySelectorAll.bind(document);
+
+        const tabs = $$('.sale-product');
+        const pages = $$('.page-item');
+
+        pages.forEach((page, index, ) => {
+            const tab = tabs[index];
+
+            page.onclick = function () {
+
+                $('.page-item.active').classList.remove('active');
+                $('.sale-product.product-page__active').classList.remove('product-page__active');
+
+                this.classList.add('active');
+                tab.classList.add('product-page__active');
+            }
+        });
+
         document.addEventListener("DOMContentLoaded",function() {
             // Bắt sự kiện cuộn chuột
             var trangthai="under120";

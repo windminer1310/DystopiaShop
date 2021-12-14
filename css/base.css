@@ -7,12 +7,14 @@
 
 html {
     font-family: 'Roboto', sans-serif;
+    scroll-behavior: smooth;
 }
 
 :root {
     --border-color: #dbdbdb;
     --text-color: #333;
-    --primary-color: #1435c3;
+    --primary-color: #e92525;
+    /* --primary-color: #1435c3; */
     --white-color: #fff;
     --icon-color: #666;
     --header-height: 90px;

@@ -206,4 +206,23 @@
 		return $statement;
 	}
     
+	function getProductsInPage($start, $totalProductInPage) {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+		// create our sql statment
+		$statement = $databaseConnection->prepare('
+			SELECT
+				*
+			FROM
+				product
+			LIMIT ' . $start . ' , ' . $totalProductInPage
+		);
+
+		// execute sql with actual values
+		$statement->setFetchMode( PDO::FETCH_ASSOC );
+
+		$statement->execute();
+		return $statement;
+	}
     

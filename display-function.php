@@ -1,7 +1,8 @@
 <?php
     function displayDiscountTagWithHtml( $discount){
         echo "<div class='product-item__sale-off'>";
-        echo "<span class = 'product-item__sale-off-percent'>".$discount."%</span>";
+        echo "<div class = 'product-item__sale-off-text'>GIẢM GIÁ</div>";
+        echo "<div class = 'product-item__sale-off-percent'>".$discount."%</div>";
         echo "</div>";
     }
 
@@ -140,26 +141,44 @@
         }
     }
 
-    function displayListPageButtonHome($totalPage,$page_number){
+    function displayListPageButtonHome($totalPage){
         if($totalPage > floor($totalPage)){
             for($count = 1; $count <= floor($totalPage)+1; $count++){
-                if($count == $page_number) 
-                    echo "<li class='page-item active'><a class='page-link' href='./index.php'>" . $count . "</a></li>";
+                if($count == 1) 
+                    echo "<li class='page-item active'><div class='page-link' >" . $count . "</div></li>";
                 else 
-                    echo "<li class='page-item' onlick='<?php ". $_GET['page_num_home'] = $page_number ." ?>' ><a class='page-link' href='./index.php'>" . $count . "</a></li>";
+                    echo "<li class='page-item'><div class='page-link' >" . $count . "</div></li>";
             }
         }
         else {
             for($count = 1; $count < floor($totalPage)+1; $count++){
-                if($count == $page_number) 
-                    echo "<li class='page-item active'><a class='page-link' href='./index.php'>" . $count . "</a></li>";
+                if($count == 1) 
+                    echo "<li class='page-item active'  ><div class='page-link' >" . $count . "</div></li>";
                 else 
-                    echo "<li class='page-item' onlick='<?php ". $_GET['page_num_home'] = $page_number ." ?>' ><a class='page-link' href='./index.php'>" . $count . "</a></li>";
+                    echo "<li class='page-item'  ><div class='page-link' >" . $count . "</div></li>";
             }
         }
     }
 
-     
+    function displayListPageButtonViewProduct($totalPage){
+        if($totalPage > floor($totalPage)){
+            for($count = 1; $count <= floor($totalPage)+1; $count++){
+                if($count == 1) 
+                    echo "<li class='page-item active'><a href='#' class='page-link' >" . $count . "</a></li>";
+                else 
+                    echo "<li class='page-item'><a href='#' class='page-link' >" . $count . "</a></li>";
+            }
+        }
+        else {
+            for($count = 1; $count < floor($totalPage)+1; $count++){
+                if($count == 1) 
+                    echo "<li class='page-item active'  ><a href='#' class='page-link' >" . $count . "</a></li>";
+                else 
+                    echo "<li class='page-item'  ><a href='#' class='page-link' >" . $count . "</a></li>";
+            }
+        }
+    } 
+
 
     function displayUserName($nameSession){
         $eachPartName = preg_split("/\ /",$nameSession);
@@ -187,4 +206,5 @@
         if($count > 0) return true;
         return false;
     }
+
 ?>

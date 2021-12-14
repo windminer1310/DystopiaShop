@@ -2,6 +2,22 @@ function mustInput() {
     alert('Vui lòng đăng nhập!');
 }
 
+
+function eventClickListProductBtn($pageNumber){
+    const $ = document.querySelector.bind(document);
+    const $$ = document.querySelectorAll.bind(document);
+
+    const tabs = $$('.sale-product');
+    const pages = $$('.page-link');
+    console.log(tabs, pages);
+
+    pages.forEach((page, index, ) => {
+        page.onclick = function () {
+            console.log(this);
+        }
+    });
+}
+
 (function($) {
     // Back to top button
     $(window).scroll(function() {
@@ -232,3 +248,4 @@ function mustInput() {
         }
     });
 })(jQuery);
+

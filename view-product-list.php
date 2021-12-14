@@ -24,12 +24,6 @@
     }else if( isset($_GET['search'])){
         $search = $_GET['search'];
     }
-    if (isset($_GET['page_num'])) {
-        $page_number = $_GET['page_num'];    
-    }
-    else {
-        $page_number = 1;
-    }
 
     $dbhost = 'localhost';
     $dbuser = 'root';
@@ -53,7 +47,9 @@
         <link href="img/favicon.ico" rel="icon">
 
         <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
         <!-- CSS Libraries -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
@@ -73,113 +69,113 @@
     <body>
         
         <!-- Header Start -->
-    <header class="header">
-        <div class="grid wide">
-            <div class="header-with-search">
-                <div class="header__logo">
-                    <a href="index.php" class="header__logo-link">
-                        <img src="img/logo.png" alt="Logo" class="header__logo-img">
-                    </a>
-                </div>
-                <form class="header__search" method="get" action="view-product-list.php?">
-                    <input type="text" class="header__search-input" placeholder="Tìm kiếm sản phẩm" name="search">
-                    <button class="header__search-btn">
-                        <i class="header__search-btn-icon bi bi-search" type="submit"></i>
-                    </button>
-                </form>
-                <div class="header__item">
-                    <a href="" class="header__icon-link">
-                        <i class="header__icon bi bi-tags"></i>
-                    </a>
-                    <a href="" class="header__link">
-                        Khuyến mãi
-                    </a>
-                </div>
-                <div class="header__item">
-                    <a href="" class="header__icon-link">
-                        <i class="header__icon bi bi-pc-display"></i>
-                    </a>
-                    <a href="" class="header__link">
-                        Cấu hình PC
-                    </a>
-                </div>
+        <header class="header">
+            <div class="grid wide">
+                <div class="header-with-search">
+                    <div class="header__logo">
+                        <a href="index.php" class="header__logo-link">
+                            <img src="img/logo.png" alt="Logo" class="header__logo-img">
+                        </a>
+                    </div>
+                    <form class="header__search" method="get" action="view-product-list.php?">
+                        <input type="text" class="header__search-input" placeholder="Tìm kiếm sản phẩm" name="search">
+                        <button class="header__search-btn">
+                            <i class="header__search-btn-icon bi bi-search" type="submit"></i>
+                        </button>
+                    </form>
+                    <div class="header__item">
+                        <a href="" class="header__icon-link">
+                            <i class="header__icon bi bi-tags"></i>
+                        </a>
+                        <a href="" class="header__link">
+                            Khuyến mãi
+                        </a>
+                    </div>
+                    <div class="header__item">
+                        <a href="" class="header__icon-link">
+                            <i class="header__icon bi bi-pc-display"></i>
+                        </a>
+                        <a href="" class="header__link">
+                            Cấu hình PC
+                        </a>
+                    </div>
 
-                <!-- Chưa đăng nhập -->
-                <div class="header__item">
-                    <a class="header__icon-link" href="./register.html">
-                        <i class="header__icon bi bi-person-plus"></i>
-                    </a>
-                    <a href="./register.html" class="header__link header__user-register">Đăng ký</a>
-                </div>
+                    <!-- Chưa đăng nhập -->
+                    <div class="header__item">
+                        <a class="header__icon-link" href="./register.php">
+                            <i class="header__icon bi bi-person-plus"></i>
+                        </a>
+                        <a href="./registerphp" class="header__link header__user-register">Đăng ký</a>
+                    </div>
 
-                <div class="header__item">
-                    <a class="header__icon-link" href="./login.php">
-                        <i class="header__icon bi bi-person"></i>
-                    </a>
-                    <a href="./login.php" class="header__link header__user-login">Đăng nhập</a>
-                </div>
+                    <div class="header__item">
+                        <a class="header__icon-link" href="./login.php">
+                            <i class="header__icon bi bi-person"></i>
+                        </a>
+                        <a href="./login.php" class="header__link header__user-login">Đăng nhập</a>
+                    </div>
 
-                <!-- Đã đăng nhập -->
-                <!-- <div class="header__item">
-                    <a class="header__icon-link" href="">
-                        <i class="header__icon bi bi-clipboard-check"></i>
-                    </a>
-                    <a href="" class="header__link header__user-orders">Đơn hàng</a>
-                </div>
-                <div class="header__item">
-                    <a class="header__icon-link" href="">
-                        <i class="header__icon bi bi-person"></i>
-                    </a>
-                    <a href="" class="header__link header__user-login">Hữu Lộc</a>
-                </div> -->
+                    <!-- Đã đăng nhập -->
+                    <!-- <div class="header__item">
+                        <a class="header__icon-link" href="">
+                            <i class="header__icon bi bi-clipboard-check"></i>
+                        </a>
+                        <a href="" class="header__link header__user-orders">Đơn hàng</a>
+                    </div>
+                    <div class="header__item">
+                        <a class="header__icon-link" href="">
+                            <i class="header__icon bi bi-person"></i>
+                        </a>
+                        <a href="" class="header__link header__user-login">Hữu Lộc</a>
+                    </div> -->
 
 
-                <div class="header__item header__cart-wrap">
-                    <a href="" class="header__icon-link">
-                        <i class="header__icon bi bi-cart3"></i>
-                    </a>
-                    <a href="" class="header__link">
-                        Giỏ hàng
-                    </a>
+                    <div class="header__item header__cart-wrap">
+                        <a href="" class="header__icon-link">
+                            <i class="header__icon bi bi-cart3"></i>
+                        </a>
+                        <a href="" class="header__link">
+                            Giỏ hàng
+                        </a>
 
-                    <!-- <span class="header__cart-notice">3</span> -->
-                    <!-- No cart: header__cart-list--no-cart -->
-                    <div class="header__cart-list header__cart-list--no-cart">
-                        <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
-                        <span class="header__cart-list-no-cart-msg">
-                                    Chưa có sản phẩm
-                                </span>
+                        <!-- <span class="header__cart-notice">3</span> -->
+                        <!-- No cart: header__cart-list--no-cart -->
+                        <div class="header__cart-list header__cart-list--no-cart">
+                            <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
+                            <span class="header__cart-list-no-cart-msg">
+                                        Chưa có sản phẩm
+                                    </span>
 
-                        <!-- <h4 class="header__cart-heading">Sản phẩm đã thêm</h4> -->
-                        <!-- <ul class="header__cart-list-item">
-                                <li class="header__cart-item">
-                                    <img src="https://hanoicomputercdn.com/media/product/58177_asus_strix_lc_360_rgb_black_8.png" alt="" class="header__cart-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-head">
-                                            <h4 class="header__cart-item-name">Asus ROG Strix</h4>
-                                            <div class="header__cart-item-price-wrap">
-                                                <span class="header__cart-item-price">10.000.000đ</span>
-                                                <span class="header__cart-item-multiply">x</span>
-                                                <span class="header__cart-item-qnt">2</span>
+                            <!-- <h4 class="header__cart-heading">Sản phẩm đã thêm</h4> -->
+                            <!-- <ul class="header__cart-list-item">
+                                    <li class="header__cart-item">
+                                        <img src="https://hanoicomputercdn.com/media/product/58177_asus_strix_lc_360_rgb_black_8.png" alt="" class="header__cart-img">
+                                        <div class="header__cart-item-info">
+                                            <div class="header__cart-item-head">
+                                                <h4 class="header__cart-item-name">Asus ROG Strix</h4>
+                                                <div class="header__cart-item-price-wrap">
+                                                    <span class="header__cart-item-price">10.000.000đ</span>
+                                                    <span class="header__cart-item-multiply">x</span>
+                                                    <span class="header__cart-item-qnt">2</span>
+                                                </div>
+                                            </div>
+                                            <div class="header__cart-item-body">
+                                                <span class="header__cart-item-description">
+                                                        Phân loại: Bạc
+                                                    </span>
+                                                <span class="header__cart-item-remove">Xóa</span>
                                             </div>
                                         </div>
-                                        <div class="header__cart-item-body">
-                                            <span class="header__cart-item-description">
-                                                    Phân loại: Bạc
-                                                </span>
-                                            <span class="header__cart-item-remove">Xóa</span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul> -->
+                                    </li>
+                                </ul> -->
 
-                        <!-- <a href="/" onclick="mustInput();" class="header__cart-view-cart btn btn--primary">Xem giỏ hàng</a> -->
+                            <!-- <a href="/" onclick="mustInput();" class="header__cart-view-cart btn btn--primary">Xem giỏ hàng</a> -->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
-    <!-- Header End -->
+        </header>
+        <!-- Header End -->
 
         <div class="homepage">
             <div class=" grid wide">
@@ -218,15 +214,30 @@
 
     
         <!-- Product List Start -->
-        <div class="product sale-product">
-            <div class="grid wide">
-                <div class="section-header">
-                    <div class="section-header-title">
+        
+        <?php 
+        $numProductInAPage = 10;
+        $count_product = 0;
+        $allDiscountProduct = getDiscountProducts();
+
+        $totalProduct = $allDiscountProduct->rowCount();
+        $totalPage = $totalProduct/$numProductInAPage;
+                
+        if($totalPage > floor($totalPage)){
+            for($count = 1; $count <= floor($totalPage)+1; $count++){
+                if($count == 1){
+                    echo "<div class='product sale-product product-page__active'>";
+                }
+                else{
+                    echo "<div class='product sale-product'>";
+                }
+            echo "<div class='grid wide'>
+                <div class='section'>
+                    <div class='section-title'>
                         Sản phẩm
                     </div>
-                    <div class="sale-product__list-item">
-                        <div class="row">
-                            <?php                               
+                    <div class='sale-product__list-item'>
+                        <div class='row'> ";                            
                                 $sql = "SELECT * FROM `product`";
                                 if (isset($_GET['price_from'])) {
                                     if ($_GET['price_from'] == 1) {
@@ -270,20 +281,12 @@
                                 }
                                 $rs = $conn->query($sql);
 
-                                if (!$rs) {
-                                    die("Không có sản phẩm nào để hiển thị!");
-                                    exit();
-                                }
-                                $count_product = 0;
-                                $numProductInAPage = 30;
-                                
-                                while ($row = $rs->fetch_array(MYSQLI_ASSOC)) {
-                                    if($count_product >= ($page_number-1)*$numProductInAPage && $count_product < ($page_number-1)*$numProductInAPage + $numProductInAPage){
+                                foreach ($conn->query($sql . "LIMIT ". $count_product . " , " .$numProductInAPage)->fetch_all(MYSQLI_ASSOC) as $value => $row) {
                                         echo "<div class='col l-10-2'>";
-                                        // if ($row['discount'] != 0) {
-                                        //     displayDiscountTagWithHtml($row['discount']);
-                                        // }
-                                            echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";                                            
+                                            echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";  
+                                                if ($row['discount'] != 0) {
+                                                    displayDiscountTagWithHtml($row['discount']);
+                                                }                                          
                                                 echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
                                                 echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
                                                 echo "<div class='product-item__price'>";  
@@ -293,26 +296,25 @@
                                                 echo "</div>";
                                             echo "</a>";
                                         echo "</div>";
-                                    }
-                                    if( $count_product == (($page_number-1)*$numProductInAPage + $numProductInAPage)) break;
-                                    $count_product++;                                 
-                                }
-                                
-                                echo "</div>";
-                            ?>                         
-                        </div>       
+                                        $count_product++;  
+                                    }     
+                                echo "</div>                     
+                            </div>       
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>";
+            }
+        }
+        ?>
         
         <div class="list-product_btn">
             <div class="grid wide">
                 <ul class="pagination justify-content-center">
                     <?php
-                        $totalProduct = mysqli_num_rows($rs);
+                        $totalProduct = $allDiscountProduct->rowCount();
                         $totalPage = $totalProduct/$numProductInAPage;
-                        displayListPageButton($totalPage, $sort, $search, $price_from, $page_number);
+                        displayListPageButtonViewProduct($totalPage);
                     ?>
                 </ul>
             </div>
@@ -494,6 +496,25 @@
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
         <script>
+            const $ = document.querySelector.bind(document);
+            const $$ = document.querySelectorAll.bind(document);
+
+            const tabs = $$('.sale-product');
+            const pages = $$('.page-item');
+
+            pages.forEach((page, index, ) => {
+                const tab = tabs[index];
+
+                page.onclick = function () {
+
+                    $('.page-item.active').classList.remove('active');
+                    $('.sale-product.product-page__active').classList.remove('product-page__active');
+
+                    this.classList.add('active');
+                    tab.classList.add('product-page__active');
+                }
+            });
+
             document.addEventListener("DOMContentLoaded",function() {
                 // Bắt sự kiện cuộn chuột
                 var trangthai="under120";
