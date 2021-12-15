@@ -153,9 +153,9 @@
         else {
             for($count = 1; $count < floor($totalPage)+1; $count++){
                 if($count == 1) 
-                    echo "<li class='page-item active'  ><div class='page-link' >" . $count . "</div></li>";
+                    echo "<li class='page-item active' ><div class='page-link' >" . $count . "</div></li>";
                 else 
-                    echo "<li class='page-item'  ><div class='page-link' >" . $count . "</div></li>";
+                    echo "<li class='page-item' ><div class='page-link' >" . $count . "</div></li>";
             }
         }
     }
@@ -164,17 +164,17 @@
         if($totalPage > floor($totalPage)){
             for($count = 1; $count <= floor($totalPage)+1; $count++){
                 if($count == 1) 
-                    echo "<li class='page-item active'><a href='#' class='page-link' >" . $count . "</a></li>";
+                    echo "<li class='page-item active'><a href='#product-view' class='page-link' >" . $count . "</a></li>";
                 else 
-                    echo "<li class='page-item'><a href='#' class='page-link' >" . $count . "</a></li>";
+                    echo "<li class='page-item'><a href='#product-view' class='page-link' >" . $count . "</a></li>";
             }
         }
         else {
             for($count = 1; $count < floor($totalPage)+1; $count++){
                 if($count == 1) 
-                    echo "<li class='page-item active'  ><a href='#' class='page-link' >" . $count . "</a></li>";
+                    echo "<li class='page-item active'  ><a href='#product-view' class='page-link' >" . $count . "</a></li>";
                 else 
-                    echo "<li class='page-item'  ><a href='#' class='page-link' >" . $count . "</a></li>";
+                    echo "<li class='page-item'  ><a href='#product-view' class='page-link' >" . $count . "</a></li>";
             }
         }
     } 
@@ -207,4 +207,17 @@
         return false;
     }
 
+    function displayNImgProductView($imgLink, $totalImageProduct, $indexNumberImg){
+        for($i = 1; $i <= $totalImageProduct; $i++){
+            if($i == 1) echo "<img class='img-display img-display--active' src='" .substr_replace($imgLink,(string)$i, $indexNumberImg, 1). "' alt='Product Image'>";
+            else echo "<img class='img-display ' src='" .substr_replace($imgLink,(string)$i, $indexNumberImg, 1). "' alt='Product Image'>";
+        }
+    }
+
+    function displayListNImgProduct($imgLink, $totalImageProduct, $indexNumberImg){
+        for($i = 1; $i <= $totalImageProduct; $i++){
+            if($i == 1) echo "<img class='list-img-item list-img-item--active' src='" .substr_replace($imgLink,(string)$i, $indexNumberImg, 1). "' alt='Product Image'>";
+            else echo "<img class='list-img-item' src='" .substr_replace($imgLink,(string)$i, $indexNumberImg, 1). "' alt='Product Image'>";
+        }
+    }
 ?>

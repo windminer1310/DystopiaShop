@@ -95,7 +95,7 @@
                         <a class="header__icon-link" href="./register.php">
                             <i class="header__icon bi bi-person-plus"></i>
                         </a>
-                        <a href="./registerphp" class="header__link header__user-register">Đăng ký</a>
+                        <a href="./register.php" class="header__link header__user-register">Đăng ký</a>
                     </div>
 
                     <div class="header__item">
@@ -190,31 +190,22 @@
         <!-- Product Detail Start -->
         <div class="product featured-product">
             <div class="grid wide">
-                <div class="row">
                     <div class="product-detail-top col l-9">
-                        <div class="col l-4">
+                        <div class="col l-5">
                             <div class='product__img'>
                                 <?php 
                                     $totalImageProduct = 5;
                                     $indexNumberImg = -5;
-                                    for($i = 1; $i <= $totalImageProduct; $i++){
-                                        if($i == 1) echo "<img class='img-display img-display--active' src='" .substr_replace($info['image_link'],(string)$i, $indexNumberImg, 1). "' alt='Product Image'>";
-                                        else echo "<img class='img-display ' src='" .substr_replace($info['image_link'],(string)$i, $indexNumberImg, 1). "' alt='Product Image'>";
-                                    }
+                                    displayNImgProductView($info['image_link'], $totalImageProduct, $indexNumberImg);
                                 ?>
-                                <div class='product__list-img'>
-                                    <?php 
-                                        $totalImageProduct = 5;
-                                        $indexNumberImg = -5;
-                                        for($i = 1; $i <= $totalImageProduct; $i++){
-                                            if($i == 1) echo "<img class='list-img-item list-img-item--active' src='" .substr_replace($info['image_link'],(string)$i, $indexNumberImg, 1). "' alt='Product Image'>";
-                                            else echo "<img class='list-img-item' src='" .substr_replace($info['image_link'],(string)$i, $indexNumberImg, 1). "' alt='Product Image'>";
-                                        }
-                                    ?>
-                                </div>
+                            <div class='product__list-img'>
+                                <?php 
+                                    displayListNImgProduct($info['image_link'], $totalImageProduct, $indexNumberImg);
+                                ?>
+                            </div>
                             </div>
                         </div>
-                        <div class="col l-8">
+                        <div class="col l-7">
                             <div class="product-content">
                                 <div class="title-product">
                                     <h2>
@@ -232,7 +223,7 @@
                                     {
                                         echo "<div class = 'price-product'>
                                             <h3 class='product-item__current-price-detail'>" . number_format($info['price'], 0, ',', '.') . " ₫</h3>
-                                            <h4 class = '' style='color: white;'>G:</h4>
+                                            <h4 class = '' style='color: white;'>None</h4>
                                         </div>";
                                     }
                                     else
@@ -278,18 +269,27 @@
                                 </div>
                             </div>
                         </div>
+                </div>
+            </div>
+        <!-- Product Detail End -->
+
+                                        
+        <!-- Product Detail Start -->
+
+        <div class="description description-product">
+            <div class="grid wide">
+                <div class="section">
+                    <div class="section-title">
+                        Mô tả sản phẩm
                     </div>
-                <!-- <div class="product-detail-bottom">
-                    <div class="col c-4">
-                        <div class='product-content'>
-                            dsadsadsa
-                        </div>
+                    <div class="">
+                        dsada
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
+
         <!-- Product Detail End -->
-        
 
         
 

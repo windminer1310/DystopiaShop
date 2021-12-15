@@ -157,34 +157,34 @@
                 <nav class="home-category">
                     <ul class="category-list">
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=laptop"><i class="category-item__icon bi bi-laptop"></i>Laptop & Macbook</a>
+                            <a class="category-item__link" href="view-product-list.php?search=laptop"><i class="category-item__icon bi bi-laptop"></i>Laptop & Macbook</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=vi xử lý"><i class="category-item__icon bi bi-cpu"></i>Bộ vi xử lý</a>
+                            <a class="category-item__link" href="view-product-list.php?search=vi xử lý"><i class="category-item__icon bi bi-cpu"></i>Bộ vi xử lý</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=vga"><i class="category-item__icon bi bi-cpu"></i>Card màn hình</a>
+                            <a class="category-item__link" href="view-product-list.php?search=vga"><i class="category-item__icon bi bi-cpu"></i>Card màn hình</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=ổ+cứng"><i class="category-item__icon bi bi-motherboard"></i>Bo mạch chủ</a>
+                            <a class="category-item__link" href="view-product-list.php?search=ổ+cứng"><i class="category-item__icon bi bi-motherboard"></i>Bo mạch chủ</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=chuột"><i class="category-item__icon bi bi-hdd"></i>Ổ cứng</a>
+                            <a class="category-item__link" href="view-product-list.php?search=chuột"><i class="category-item__icon bi bi-hdd"></i>Ổ cứng</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=chuột"><i class="category-item__icon bi bi-memory"></i>RAM - Bộ nhớ</a>
+                            <a class="category-item__link" href="view-product-list.php?search=chuột"><i class="category-item__icon bi bi-memory"></i>RAM - Bộ nhớ</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=màn+hình"><i class="category-item__icon bi bi-display"></i>Màn hình máy tính</a>
+                            <a class="category-item__link" href="view-product-list.php?search=màn+hình"><i class="category-item__icon bi bi-display"></i>Màn hình máy tính</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=bàn+phím"><i class="category-item__icon bi bi-pc"></i>Thùng máy tính</a>
+                            <a class="category-item__link" href="view-product-list.php?search=bàn+phím"><i class="category-item__icon bi bi-pc"></i>Thùng máy tính</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=tai+nghe"><i class="category-item__icon bi bi-mouse2"></i>Chuột & Bàn phím</a>
+                            <a class="category-item__link" href="view-product-list.php?search=tai+nghe"><i class="category-item__icon bi bi-mouse2"></i>Chuột & Bàn phím</a>
                         </li>
                         <li class="category-item">
-                            <a class="category-item__link" href="view-product-list.php?page_num=1&search=loa"><i class="category-item__icon bi bi-speaker"></i>Thiết bị âm thanh</a>
+                            <a class="category-item__link" href="view-product-list.php?search=loa"><i class="category-item__icon bi bi-speaker"></i>Thiết bị âm thanh</a>
                         </li>
                     </ul>
                 </nav>
@@ -281,44 +281,42 @@
         <?php 
         $numProductInAPage = 10;
         $count_product = 0;
+        $firstPageActive = 1;
+        
         $allDiscountProduct = getDiscountProducts();
 
         $totalProduct = $allDiscountProduct->rowCount();
         $totalPage = $totalProduct/$numProductInAPage;
                     
         if($totalPage > floor($totalPage)){
-            for($count = 1; $count <= floor($totalPage)+1; $count++){
-                if($count == 1){
-                    echo "<div class='product sale-product product-page__active'>";
-                }
-                else{
-                    echo "<div class='product sale-product'>";
-                }
+            for($countPage = 1; $countPage <= floor($totalPage)+1; $countPage++){
+
+                if($countPage == $firstPageActive) echo "<div class='product sale-product product-page__active'>";
+                else echo "<div class='product sale-product'>";
+
                 echo "<div class='grid wide'>
                     <div class='section'>
                         <div class='section-title'>
                             Đang khuyến mãi
                         </div>
-                            <div class='sale-product__list-item'>
-                                <div class='row'>";
-                                foreach(getDiscountProductsInPage($count_product, $numProductInAPage)->fetchAll() as $value => $row) {
-                                    echo "<div class='col l-10-2'>";
-                                        echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>"; 
-                                            if ($row['discount'] != 0) {
-                                                displayDiscountTagWithHtml($row['discount']);
-                                            }                                
-                                            echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
-                                            echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
-                                            echo "<div class='product-item__price'>";  
-                                                $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
-                                                echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
-                                                echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
-                                            echo "</div>";
-                                        echo "</a>";
-                                    echo "</div>";            
-                                    $count_product++; 
-                                }  
-                            echo "</div>";
+                        <div class='product__list-item'>
+                            <div class='row'>";
+                            foreach(getDiscountProductsInPage($count_product, $numProductInAPage)->fetchAll() as $value => $row) {
+                                echo "<div class='col l-10-2'>";
+                                    echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>"; 
+                                        displayDiscountTagWithHtml($row['discount']);                       
+                                        echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
+                                        echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
+                                        echo "<div class='product-item__price'>";  
+                                            $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
+                                            echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
+                                            echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                        echo "</div>";
+                                    echo "</a>";
+                                echo "</div>";            
+                                $count_product++; 
+                            }  
+                        echo "</div>";
                         echo "</div>";
                     echo "</div>";
                 echo "</div>";

@@ -9,6 +9,7 @@
     if(isset($_SESSION['name']) && isset($_SESSION['id'])){
         headToPage('product-list.php');
     }
+    else $isLogin = false;
 
     $sort = 0;
     $price_from = 0;
@@ -105,7 +106,7 @@
                         <a class="header__icon-link" href="./register.php">
                             <i class="header__icon bi bi-person-plus"></i>
                         </a>
-                        <a href="./registerphp" class="header__link header__user-register">Đăng ký</a>
+                        <a href="./register.php" class="header__link header__user-register">Đăng ký</a>
                     </div>
 
                     <div class="header__item">
@@ -188,7 +189,7 @@
                                 ?>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <?php
-                                        searchProductWithDescribeDropdownTag($price_from, $search);
+                                        searchProductWithDescribeDropdownTag($price_from, $search, $isLogin);
                                     ?>
                                 </div>
                             </div>
@@ -202,7 +203,7 @@
                                 ?>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <?php
-                                        searchProductWithDropdownTagPriceArea($sort, $search);
+                                        searchProductWithDropdownTagPriceArea($sort, $search, $isLogin);
                                     ?>
                                 </div>
                             </div>
@@ -214,112 +215,119 @@
 
     
         <!-- Product List Start -->
-        
-        <?php 
-        $numProductInAPage = 10;
-        $count_product = 0;
-        $allDiscountProduct = getDiscountProducts();
+        <div id="product-view">
+            <?php 
+            $numProductInAPage = 20;
+            $count_product = 0;
 
-        $totalProduct = $allDiscountProduct->rowCount();
-        $totalPage = $totalProduct/$numProductInAPage;
-                
-        if($totalPage > floor($totalPage)){
-            for($count = 1; $count <= floor($totalPage)+1; $count++){
-                if($count == 1){
-                    echo "<div class='product sale-product product-page__active'>";
-                }
-                else{
-                    echo "<div class='product sale-product'>";
-                }
-            echo "<div class='grid wide'>
-                <div class='section'>
-                    <div class='section-title'>
-                        Sản phẩm
-                    </div>
-                    <div class='sale-product__list-item'>
-                        <div class='row'> ";                            
-                                $sql = "SELECT * FROM `product`";
-                                if (isset($_GET['price_from'])) {
-                                    if ($_GET['price_from'] == 1) {
-                                        $sql = $sql . " WHERE price <= 1000000";
-                                    }
-                                    elseif ($_GET['price_from'] == 2) {
-                                        $sql = $sql . " WHERE price > 1000000 AND price <= 10000000";
-                                    }
-                                    elseif ($_GET['price_from'] == 3) {
-                                        $sql = $sql . " WHERE price > 10000000 AND price <= 50000000";
+            $productTable = 'product';
+            $allProducts = getRowWithTable($productTable);
+
+            $totalProduct = $allProducts->rowCount();
+            $totalPage = $totalProduct/$numProductInAPage;
+                    
+            if($totalPage > floor($totalPage)){
+                for($count = 1; $count <= floor($totalPage)+1; $count++){
+                    if($count == 1){
+                        echo "<div class='product sale-product product-page__active'>";
+                    }
+                    else{
+                        echo "<div class='product sale-product'>";
+                    }
+                echo "<div class='grid wide'>
+                    <div class='section'>
+                        <div class='section-title'>
+                            Sản phẩm
+                        </div>
+                        <div class='product__list-item'>
+                            <div class='row'> ";                            
+                                    $sql = "SELECT * FROM `product`";
+                                    if (isset($_GET['price_from'])) {
+                                        if ($_GET['price_from'] == 1) {
+                                            $sql = $sql . " WHERE price <= 1000000";
+                                        }
+                                        elseif ($_GET['price_from'] == 2) {
+                                            $sql = $sql . " WHERE price > 1000000 AND price <= 10000000";
+                                        }
+                                        elseif ($_GET['price_from'] == 3) {
+                                            $sql = $sql . " WHERE price > 10000000 AND price <= 50000000";
+                                        }
+                                        else {
+                                            $sql = $sql . " WHERE price > 50000000";
+                                        }
+                                        if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
+                                            $sql = $sql . " AND (product_name LIKE '%" . $search . "%' OR category_id = 
+                                            (SELECT category_id FROM `category` WHERE category_name LIKE '%" . $search . "%') OR brand_id = 
+                                            (SELECT brand_id FROM `brand` WHERE brand_name LIKE '%" . $search . "%') OR description LIKE '%" . $search . "%')";
+                                        }
                                     }
                                     else {
-                                        $sql = $sql . " WHERE price > 50000000";
+                                        if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
+                                            $sql = $sql . " WHERE product_name LIKE '%" . $search . "%' OR category_id = 
+                                            (SELECT category_id FROM `category` WHERE category_name LIKE '%" . $search . "%') OR brand_id = 
+                                            (SELECT brand_id FROM `brand` WHERE brand_name LIKE '%" . $search . "%') OR description LIKE '%" . $search . "%'";
+                                        }
                                     }
-                                    if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
-                                        $sql = $sql . " AND (product_name LIKE '%" . $search . "%' OR category_id = 
-                                        (SELECT category_id FROM `category` WHERE category_name LIKE '%" . $search . "%') OR brand_id = 
-                                        (SELECT brand_id FROM `brand` WHERE brand_name LIKE '%" . $search . "%') OR description LIKE '%" . $search . "%')";
+                                    if (isset($_GET['sort'])) {
+                                        if ($_GET['sort'] == 1) {
+                                            $sql = $sql . " ORDER BY saledate DESC";
+                                        }
+                                        elseif ($_GET['sort'] == 3) {
+                                            $sql = $sql . " ORDER BY price ASC";
+                                        }
+                                        elseif ($_GET['sort'] == 4) {
+                                            $sql = $sql . " ORDER BY price DESC";
+                                        }
+                                        else {
+                                            $sql = $sql . " ORDER BY sold DESC";
+                                        }
                                     }
-                                }
-                                else {
-                                    if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
-                                        $sql = $sql . " WHERE product_name LIKE '%" . $search . "%' OR category_id = 
-                                        (SELECT category_id FROM `category` WHERE category_name LIKE '%" . $search . "%') OR brand_id = 
-                                        (SELECT brand_id FROM `brand` WHERE brand_name LIKE '%" . $search . "%') OR description LIKE '%" . $search . "%'";
-                                    }
-                                }
-                                if (isset($_GET['sort'])) {
-                                    if ($_GET['sort'] == 1) {
-                                        $sql = $sql . " ORDER BY saledate DESC";
-                                    }
-                                    elseif ($_GET['sort'] == 3) {
-                                        $sql = $sql . " ORDER BY price ASC";
-                                    }
-                                    elseif ($_GET['sort'] == 4) {
-                                        $sql = $sql . " ORDER BY price DESC";
-                                    }
-                                    else {
-                                        $sql = $sql . " ORDER BY sold DESC";
-                                    }
-                                }
-                                $rs = $conn->query($sql);
+                                    $rs = $conn->query($sql);
 
-                                foreach ($conn->query($sql . "LIMIT ". $count_product . " , " .$numProductInAPage)->fetch_all(MYSQLI_ASSOC) as $value => $row) {
-                                        echo "<div class='col l-10-2'>";
-                                            echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";  
-                                                if ($row['discount'] != 0) {
-                                                    displayDiscountTagWithHtml($row['discount']);
-                                                }                                          
-                                                echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
-                                                echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
-                                                echo "<div class='product-item__price'>";  
-                                                    $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
-                                                    echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
-                                                    echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
-                                                echo "</div>";
-                                            echo "</a>";
-                                        echo "</div>";
-                                        $count_product++;  
-                                    }     
-                                echo "</div>                     
-                            </div>       
+                                    foreach ($conn->query($sql . " LIMIT ". $count_product . " , " .$numProductInAPage)->fetch_all(MYSQLI_ASSOC) as $value => $row) {
+                                            echo "<div class='col l-10-2'>";
+                                                echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";  
+                                                    if ($row['discount'] != 0) {
+                                                        displayDiscountTagWithHtml($row['discount']);
+                                                    }                                          
+                                                    echo "<div class='product-item__img' style='background-image: url(". $row['image_link'] .");'></div>"; 
+                                                    echo "<h2 class = 'product-item__name'>" . $row['product_name'] . "</h2>";
+                                                    echo "<div class='product-item__price'>";  
+                                                    if ($row['discount'] != 0) {
+                                                        $discount = $row['price'] - ($row['price'] * $row['discount'] * 0.01);
+                                                        echo "<span class = 'product-item__current-price'>" . number_format($discount, 0, ',','.') . " ₫</span>";
+                                                        echo "<span class = 'product-item__original-price'>" .  number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                                    }
+                                                    else{
+                                                        echo "<span class = 'product-item__current-price'>" . number_format($row['price'], 0, ',', '.') . " ₫</span>";
+                                                    }
+                                                    echo "</div>";
+                                                echo "</a>";
+                                            echo "</div>";
+                                            $count_product++;  
+                                        }     
+                                    echo "</div>                     
+                                </div>       
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>";
+                </div>";
+                }
             }
-        }
-        ?>
-        
-        <div class="list-product_btn">
-            <div class="grid wide">
-                <ul class="pagination justify-content-center">
-                    <?php
-                        $totalProduct = $allDiscountProduct->rowCount();
-                        $totalPage = $totalProduct/$numProductInAPage;
-                        displayListPageButtonViewProduct($totalPage);
-                    ?>
-                </ul>
-            </div>
-        </div>                        
-    
+            ?>
+            
+            <div class="list-product_btn">
+                <div class="grid wide">
+                    <ul class="pagination justify-content-center">
+                        <?php
+                            $totalProductAfterSearch = $count_product;
+                            $totalPage = $totalProductAfterSearch/$numProductInAPage;
+                            displayListPageButtonViewProduct($totalPage);
+                        ?>
+                    </ul>
+                </div>
+            </div>                        
+        </div>
         
         <!-- MAP & FEATURE -->
         <!-- Cần fix giao diện :( -->
