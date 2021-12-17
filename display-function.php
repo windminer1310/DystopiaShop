@@ -102,79 +102,23 @@
         }
     }
 
-    function displayListPageButton($totalPage, $sort, $search, $price_from, $page_number){
-        if($totalPage > floor($totalPage)){
-            for($count = 1; $count <= floor($totalPage)+1; $count++){
-                $link = "view-product-list.php?page_num=" . $count;
-                if (isset($_GET['sort'])) {
-                    $link = $link . "&sort=" . $sort;
-                }
-                if (isset($_GET['price_from'])) {
-                    $link = $link . "&price_from=" . $price_from;
-                }
-                if (isset($_GET['search']) && strlen($_GET['search'])>0) {
-                   $link = $link . "&search=" . $search;
-                }
-                if($count == $page_number) 
-                    echo "<li class='page-item active'><a class='page-link' href='" . $link . "'>" . $count . "</a></li>";
-                else 
-                    echo "<li class='page-item'><a class='page-link' href='" . $link . "'>" . $count . "</a></li>";
-            }
-        }
-        else {
-            for($count = 1; $count < floor($totalPage)+1; $count++){
-                $link = "view-product-list.php?page_num=" . $count;
-                if (isset($_GET['sort'])) {
-                    $link = $link . $sort;
-                }
-                if (isset($_GET['price_from'])) {
-                    $link = $link . $price_from;
-                }
-                if (isset($_GET['search']) && strlen($_GET['search'])>0) {
-                   $link = $link . "&search=" . $search;
-                }
-                if($count == $page_number) 
-                    echo "<li class='page-item active'><a class='page-link' href='" . $link . "'>" . $count . "</a></li>";
-                else 
-                    echo "<li class='page-item'><a class='page-link' href='" . $link . "'>" . $count . "</a></li>";
-            }
-        }
-    }
 
-    function displayListPageButtonHome($totalPage){
-        if($totalPage > floor($totalPage)){
-            for($count = 1; $count <= floor($totalPage)+1; $count++){
-                if($count == 1) 
-                    echo "<li class='page-item active'><div class='page-link' >" . $count . "</div></li>";
-                else 
-                    echo "<li class='page-item'><div class='page-link' >" . $count . "</div></li>";
-            }
-        }
-        else {
-            for($count = 1; $count < floor($totalPage)+1; $count++){
-                if($count == 1) 
-                    echo "<li class='page-item active' ><div class='page-link' >" . $count . "</div></li>";
-                else 
-                    echo "<li class='page-item' ><div class='page-link' >" . $count . "</div></li>";
-            }
-        }
-    }
 
-    function displayListPageButtonViewProduct($totalPage){
+    function displayListPageButton($totalPage, $href){
         if($totalPage > floor($totalPage)){
             for($count = 1; $count <= floor($totalPage)+1; $count++){
                 if($count == 1) 
-                    echo "<li class='page-item active'><a href='#product-view' class='page-link' >" . $count . "</a></li>";
+                    echo "<li class='page-item active'><a href='#".$href."' class='page-link' >" . $count . "</a></li>";
                 else 
-                    echo "<li class='page-item'><a href='#product-view' class='page-link' >" . $count . "</a></li>";
+                    echo "<li class='page-item'><a href='#".$href."' class='page-link' >" . $count . "</a></li>";
             }
         }
         else {
             for($count = 1; $count < floor($totalPage)+1; $count++){
                 if($count == 1) 
-                    echo "<li class='page-item active'  ><a href='#product-view' class='page-link' >" . $count . "</a></li>";
+                    echo "<li class='page-item active'  ><a href='#".$href."' class='page-link' >" . $count . "</a></li>";
                 else 
-                    echo "<li class='page-item'  ><a href='#product-view' class='page-link' >" . $count . "</a></li>";
+                    echo "<li class='page-item'  ><a href='#".$href."' class='page-link' >" . $count . "</a></li>";
             }
         }
     } 
@@ -203,8 +147,8 @@
     }
 
     function cartIsEmpty($count){
-        if($count > 0) return true;
-        return false;
+        if($count > 0) return false;
+        return true;
     }
 
     function displayNImgProductView($imgLink, $totalImageProduct, $indexNumberImg){

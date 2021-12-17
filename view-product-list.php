@@ -53,7 +53,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
         <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <link href="lib/slick/slick.css" rel="stylesheet">
@@ -85,10 +85,10 @@
                         </button>
                     </form>
                     <div class="header__item">
-                        <a href="" class="header__icon-link">
+                        <a href="user-login.php#sale" class="header__icon-link">
                             <i class="header__icon bi bi-tags"></i>
                         </a>
-                        <a href="" class="header__link">
+                        <a href="user-login.php#sale" class="header__link">
                             Khuyến mãi
                         </a>
                     </div>
@@ -322,48 +322,14 @@
                         <?php
                             $totalProductAfterSearch = $count_product;
                             $totalPage = $totalProductAfterSearch/$numProductInAPage;
-                            displayListPageButtonViewProduct($totalPage);
+                            displayListPageButton($totalPage, 'product-view');
                         ?>
                     </ul>
                 </div>
             </div>                        
         </div>
         
-        <!-- MAP & FEATURE -->
-        <!-- Cần fix giao diện :( -->
-        <div class="map-and-feature">
-            <div class="grid wide">
-                <div class="row">
-                    <div class="col l-9">
-                        <!-- Google Map Start -->
-                        <div class="contact-map-wrap">
-                            <iframe title="google-map" class="contact-map" src="<?php echo ADDRESS_GOOGLE_URL ?>"></iframe>
-                        </div>
-                        <!-- Google Map End -->
-                    </div>
-                    <div class="col l-3">
-                        <div class="features">
-                            <div class="feature-content">
-                                <i class="fab fa-cc-mastercard"></i>
-                                Thanh toán an toàn
-                            </div>
-                            <div class="feature-content">
-                                <i class="fa fa-truck"></i>
-                                Giao hàng toàn quốc
-                            </div>
-                            <div class="feature-content">
-                                <i class="fa fa-sync-alt"></i>
-                                Đổi trả trong vòng 7 ngày
-                            </div>
-                            <div class="feature-content">
-                                <i class="fa fa-comments"></i>
-                                Hổ trợ 24/7
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
 
         <!-- Footer Start -->
         <footer class="footer">

@@ -92,17 +92,17 @@
                     <a href="" class="header__link header__user-orders">Đơn hàng</a>
                 </div>
                 
-                <div class="header__item header__navbar-user">
+                <div class="header__item header__user">
                     <a class="header__icon-link" href="">
-                        <img class = "header__avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
+                        <i class="header__icon bi bi-person"></i>
                     </a>
                     <a href="" class="header__link header__user-login"><?php echo $name;?></a>
 
-                    <ul class="header__navbar-user-menu">
-                        <li class="header__navbar-user-item">
+                    <ul class="header__user-menu">
+                        <li class="header__user-item">
                             <a href="./my-account.php">Tài khoản của tôi</a>
                         </li>
-                        <li class="header__navbar-user-item header__navbar-user-item--separate">
+                        <li class="header__user-item">
                             <a href="./logout.php" >Đăng xuất</a>
                         </li>
                     </ul>
@@ -112,47 +112,73 @@
                 <div class="header__item header__cart-wrap">
                     <a href="./cart.php" class="header__icon-link">
                         <i class="header__icon bi bi-cart3"></i>
-                    </a>
-                    <a href="./cart.php" class="header__link">
-                        Giỏ hàng
-                    </a>
-                    <?php 
+                        <?php 
                         if($numburProductInCart > 0){
                             echo "<span class='header__cart-notice'>".$numburProductInCart." </span>";
                         }
                     ?>
-                    <!-- No cart: header__cart-list--no-cart -->
-                    <div class="header__cart-list header__cart-list--no-cart">
-                        <!-- <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
-                        <span class="header__cart-list-no-cart-msg">
-                                    Chưa có sản phẩm
-                        </span> -->
+                    </a>
+                    <a href="./cart.php" class="header__link">
+                        Giỏ hàng
+                    </a>
+                    <?php
+                        $tableCart = 'cart';
+                        $column = 'user_id';
+                        $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
+                    
+                        $count = $getCartRow->rowCount();
+                        if(cartIsEmpty($count)){
+                            //No cart: header__cart--no-item
+                            echo '<div class="header__cart-list header__cart--no-item">
+                                <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
+                                <span class="header__cart-list-no-cart-msg">
+                                            Chưa có sản phẩm
+                                </span>
+                            <?div>';
+                        }
+                        else{
+                            echo '<div class="header__cart-list">
+                                <h4 class="header__cart-heading">Sản phẩm đã thêm</h4>
+                                <ul class="header__cart-list-item" id="scrollbar">';
+                                $totalPrice = 0;
+                                    foreach ($row = $getCartRow->fetchAll() as $value => $row) {
+                                        $id_product = $row['product_id'];
+                                        $tableName = 'product';
+                                        $column = 'product_id';
+                                        $productInfo = getRowWithValue( $tableName, $column, $id_product);
+                                        $productLink = 'product-detail.php?id='.$productInfo['product_id'];
+                                        $img = $productInfo['image_link'];
+                                        $productName = $productInfo['product_name'];
+                                        $quantity = $row['qty'];
+                                        $price = 0;
+                                        if ($productInfo['discount'] == 0){
+                                            $price = $productInfo['price']; 
+                                        }else{
+                                            $price = $productInfo['price'] * (100 - $productInfo['discount']) / 100;
+                                        }
+                                        $totalPrice += $price*$quantity;
 
-                        <h4 class="header__cart-heading">Sản phẩm đã thêm</h4>
-                        <ul class="header__cart-list-item">
-                                <li class="header__cart-item">
-                                    <img src="https://hanoicomputercdn.com/media/product/58177_asus_strix_lc_360_rgb_black_8.png" alt="" class="header__cart-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-head">
-                                            <h4 class="header__cart-item-name">Asus ROG Strix</h4>
-                                            <div class="header__cart-item-price-wrap">
-                                                <span class="header__cart-item-price">10.000.000đ</span>
-                                                <span class="header__cart-item-multiply">x</span>
-                                                <span class="header__cart-item-qnt">2</span>
-                                            </div>
-                                        </div>
-                                        <div class="header__cart-item-body">
-                                            <span class="header__cart-item-description">
-                                                    Phân loại: Bạc
-                                                </span>
-                                            <span class="header__cart-item-remove">Xóa</span>
-                                        </div>
+                                        echo '<li class="header__cart-item">
+                                            <a href="'.$productLink.'" class="header__cart-img-link"><img src="'.$img.'" alt="Ảnh sản phẩm" class="header__cart-img"></a>
+                                                <div class="header__cart-item-info">
+                                                <a href="'.$productLink.'" class="header__cart-item-name">'.$productName.'</a>
+                                                    <span class="header__cart-item-qnt">Số lượng: '.$quantity.'</span>
+                                                    <span class="header__cart-item-price">Đơn giá: '.number_format($price, 0, ',', '.').'đ</span>                  
+                                                </div>
+                                            </li>
+                                        ';
+                                    }
+                                echo '</ul>';
+                                echo '<div class="header__cart-footer">
+                                        <h4 class="cart-footer__title">Tổng tiền sản phẩm</h4>
+                                        <div class="cart-footer__total-price">'.number_format($totalPrice, 0, ',', '.').'đ</div>
                                     </div>
-                                </li>
-                            </ul>
-
-                        <!-- <a href="/" onclick="mustInput();" class="header__cart-view-cart btn btn--primary">Xem giỏ hàng</a> -->
-                    </div>
+                                    <a href="./cart.php" class="header__cart-view-cart">Xem giỏ hàng</a>
+                                    ';
+                            echo '</div>';
+                        }  
+                    ?>
+                    
                 </div>
             </div>
         </div>
@@ -340,7 +366,7 @@
                     <?php
                         $totalProduct = $allDiscountProduct->rowCount();
                         $totalPage = $totalProduct/$numProductInAPage;
-                        displayListPageButtonHome($totalPage);
+                        displayListPageButton($totalPage, 'sale');
                     ?>
                 </ul>
             </div>
@@ -543,13 +569,18 @@
             }
         });
 
+        // Bắt sự kiện cuộn chuột
         document.addEventListener("DOMContentLoaded",function() {
-            // Bắt sự kiện cuộn chuột
+            
             var trangthai="under120";
+
             var cartList = document.querySelectorAll('div.header__cart-list');
             cartList = cartList[0];
             var menu = document.querySelectorAll('header.header');
-            var menu = menu[0];
+            menu = menu[0];
+            var userMenu = document.querySelectorAll('ul.header__user-menu');
+            userMenu = userMenu[0];
+
             window.addEventListener("scroll",function(){
                 var x = pageYOffset;
                 if(x > 120){
@@ -557,18 +588,23 @@
                     {
                         trangthai="over120";
                         menu.classList.add('header-shrink');
-                        cartList.classList.add('header__cart-fix-shrink');
+                        cartList.classList.add('header__fix-shrink');
+                        userMenu.classList.add('header__fix-shrink');
                     }
                 }
                 else if(x <= 120){
                     if(trangthai=="over120"){
-                    menu.classList.remove('header-shrink');
-                    cartList.classList.remove('header__cart-fix-shrink');
-                    trangthai="under120";}
-                }
+                        menu.classList.remove('header-shrink');
+                        cartList.classList.remove('header__fix-shrink');
+                        userMenu.classList.remove('header__fix-shrink');
+
+                        trangthai="under120";}
+                    }
             
             })
         })
+
+        
     </script>
     
 </body>

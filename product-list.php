@@ -99,10 +99,10 @@
                         </button>
                     </form>
                     <div class="header__item">
-                        <a href="#sale" class="header__icon-link">
+                        <a href="user-login.php#sale" class="header__icon-link">
                             <i class="header__icon bi bi-tags"></i>
                         </a>
-                        <a href="#sale" class="header__link">
+                        <a href="user-login.php#sale" class="header__link">
                             Khuyến mãi
                         </a>
                     </div>
@@ -300,7 +300,7 @@
 
                                     foreach ($conn->query($sql . " LIMIT ". $count_product . " , " .$numProductInAPage)->fetch_all(MYSQLI_ASSOC) as $value => $row) {
                                             echo "<div class='col l-10-2'>";
-                                                echo "<a class='product-item' href='view-product-detail.php?id=" . $row['product_id'] . "'>";  
+                                                echo "<a class='product-item' href='product-detail.php?id=" . $row['product_id'] . "'>";  
                                                     if ($row['discount'] != 0) {
                                                         displayDiscountTagWithHtml($row['discount']);
                                                     }                                          
@@ -336,13 +336,142 @@
                         <?php
                             $totalProductAfterSearch = $count_product;
                             $totalPage = $totalProductAfterSearch/$numProductInAPage;
-                            displayListPageButtonViewProduct($totalPage);
+                            displayListPageButton($totalPage, 'product-view');
                         ?>
                     </ul>
                 </div>
             </div>                        
         </div>
         
+        <!-- MAP & FEATURE -->
+   
+
+        <!-- Footer Start -->
+        <footer class="footer">
+            <div class="grid wide">
+                <div class="row">
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Chăm sóc khách hàng</h3>
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Trung tâm trợ giúp</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Hướng dẫn mua hàng</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Chính sách thanh toán</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Chính sách giao hàng</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Chính sách hoàn trả</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Liên lạc</h3>
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fas fa-map-marked-alt"></i><?php echo SHOP_ADDRESS ?>
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="mailto:<?php echo SHOP_EMAIL ?>" class="footer-item__link">
+                                    <i class="footer-item__icon fas fa-envelope"></i><?php echo SHOP_EMAIL ?>
+                            </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="tel:<?php echo SHOP_PHONE ?>" class="footer-item__link">
+                                    <i class="footer-item__icon fa fa-phone"></i><?php echo SHOP_PHONE ?>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Về Dystopia</h3>
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Giới thiệu</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Tuyển dụng</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Chính sách bảo mật</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Điều khoản</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Theo dõi</h3>
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-twitter-square"></i> Twitter
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-facebook-square"></i> Facebook
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-linkedin"></i> LinkedIn
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-instagram"></i> Instagram
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-youtube-square"></i> Youtube
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Vào cửa hàng trên ứng dụng</h3>
+                        <div class="footer__download">
+                            <img src="./img/download/qr_code.png" alt="QR Code" class="footer__download-qr">
+                            <div class="footer__download-apps">
+                                <a href="" class="footer__download-app-link">
+                                    <img src="./img/download/google_play.png" alt="Google play" class="footer__download-app-img">
+                                </a>
+                                <a href="" class="footer__download-app-link">
+                                    <img src="./img/download/app_store.png" alt="App store" class="footer__download-app-img">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <div class="grid wide">
+                    <p class="footer__text">© 2021 Bản quyền thuộc về Team ... </p>
+                </div>
+            </div>
+            <!-- <div class="row payment align-items-center">
+                <div class="col-md-6">
+                    <div class="payment-method">
+                        <h2>Chấp nhận thanh toán</h2>
+                        <img src="img/payment-method.png" alt="Payment Method" />
+                    </div>
+                </div>
+            </div> -->
+        </footer>
+        <!-- Footer End -->
        
         
         <!-- Back to Top -->

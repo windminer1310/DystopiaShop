@@ -88,62 +88,14 @@
                     <a href="./login.php" class="header__link header__user-login">Đăng nhập</a>
                 </div>
 
-                <!-- Đã đăng nhập -->
-                <!-- <div class="header__item">
-                    <a class="header__icon-link" href="">
-                        <i class="header__icon bi bi-clipboard-check"></i>
-                    </a>
-                    <a href="" class="header__link header__user-orders">Đơn hàng</a>
-                </div>
-                <div class="header__item">
-                    <a class="header__icon-link" href="">
-                        <i class="header__icon bi bi-person"></i>
-                    </a>
-                    <a href="" class="header__link header__user-login">Hữu Lộc</a>
-                </div> -->
-
-
                 <div class="header__item header__cart-wrap">
-                    <a href="" class="header__icon-link">
+                    <a href="" class="header__icon-link" onclick="mustInput();">
                         <i class="header__icon bi bi-cart3"></i>
                     </a>
-                    <a href="" class="header__link">
+                    <a href="" class="header__link" onclick="mustInput();">
                         Giỏ hàng
                     </a>
-
-                    <!-- <span class="header__cart-notice">3</span> -->
-                    <!-- No cart: header__cart-list--no-cart -->
-                    <div class="header__cart-list header__cart-list--no-cart">
-                        <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
-                        <span class="header__cart-list-no-cart-msg">
-                                    Chưa có sản phẩm
-                                </span>
-
-                        <!-- <h4 class="header__cart-heading">Sản phẩm đã thêm</h4> -->
-                        <!-- <ul class="header__cart-list-item">
-                                <li class="header__cart-item">
-                                    <img src="https://hanoicomputercdn.com/media/product/58177_asus_strix_lc_360_rgb_black_8.png" alt="" class="header__cart-img">
-                                    <div class="header__cart-item-info">
-                                        <div class="header__cart-item-head">
-                                            <h4 class="header__cart-item-name">Asus ROG Strix</h4>
-                                            <div class="header__cart-item-price-wrap">
-                                                <span class="header__cart-item-price">10.000.000đ</span>
-                                                <span class="header__cart-item-multiply">x</span>
-                                                <span class="header__cart-item-qnt">2</span>
-                                            </div>
-                                        </div>
-                                        <div class="header__cart-item-body">
-                                            <span class="header__cart-item-description">
-                                                    Phân loại: Bạc
-                                                </span>
-                                            <span class="header__cart-item-remove">Xóa</span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul> -->
-
-                        <!-- <a href="/" onclick="mustInput();" class="header__cart-view-cart btn btn--primary">Xem giỏ hàng</a> -->
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -327,11 +279,11 @@
 
         <div class="list-product_btn">
             <div class="grid wide">
-                <ul class="pagination justify-content-center">
+                <ul class="pagination">
                     <?php
                         $totalProduct = $allDiscountProduct->rowCount();
                         $totalPage = $totalProduct/$numProductInAPage;
-                        displayListPageButtonHome($totalPage);
+                        displayListPageButton($totalPage, 'sale');
                     ?>
                 </ul>
             </div>

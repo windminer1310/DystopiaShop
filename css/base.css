@@ -34,3 +34,38 @@ html {
 .no-padding {
     padding: 0;
 }
+
+/*Button*/
+
+.btn {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    height: 40px;
+    min-width: 230px;
+    border: 1px solid var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn.btn--full-width {
+    width: 100%;
+}
+
+.btn.btn--white {
+    background-color: var(--white-color);
+    color: var(--primary-color);
+}
+
+.btn.btn--disabled {
+    color: #949494;
+    cursor: default;
+    background-color: #c3c3c3;
+    border: none;
+}   

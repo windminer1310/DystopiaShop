@@ -38,7 +38,7 @@
                 alertUpdateCartStatus($statusCart);
             }
         }else{
-            echo "Số lượng sách không đủ để cung cấp.";
+            echo "Số lượng sản phẩm không đủ để cung cấp.";
         }
     }else{
         echo "Truy xuất dữ liệu thất bại!";
