@@ -80,7 +80,7 @@
 
                     <div class="auth-form__controls">
                         <input type="button" class="btns auth-form__controls-back btns--normal" onclick="location.href='index.php'" value="TRỞ LẠI">
-                        <input class="btns btns--disabled btns--primary " type="submit" name="submit" id="submit" onclick="login(); return false" value="ĐĂNG NHẬP" disabled>
+                        <input class="btns btns--disabled btns--primary" type="submit" name="submit" id="submit" onclick="login(); return false" value="ĐĂNG NHẬP" disabled>
                     </div>
                 </form>
             </div>
@@ -101,43 +101,6 @@
         </div>
     </div>
 
-
-
-     <!-- MAP & FEATURE -->
-    <!-- Cần fix giao diện :( -->
-    <div class="map-and-feature">
-        <div class="grid wide">
-            <div class="row">
-                <div class="col l-9">
-                    <!-- Google Map Start -->
-                    <div class="contact-map-wrap">
-                        <iframe title="google-map" class="contact-map" src="<?php echo ADDRESS_GOOGLE_URL ?>"></iframe>
-                    </div>
-                    <!-- Google Map End -->
-                </div>
-                <div class="col l-3">
-                    <div class="features">
-                        <div class="feature-content">
-                            <i class="fab fa-cc-mastercard"></i>
-                            Thanh toán an toàn
-                        </div>
-                        <div class="feature-content">
-                            <i class="fa fa-truck"></i>
-                            Giao hàng toàn quốc
-                        </div>
-                        <div class="feature-content">
-                            <i class="fa fa-sync-alt"></i>
-                            Đổi trả trong vòng 7 ngày
-                        </div>
-                        <div class="feature-content">
-                            <i class="fa fa-comments"></i>
-                            Hổ trợ 24/7
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer Start -->
     <footer class="footer">

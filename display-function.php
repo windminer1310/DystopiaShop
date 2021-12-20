@@ -9,12 +9,27 @@
     function dayOfDate($date){
         $timestamp = strtotime($date);
         $day = date('w', $timestamp);
-        if($day == '8'){
-            return 'Chủ nhật ';
-        }
-        else {
-            return 'Thứ ' . $day;
-        }
+        $dayInWeekArray = [
+            'Chủ nhật',
+            'Thứ hai',
+            'Thứ ba',
+            'Thứ tư',
+            'Thứ năm',
+            'Thứ sáu',
+            'Thứ bảy'
+        ];
+        return $dayInWeekArray[$day];
+    }
+
+    function displayAddress($address){
+        $addressForm = explode( '-', $address);
+
+        $City = $addressForm[0];
+        $District = $addressForm[1];
+        $Ward = $addressForm[2];
+        $specificAddress = $addressForm[3];
+
+        return $City . ", " . $District . ", " . $Ward .", ". $specificAddress;
     }
 
     function approveStatus($status){

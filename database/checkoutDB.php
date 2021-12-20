@@ -5,13 +5,14 @@
     $password = "";
     $dbname = "database";
 
+
     if(isset($_SESSION['id']) && $_SESSION['totalPrice']){
         $user_id = $_SESSION['id'];
         $totalPrice = $_SESSION['totalPrice'];
     }
 
     if (isset($_POST["phone"]) && isset($_POST["name"]) && isset($_POST["email"]) && isset($_POST["city"]) && isset($_POST["district"])
-        && isset($_POST["ward"]) && isset($_POST["address"]) && isset($_POST["message"])){
+        && isset($_POST["ward"]) && isset($_POST["address"]) && isset($_POST["note"])){
         $getPhone =  $_POST["phone"];
         $getName =  $_POST["name"];
         $getEmail =  $_POST["email"];
@@ -19,7 +20,7 @@
         $getDistrict =  $_POST["district"];
         $getWard =  $_POST["ward"];
         $getAddress =  $_POST["address"];
-        $getmessage =  $_POST["message"];
+        $getNote =  $_POST["note"];
     }
     else{
         header('Location: ../checkout.php');
@@ -57,8 +58,10 @@
         }
     }
 
+    
     date_default_timezone_set('Asia/Ho_Chi_Minh');
     $currentDate = date('Y-m-d H:i:s');
+    
 
     $sql = "INSERT INTO transaction (status, address, user_id, user_name, user_email, user_phone, amount, product_id, payment, message, date)
     VALUES (0, '$specificAddress', $user_id, '$getName', '$getEmail', '$getPhone', '$productAmountPattern', '$productIdPattern', $totalPrice, '$getmessage', '$currentDate')";

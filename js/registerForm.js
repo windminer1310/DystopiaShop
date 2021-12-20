@@ -13,7 +13,7 @@ function success() {
 }
 
 function displayInvalidInfo(){
-    document.getElementById('auth-form__notify-text').innerHTML = '<div class="fail-auth__form">Vui lòng nhập đầy đủ thông tin!</div>';
+    document.getElementById('auth-form__notify-text').innerHTML = '<div class="fail-auth__form">Vui lòng nhập đầy đủ và nhập đúng định dạng thông tin!</div>';
         setTimeout(function() {
             document.getElementById('auth-form__notify-text').innerHTML = '';
         }, 5000);
@@ -68,7 +68,7 @@ function checkUserEmail() {
 function checkUserPassword() {
     hideInstructionBox("password");
     var getPassword = document.getElementById("password").value;
-    if (getPassword.length >= 5) {
+    if (getPassword.length >= 8) {
         document.getElementById('password').style.borderColor = "#dbdbdb";
         return true;
     }

@@ -2,15 +2,16 @@
 function success() {
     if(checkUserPhone(document.getElementById("phone").value) && checkUserPassword(document.getElementById("password").value)) {
         document.getElementById('submit').disabled = false; 
-
+        document.getElementById('submit').classList.remove('btns--disabled');
     } else { 
         document.getElementById('submit').disabled = true;
+        document.getElementById('submit').classList.add('btns--disabled');
     }
 }
 
 function checkUserPhone(getPhone)
 {
-    if(getPhone.length > 0){
+    if(getPhone.length >= 10 && getPhone.length <= 12 ){
         return true;
     }
     else return false;
@@ -18,7 +19,7 @@ function checkUserPhone(getPhone)
 
 function checkUserPassword(getPassword)
 {
-    if(getPassword.length > 0){
+    if(getPassword.length >= 8){
         return true;
     }
     else return false;

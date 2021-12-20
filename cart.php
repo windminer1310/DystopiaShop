@@ -86,21 +86,33 @@
                         <a href="" class="header__link header__user-orders">Đơn hàng</a>
                     </div>
                     
-                    <div class="header__item header__navbar-user">
-                        <a class="header__icon-link" href="">
-                            <img class = "header__avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
-                        </a>
-                        <a href="" class="header__link header__user-login"><?php echo $name;?></a>
+                    <div class="header__item header__user">
+                    <?php 
+                        if(!isset($_SESSION['img_url'])){
+                            echo "<a class='header__icon-link' href=''>
+                                <i class='header__icon bi bi-person'></i>
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                        else {
+                            echo "<a class='header__icon-link' href=''>
+                                <img class = 'header__avatar-img' src=". $_SESSION['img_url'] .">
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                    ?>
 
-                        <ul class="header__navbar-user-menu">
-                            <li class="header__navbar-user-item">
+                        <ul class="header__user-menu">
+                            <li class="header__user-item">
                                 <a href="./my-account.php">Tài khoản của tôi</a>
                             </li>
-                            <li class="header__navbar-user-item header__navbar-user-item--separate">
+                            <li class="header__user-item">
                                 <a href="./logout.php" >Đăng xuất</a>
                             </li>
                         </ul>
                     </div>
+
+
 
 
                 </div>
@@ -134,8 +146,9 @@
                     <div class='grid wide'>
                         <div class='product-cart-top row'>
                             <div class='col l-8'>
+                                <div>
                                 <div class='header-product-cart'>
-                                    <span class = 'product-cart__text' >Tổng tiền</span>
+                                    <span class = 'header__text-field' >Tổng tiền</span>
                                     <span class = 'product-item__current-price totalPrice'></span>
                                 </div>
                                 <div class='list-product-cart'>";
@@ -184,13 +197,13 @@
                                     </div>";
                                 }
                             echo "</div>
-                            
                             </div>
+                        </div>
                         <div class='col l-4'>
                             <div class='product-cart__checkout'>
                                 
                                 <div class='body-product-cart'>
-                                    <div class='product-cart__text'>Thành tiền</div>
+                                    <div class='header__text-field'>Thành tiền</div>
                                     <span class = 'product-item__current-price totalPrice'></span>
                                 </div>
                                 <div>
@@ -203,8 +216,12 @@
                 </div>";
                 echo "<script type=\"text/javascript\">
                         var totalPrice = document.getElementsByClassName('totalPrice');
-                        totalPrice[0].innerHTML = '" . number_format($totalPrice, 0, ',', '.') . " ₫';
-                        totalPrice[1].innerHTML = '" . number_format($totalPrice, 0, ',', '.') . " ₫';
+                        
+                        totalField = totalPrice.length;
+                        for( var i = 0; i < totalField; i++)
+                        {
+                            totalPrice[i].innerHTML = '" . number_format($totalPrice, 0, ',', '.') . " ₫';
+                        }
                     </script>";
         }
         else{
@@ -214,14 +231,14 @@
                         <div class='col l-8 l-o-2'>";
                         echo "<div class='cart-page-inner'>
                                 <div class='header-product-cart'>
-                                    <span class = 'product-cart__text' >GIỎ HÀNG TRỐNG</span>
+                                    <span class = 'header__text-field' >GIỎ HÀNG TRỐNG</span>
                                 </div>";
                                 echo "<div class='empty-cart__img'>";
                                     echo "<img src='img/emptycart.svg' alt=''>";
                                 echo "</div>";
                                 echo "<p id='text-cart__empty'>Chưa có sản phẩm trong giỏ hàng của bạn!</p>
                                 <div style='text-align: center;'>
-                                    <a class='btn-buy__product btn-primary-color' name = 'submit' id='submit' type='submit' href='product-list.php#product-view'><span class='btn-buy__text' >MUA SẮM NGAY</span></a>
+                                    <a class='btn' name = 'submit' id='submit' type='submit' href='product-list.php#product-view'><span class='' >MUA SẮM NGAY</span></a>
                                 </div>";
                         echo "</div>";
                     echo "</div>";

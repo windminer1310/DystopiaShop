@@ -14,7 +14,8 @@
     }
 
     $totalPrice = 0;
-
+    $bankingMethod = 'banking-method';
+    $cashMethod = 'cash-method';
 ?>
 
 <!DOCTYPE html>
@@ -87,17 +88,27 @@
                         <a href="" class="header__link header__user-orders">Đơn hàng</a>
                     </div>
                     
-                    <div class="header__item header__navbar-user">
-                        <a class="header__icon-link" href="">
-                            <img class = "header__avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
-                        </a>
-                        <a href="" class="header__link header__user-login"><?php echo $name;?></a>
+                    <div class="header__item header__user">
+                    <?php 
+                        if(!isset($_SESSION['img_url'])){
+                            echo "<a class='header__icon-link' href=''>
+                                <i class='header__icon bi bi-person'></i>
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                        else {
+                            echo "<a class='header__icon-link' href=''>
+                                <img class = 'header__avatar-img' src=". $_SESSION['img_url'] .">
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                    ?>
 
-                        <ul class="header__navbar-user-menu">
-                            <li class="header__navbar-user-item">
+                        <ul class="header__user-menu">
+                            <li class="header__user-item">
                                 <a href="./my-account.php">Tài khoản của tôi</a>
                             </li>
-                            <li class="header__navbar-user-item header__navbar-user-item--separate">
+                            <li class="header__user-item">
                                 <a href="./logout.php" >Đăng xuất</a>
                             </li>
                         </ul>
@@ -113,9 +124,11 @@
         <div class="homepage">
             <div class="grid wide">
                 <ul class="path-homepage">
-                    <li class="path-link "><a href="index.php">Trang chủ</a></li>
+                    <li class="path-link "><a href="user-login.php">Trang chủ</a></li>
                     <li class="path-link ">></li>
-                    <li class="path-link "><a href="view-product-list.php">Sản phẩm</a></li>
+                    <li class="path-link "><a href="product-list.php">Sản phẩm</a></li>
+                    <li class="path-link ">></li>
+                    <li class="path-link "><a href="cart.php">Giỏ hàng</a></li>
                     <li class="path-link ">></li>
                     <li class="path-link active">Thanh toán</li>
                 </ul>
@@ -137,7 +150,7 @@
                             <div class='product-cart-top row'>
                                 <div class='col l-7'>
                                     <div class='list-info__checkout'>
-                                        <h5  class = 'product-cart__text'>Địa chỉ nhận hàng</h5>
+                                        <h5  class = 'header__text-field'>Địa chỉ nhận hàng</h5>
                                         <div class = 'one-field-checkout'>
                                             <p class = 'title-checkout-text'>Họ tên <span class = 'must-input-icon'>(*)</span></p>
                                             <input id = 'name' name = 'name' class = 'auth-form__input' type='text' placeholder='Nhập tên của bạn' required>
@@ -152,7 +165,7 @@
                                             <input id = 'email' name = 'email' class = 'auth-form__input' type='text' pattern='[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$' placeholder='Nhập Email của bạn' required>
                                         </div>
                                         </div>
-                                        <h5  class = 'product-cart__text'>Địa chỉ nhận hàng</h5>
+                                        <h5  class = 'header__text-field'>Địa chỉ nhận hàng</h5>
                                         <div class = 'two-field-checkout'>
                                             <div class = 'size-s-field'>
                                                 <p class = 'title-checkout-text'>Tỉnh/Thành phố <span class = 'must-input-icon'>(*)</p>
@@ -182,8 +195,8 @@
                             <div class='col l-5'>
                                 <div class='list-info__checkout'>
                                     <div class='header-product-cart'>
-                                        <h5  class = 'product-cart__text'>Thông tin đơn hàng</h5>
-                                        <a href='' class='back-to-cart__text'>Chỉnh sửa</a>
+                                        <h5  class = 'header__text-field'>Thông tin đơn hàng</h5>
+                                        <a href='./product-list.php' class='back-to-cart__text'>Chỉnh sửa</a>
                                     </div>
                                     <div class='list-product-info__checkout'>";
                                         $tableCart = 'cart';
@@ -226,14 +239,14 @@
                             </div>
                             <div class='col l-7'>
                                 <div class='note-payment-info__checkout form-after'>
-                                <h5 class = 'product-cart__text'>Ghi chú cho đơn hàng</h5>
+                                <h5 class = 'header__text-field'>Ghi chú cho đơn hàng</h5>
                                 <div class = 'one-field-checkout'>
                                     <input id = 'note' name = 'note' class = 'auth-form__input' type='text' placeholder='Nhập thông tin ghi chú cho nhà bán hàng'>
                                 </div>
-                                <h5 class = 'product-cart__text'>Phương thức thanh toán <span class = 'must-input-icon'>(*)</span></h5>
+                                <h5 class = 'header__text-field'>Phương thức thanh toán <span class = 'must-input-icon'>(*)</span></h5>
                                 <div class = 'payment-method'>
-                                    <label for='banking' class = 'payment-method__box checked-hover' id='banking-method' onclick='activePaymentMethod('banking-method')'>
-                                        <input hidden type='radio' name = 'payment_type' value='banking' id='banking'>
+                                    <label for='banking' class = 'payment-method__box' id='banking-method' >
+                                        <input hidden class='payment-method__label' type='radio' name = 'payment_type' value='banking' id='banking'>
                                         <div>
                                             <p style = 'margin-top: 0px' class = 'title-checkout-text'>Thanh toán qua Internet Banking</p>
                                             <p class = 'checkout-text payment-method__text'>MoMo, Paypal</p>
@@ -242,8 +255,8 @@
                                             <i class='fas fa-money-check-alt payment-icon'></i>
                                         </div>      
                                     </label>
-                                    <label for='cash' class = 'payment-method__box active-method' id='cash-method' onclick='activePaymentMethod('cash-method')'>
-                                        <input hidden type='radio' name = 'payment_type' value='cash' id='cash' checked required>
+                                    <label for='cash' class = 'payment-method__box active-method' id='cash-method' >
+                                        <input hidden class='payment-method__label' type='radio' name = 'payment_type' value='cash' id='cash' checked required>
                                         <div >
                                             <p style = 'margin-top: 0px' class = 'title-checkout-text'>Thanh toán khi nhận hàng</p>
                                             <p class = 'checkout-text payment-method__text'>Thanh toán bằng tiền mặt khi nhận hàng tại nhà hoặc showroom</p>
@@ -258,13 +271,20 @@
                             <div class='col l-5'>
                                 <div class='form-after'>  
                                     <div class='product-cart__checkout'>
-                                        
                                         <div class='body-product-cart'>
-                                            <div class='product-cart__text'>Thành tiền</div>
+                                            <div class='header__text-field-sub'>Tạm tính</div>
+                                            <span class = 'totalPrice product-item__sub-price'></span>
+                                        </div>
+                                        <div class='body-product-cart'>
+                                            <div class='header__text-field-sub'>Phí vận chuyển</div>
+                                            <span class = 'product-item__sub-price'>0 ₫</span>
+                                        </div>
+                                        <div class='body-product-cart'>
+                                            <div class='header__text-field'>Thành tiền</div>
                                             <span class = 'product-item__current-price totalPrice'></span>
                                         </div>
                                         <div>
-                                            <a class='text-checkout-cart__product' href='./checkout.php'><div class = 'btn btn--full-width'>XÁC NHẬN THANH TOÁN</div></a>
+                                            <button class='btn btn--full-width' type='submit'>XÁC NHẬN THANH TOÁN</button>
                                         </div>
                                     </div>
                                 </div>
@@ -275,7 +295,12 @@
                 </div>";
                 echo "<script type=\"text/javascript\">
                         var totalPrice = document.getElementsByClassName('totalPrice');
-                        totalPrice[0].innerHTML = '" . number_format($totalPrice, 0, ',', '.') . " ₫';
+
+                        totalField = totalPrice.length;
+                        for( var i = 0; i < totalField; i++)
+                        {
+                            totalPrice[i].innerHTML = '" . number_format($totalPrice, 0, ',', '.') . " ₫';
+                        }
                     </script>";
         }
         else{
@@ -285,14 +310,14 @@
                         <div class='col l-8 l-o-2'>";
                         echo "<div class='cart-page-inner'>
                                 <div class='header-product-cart'>
-                                    <span class = 'product-cart__text' >GIỎ HÀNG TRỐNG</span>
+                                    <span class = 'header__text-field' >GIỎ HÀNG TRỐNG</span>
                                 </div>";
                                 echo "<div class='empty-cart__img'>";
                                     echo "<img src='img/emptycart.svg' alt=''>";
                                 echo "</div>";
                                 echo "<p id='text-cart__empty'>Chưa có sản phẩm trong giỏ hàng của bạn!</p>
                                 <div style='text-align: center;'>
-                                    <a class='btn-buy__product btn-primary-color' name = 'submit' id='submit' type='submit' href='product-list.php#product-view'><span class='btn-buy__text' >MUA SẮM NGAY</span></a>
+                                    <a class='btn' href='product-list.php#product-view'><span class='' >MUA SẮM NGAY</span></a>
                                 </div>";
                         echo "</div>";
                     echo "</div>";

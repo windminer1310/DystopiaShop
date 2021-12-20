@@ -534,6 +534,7 @@ body {
     padding: 0;
     outline: none;
     color: var(--text-color);
+    cursor: pointer;
 }
 
 .btns.btns--normal:hover {
@@ -1418,16 +1419,11 @@ p.minus-button {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     padding: 10px 20px;
+    border-bottom: 1px solid rgb(212, 212, 212);
 }
 
-.list-product-cart {
-    background-color: var(--white-color);
-    border-top: 1px solid black;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
 
-.product-cart__text {
+.header__text-field {
     font-size: 16px;
     line-height: 28px;
     font-weight: 600;
@@ -1437,8 +1433,8 @@ p.minus-button {
 .product-cart__item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
     padding: 20px 20px;
+    background-color: var(--white-color);
 }
 
 
@@ -1516,6 +1512,13 @@ p.minus-button {
     margin-top: 5px;
 }
 
+.list-product-cart {
+    background-color: var(--white-color);
+    padding: 10px 0px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
 .list-product-cart .product-quantity__cart-page div.btn-plus i,
 .list-product-cart .product-quantity__cart-page div.btn-minus i{
     position: relative;
@@ -1555,6 +1558,18 @@ p.minus-button {
     font-weight: 500;
 }
 
+.header__text-field-sub {
+    font-size: 14px;
+    line-height: 28px;
+    font-weight: 400;
+    color: #919191;
+}
+
+.product-item__sub-price {
+    font-size: 14px;
+    font-weight: 500;
+}
+
 /**********************************/
 
 
@@ -1571,6 +1586,10 @@ p.minus-button {
 
 .one-field-checkout {
     width: 100%;
+}
+
+.one-field-checkout-half {
+    width: 50%;
 }
 
 .two-field-checkout {
@@ -1621,9 +1640,9 @@ p.minus-button {
     overflow: hidden;
 }
 
-.checked-hover:hover {
-    background-color: #ececec;
+.payment-method__box:hover {
     cursor: pointer;
+    background-color: #ececec;
 }
 
 
@@ -1637,7 +1656,11 @@ p.minus-button {
 
 .active-method {
     border-color: var(--primary-color);
+}
 
+.active-method:hover {
+    cursor: default;
+    background-color: var(--white-color);
 }
 
 .active-method__payment {
@@ -1748,13 +1771,166 @@ p.minus-button {
 /**********************************/
 
 
+/******* USER ACCOUNT ********/
+
+
+/**********************************/
+
+.feild-user__nav {
+    background-color: var(--white-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.header-user__account {
+    display: flex;
+    background-color: var(--white-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px 20px;
+}
+
+
+.list-info-order,
+.info-account {
+    background-color: var(--white-color);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 20px 20px;
+}
+
+.user-nav__item ,
+.header-user-nav__item{
+    display: flex;
+    padding: 10px 20px;
+    align-items: center;
+}
+
+.user-nav__item:hover {
+    color: var(--primary-color);
+    cursor: pointer;
+    background-color: rgb(235, 219, 219);
+}
+
+.user-nav__item-active {
+    color: var(--primary-color);
+    background-color: rgb(235, 219, 219);
+}
+
+.header-info-order {
+    display: flex;
+    padding-bottom: 12px;
+}
+
+.info-order__item {
+    margin-bottom: 16px;
+    display: flex;
+    padding-top: 16px;
+    border-top: 1px solid rgb(211, 211, 211);
+}
+
+.text-user__account {
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 12px;
+}
+
+.address-order__item ,
+.product-order__item {
+    width: 22%;
+}
+
+.price-order__item ,
+.id-order__item {
+    width: 12%;
+}
+
+.date-order__item {
+    width: 14%;
+}
+
+.status-order__item {
+    width: 10%;
+}
+
+.text-order__item {
+    font-size: 14px;
+    margin-right: 12px;
+}
+
+.header-text-order__item {
+    font-size: 15px;
+    font-weight: 600;
+    margin-right: 12px;
+}
+
+.info-order__item .id-order__item ,
+.info-order__item .status-order__item {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.info-order__item .id-order__item:hover,
+.info-order__item .status-order__item:hover {
+    color: #b10303;
+}
+
+.update-input__field {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.with-spacebetween-icon {
+    display: flex;
+    justify-content: space-between;
+}
+
+.with-spacebetween-icon .status-icon{
+    margin-top: 20px;
+    margin-bottom: -10px;
+}
+ 
+.field-user__account {
+    display: none;
+}
+
+.field-user__account--active {
+    display: block;
+}
+
+.field-user__account--info {
+    display: flex;
+}
+
+#password-change__notify-text {
+    font-size: 14px;
+    line-height: 28px;
+    font-weight: 600;
+}
+
+/*Detail Order*/
+
+.user-info__order {
+    padding: 10px 20px;
+    background-color: var(--white-color);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.info__order {
+    padding: 4px 0px;
+}
+
+/**********************************/
+
+
 /******* MAP & FEATURE CSS ********/
 
 
 /**********************************/
 
 .padding__map {
-    margin-bottom: 150px;
+    margin-bottom: 300px;
 }
 
 .map-and-feature {

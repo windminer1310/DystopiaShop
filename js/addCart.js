@@ -1,11 +1,9 @@
 function addToCart() {
     var quantityProductElement = document.getElementsByClassName('quantity-product');
 
-
     var addToCartData = new FormData();
 
     addToCartData.append(quantityProductElement[0].name, quantityProductElement[0].value);
-
 
     var ajax_request = new XMLHttpRequest();
 

@@ -40,10 +40,12 @@
         }else{
             echo "Số lượng sản phẩm không đủ để cung cấp.";
         }
-    }else{
+    }
+    else{
         echo "Truy xuất dữ liệu thất bại!";
         echo "Vui lòng liên hệ bộ phận CSKH.";
     }
+
 
     function insertCart($user_id, $product_id, $getQuantity){
         $databaseConnection = getDatabaseConnection();

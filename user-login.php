@@ -93,11 +93,21 @@
                 </div>
                 
                 <div class="header__item header__user">
-                    <a class="header__icon-link" href="">
-                        <i class="header__icon bi bi-person"></i>
-                    </a>
-                    <a href="" class="header__link header__user-login"><?php echo $name;?></a>
-
+                    <?php 
+                        if(!isset($_SESSION['img_url'])){
+                            echo "<a class='header__icon-link' href=''>
+                                <i class='header__icon bi bi-person'></i>
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                        else {
+                            echo "<a class='header__icon-link' href=''>
+                                <img class = 'header__avatar-img' src=". $_SESSION['img_url'] .">
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                    ?>
+                    
                     <ul class="header__user-menu">
                         <li class="header__user-item">
                             <a href="./my-account.php">Tài khoản của tôi</a>

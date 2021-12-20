@@ -67,7 +67,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
         <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"> -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <link href="lib/slick/slick.css" rel="stylesheet">
@@ -123,68 +123,104 @@
                         <a href="" class="header__link header__user-orders">Đơn hàng</a>
                     </div>
                     
-                    <div class="header__item header__navbar-user">
-                        <a class="header__icon-link" href="">
-                            <img class = "header__avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
-                        </a>
-                        <a href="" class="header__link header__user-login"><?php echo $name;?></a>
+                    <div class="header__item header__user">
+                    <?php 
+                        if(!isset($_SESSION['img_url'])){
+                            echo "<a class='header__icon-link' href=''>
+                                <i class='header__icon bi bi-person'></i>
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                        else {
+                            echo "<a class='header__icon-link' href=''>
+                                <img class = 'header__avatar-img' src=". $_SESSION['img_url'] .">
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                    ?>
 
-                        <ul class="header__navbar-user-menu">
-                            <li class="header__navbar-user-item">
-                                <a href="./my-account.php">Tài khoản của tôi</a>
-                            </li>
-                            <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                <a href="./logout.php" >Đăng xuất</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul class="header__user-menu">
+                        <li class="header__user-item">
+                            <a href="./my-account.php">Tài khoản của tôi</a>
+                        </li>
+                        <li class="header__user-item">
+                            <a href="./logout.php" >Đăng xuất</a>
+                        </li>
+                    </ul>
+                </div>
 
 
-                    <div class="header__item header__cart-wrap">
-                        <a href="./cart.php" class="header__icon-link">
-                            <i class="header__icon bi bi-cart3"></i>
-                            <?php 
-                                if($numburProductInCart > 0){
-                                    echo "<span class='header__cart-notice'>".$numburProductInCart." </span>";
-                                }
-                            ?>
-                        </a>
-                        <a href="./cart.php" class="header__link">
-                            Giỏ hàng
-                        </a>
-                        
-                        <!-- No cart: header__cart-list--no-cart -->
-                        <div class="header__cart-list header__cart-list--no-cart">
-                            <!-- <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
-                            <span class="header__cart-list-no-cart-msg">
-                                        Chưa có sản phẩm
-                            </span> -->
+                <div class="header__item header__cart-wrap">
+                    <a href="./cart.php" class="header__icon-link">
+                        <i class="header__icon bi bi-cart3"></i>
+                        <?php 
+                        if($numburProductInCart > 0){
+                            echo "<span class='header__cart-notice'>".$numburProductInCart." </span>";
+                        }
+                    ?>
+                    </a>
+                    <a href="./cart.php" class="header__link">
+                        Giỏ hàng
+                    </a>
+                    <?php
+                        $tableCart = 'cart';
+                        $column = 'user_id';
+                        $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
+                    
+                        $count = $getCartRow->rowCount();
+                        if(cartIsEmpty($count)){
+                            //No cart: header__cart--no-item
+                            echo '<div class="header__cart-list header__cart--no-item">
+                                <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
+                                <span class="header__cart-list-no-cart-msg">
+                                            Chưa có sản phẩm
+                                </span>
+                            <?div>';
+                        }
+                        else{
+                            echo '<div class="header__cart-list">
+                                <h4 class="header__cart-heading">Sản phẩm đã thêm</h4>
+                                <ul class="header__cart-list-item" id="scrollbar">';
+                                $totalPrice = 0;
+                                    foreach ($row = $getCartRow->fetchAll() as $value => $row) {
+                                        $id_product = $row['product_id'];
+                                        $tableName = 'product';
+                                        $column = 'product_id';
+                                        $productInfo = getRowWithValue( $tableName, $column, $id_product);
+                                        $productLink = 'product-detail.php?id='.$productInfo['product_id'];
+                                        $img = $productInfo['image_link'];
+                                        $productName = $productInfo['product_name'];
+                                        $quantity = $row['qty'];
+                                        $price = 0;
+                                        if ($productInfo['discount'] == 0){
+                                            $price = $productInfo['price']; 
+                                        }else{
+                                            $price = $productInfo['price'] * (100 - $productInfo['discount']) / 100;
+                                        }
+                                        $totalPrice += $price*$quantity;
 
-                            <h4 class="header__cart-heading">Sản phẩm đã thêm</h4>
-                            <ul class="header__cart-list-item">
-                                    <li class="header__cart-item">
-                                        <img src="https://hanoicomputercdn.com/media/product/58177_asus_strix_lc_360_rgb_black_8.png" alt="" class="header__cart-img">
-                                        <div class="header__cart-item-info">
-                                            <div class="header__cart-item-head">
-                                                <h4 class="header__cart-item-name">Asus ROG Strix</h4>
-                                                <div class="header__cart-item-price-wrap">
-                                                    <span class="header__cart-item-price">10.000.000đ</span>
-                                                    <span class="header__cart-item-multiply">x</span>
-                                                    <span class="header__cart-item-qnt">2</span>
+                                        echo '<li class="header__cart-item">
+                                            <a href="'.$productLink.'" class="header__cart-img-link"><img src="'.$img.'" alt="Ảnh sản phẩm" class="header__cart-img"></a>
+                                                <div class="header__cart-item-info">
+                                                <a href="'.$productLink.'" class="header__cart-item-name">'.$productName.'</a>
+                                                    <span class="header__cart-item-qnt">Số lượng: '.$quantity.'</span>
+                                                    <span class="header__cart-item-price">Đơn giá: '.number_format($price, 0, ',', '.').'đ</span>                  
                                                 </div>
-                                            </div>
-                                            <div class="header__cart-item-body">
-                                                <span class="header__cart-item-description">
-                                                        Phân loại: Bạc
-                                                    </span>
-                                                <span class="header__cart-item-remove">Xóa</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-
-                            <!-- <a href="/" onclick="mustInput();" class="header__cart-view-cart btn btn--primary">Xem giỏ hàng</a> -->
-                        </div>
+                                            </li>
+                                        ';
+                                    }
+                                echo '</ul>';
+                                echo '<div class="header__cart-footer">
+                                        <h4 class="cart-footer__title">Tổng tiền sản phẩm</h4>
+                                        <div class="cart-footer__total-price">'.number_format($totalPrice, 0, ',', '.').'đ</div>
+                                    </div>
+                                    <a href="./cart.php" class="header__cart-view-cart">Xem giỏ hàng</a>
+                                    ';
+                            echo '</div>';
+                        }  
+                    ?>
+                    
+                </div>
                     </div>
                 </div>
             </div>
@@ -257,17 +293,18 @@
                             <div class='row'> ";                            
                                     $sql = "SELECT * FROM `product`";
                                     if (isset($_GET['price_from'])) {
+                                        $currentPrice = 'price*(1 - 0.01*discount)';
                                         if ($_GET['price_from'] == 1) {
-                                            $sql = $sql . " WHERE price <= 1000000";
+                                            $sql = $sql . " WHERE ".$currentPrice." <= 1000000";
                                         }
                                         elseif ($_GET['price_from'] == 2) {
-                                            $sql = $sql . " WHERE price > 1000000 AND price <= 10000000";
+                                            $sql = $sql . " WHERE ".$currentPrice." > 1000000 AND ".$currentPrice." <= 10000000";
                                         }
                                         elseif ($_GET['price_from'] == 3) {
-                                            $sql = $sql . " WHERE price > 10000000 AND price <= 50000000";
+                                            $sql = $sql . " WHERE ".$currentPrice." > 10000000 AND ".$currentPrice." <= 50000000";
                                         }
                                         else {
-                                            $sql = $sql . " WHERE price > 50000000";
+                                            $sql = $sql . " WHERE ".$currentPrice." > 50000000";
                                         }
                                         if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
                                             $sql = $sql . " AND (product_name LIKE '%" . $search . "%' OR category_id = 
@@ -283,14 +320,15 @@
                                         }
                                     }
                                     if (isset($_GET['sort'])) {
+                                        $currentPrice = 'price*(1 - 0.01*discount)';
                                         if ($_GET['sort'] == 1) {
                                             $sql = $sql . " ORDER BY saledate DESC";
                                         }
                                         elseif ($_GET['sort'] == 3) {
-                                            $sql = $sql . " ORDER BY price ASC";
+                                            $sql = $sql . " ORDER BY ".$currentPrice." ASC";
                                         }
                                         elseif ($_GET['sort'] == 4) {
-                                            $sql = $sql . " ORDER BY price DESC";
+                                            $sql = $sql . " ORDER BY ".$currentPrice." DESC";
                                         }
                                         else {
                                             $sql = $sql . " ORDER BY sold DESC";

@@ -4,6 +4,7 @@
     require_once('database/connectDB.php');
     require_once('session.php');
     require_once('shop_info/shop-info.php');
+    require_once('database/connectDB.php');
 
     if(hasUserInfoSession($_SESSION['name'], $_SESSION['id'])){
         $name = displayUserName($_SESSION['name']);
@@ -32,249 +33,360 @@
         <link href="img/favicon.ico" rel="icon">
 
         <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
         <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <link href="lib/slick/slick.css" rel="stylesheet">
         <link href="lib/slick/slick-theme.css" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
+        <link rel="stylesheet" href="./css/grid.css">
+
+        <!-- <link href="css/style.css" rel="stylesheet"> -->
+        <link href="css/home.css" rel="stylesheet">
         <link href="css/base.css" rel="stylesheet">
     </head>
 
     <body>
-        <!-- Nav Bar Start -->
-        <div class="nav">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a href="#" class="navbar-brand">MENU</a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto">
-                            <a href="user-login.php" class="nav-item nav-link">Trang chủ</a>
-                            <a href="product-list.php" class="nav-item nav-link">Sản phẩm</a>
-                            <a href="custom-pc.html" class="nav-item nav-link">Xây dựng cấu hình</a>
-                        </div>
-                        <div class="navbar-nav ml-auto">
-                            <div class="header__navbar-item header__navbar-user">
-                                <img class = "avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
-                                <span class="header__navbar-user-name"><?php echo $name;?></span>
-
-                                <ul class="header__navbar-user-menu">
-                                    <li class="header__navbar-user-item">
-                                        <a href="">Tài khoản của tôi</a>
-                                    </li>
-                                    <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                        <a href="logout.php">Đăng xuất</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Nav Bar End -->    
-        
-        <!-- Bottom Bar Start -->
-        <div class="bottom-bar">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="user-login.php">
-                                <img src="img/logo.png" alt="Logo">
-                            </a>
-                        </div>
-                    </div>
-                    <form method="get" action="product-list.php?" class="col-md-6">
-                        <div class="search">
-                            <input type="text" placeholder="Tìm kiếm" name="search">
-                            <button><i class="fa fa-search" type="submit"></i></button>
-                        </div>
-                    </form>
-                    <div class="col-md-3">
-                        <div class="user">
-                        <a href="cart.php" class="btn cart">
-                            <i class="fa fa-shopping-cart"></i>
-                            <?php 
-                            if($productInCart > 0){
-                                notifyCart($productInCart);
-                            }
-                            ?>
+        <!-- Header Start -->
+        <header class="header">
+            <div class="grid wide">
+                <div class="header-with-search">
+                    <div class="header__logo">
+                        <a href="./user-login.php" class="header__logo-link">
+                            <img src="img/logo.png" alt="Logo" class="header__logo-img">
                         </a>
-                        </div>
                     </div>
+                    <form class="header__search" method="get" action="product-list.php?">
+                        <input type="text" class="header__search-input" placeholder="Tìm kiếm sản phẩm" name="search">
+                        <button class="header__search-btn">
+                            <i class="header__search-btn-icon bi bi-search" type="submit"></i>
+                        </button>
+                    </form>
+                    <div class="header__item">
+                        <a href="#sale" class="header__icon-link">
+                            <i class="header__icon bi bi-tags"></i>
+                        </a>
+                        <a href="#sale" class="header__link">
+                            Khuyến mãi
+                        </a>
+                    </div>
+                    <div class="header__item">
+                        <a href="" class="header__icon-link">
+                            <i class="header__icon bi bi-pc-display"></i>
+                        </a>
+                        <a href="" class="header__link">
+                            Cấu hình PC
+                        </a>
+                    </div>
+
+                    <!-- Đã đăng nhập -->
+                    <div class="header__item">
+                        <a class="header__icon-link" href="">
+                            <i class="header__icon bi bi-clipboard-check"></i>
+                        </a>
+                        <a href="" class="header__link header__user-orders">Đơn hàng</a>
+                    </div>
+                    
+                    <div class="header__item header__user">
+                    <?php 
+                        if(!isset($_SESSION['img_url'])){
+                            echo "<a class='header__icon-link' href=''>
+                                <i class='header__icon bi bi-person'></i>
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                        else {
+                            echo "<a class='header__icon-link' href=''>
+                                <img class = 'header__avatar-img' src=". $_SESSION['img_url'] .">
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>";
+                        }
+                    ?>
+
+                        <ul class="header__user-menu">
+                            <li class="header__user-item">
+                                <a href="./my-account.php">Tài khoản của tôi</a>
+                            </li>
+                            <li class="header__user-item">
+                                <a href="./logout.php" >Đăng xuất</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
                 </div>
             </div>
-        </div>
-        <!-- Bottom Bar End --> 
+        </header>
+        <!-- Header End -->
         
         <!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
-            <div class="container-fluid">
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="user-login.php">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a href="product-list.php">Sản phẩm</a></li>
-                    <li class="breadcrumb-item active">Tài khoản của tôi</li>
+        <div class="homepage">
+            <div class="grid wide">
+                <ul class="path-homepage">
+                    <li class="path-link "><a href="user-login.php">Trang chủ</a></li>
+                    <li class="path-link ">></li>
+                    <li class="path-link ">Tài khoản cá nhân</a></li>
                 </ul>
             </div>
         </div>
         <!-- Breadcrumb End -->
         
-        <!-- My Account Start -->
-        <div class="my-account">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="orders-nav" data-toggle="pill" href="#orders-tab" role="tab"><i class="fa fa-shopping-bag"></i>Lịch sử mua hàng</a>
-                            <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Tài khoản</a>
-                            <a class="nav-link" href="logout.php"><i class="fa fa-sign-out-alt"></i>Đăng xuất</a>
+        <div class='product featured-product padding__map'>
+            <div class='grid wide'>
+                <div class=' row'>
+                    <div class='col l-3'>
+                        <div class='feild-user__nav'>
+                            <div class='header-user-nav__item'>
+                                <?php 
+                                    if(!isset($_SESSION['img_url'])){
+                                        echo "<i class='header__icon far fa-user-circle'></i>
+                                        <span class='text-user__account'>".$name."</a></span>";
+                                    }
+                                    else {
+                                        echo "<img class = 'header__avatar-img' src=".$_SESSION['img_url'].">
+                                        <span class='text-user__account'>".$name."</a></span>";
+                                    }
+                                ?>
+                            </div>
+                            <div class='user-nav__item user-nav__item-active'>
+                                <i class="header__icon bi bi-clipboard-check"></i>
+                                <span class='text-user__account'>Lịch sử đơn hàng</span>
+                            </div>
+                            <div class='user-nav__item'>
+                                <i class="header__icon bi bi-person"></i>
+                                <span class='text-user__account'>Thông tin tài khoản</span>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="col-md-12">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="orders-tab" role="tabpanel" aria-labelledby="orders-nav">
-                                <div class="table-responsive" style="overflow-y: auto; height: 400px;">
-                                    <table class="table table-bordered" style="border-collapse: collapse; width: 100%;">
-                                        <thead class="thead-dark" style="position: sticky; top: 0;">
-                                            <tr>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Mã đơn hàng</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Sản phẩm</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Ngày đặt</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Địa chỉ</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Tổng tiền</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Trạng thái</th>
-                                                <th style = "border-color: white white white white;"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                $tableTransaction = 'transaction';
-                                                $column = 'user_id';
-                                                $getTransactiontRow = getAllRowWithValue($tableTransaction, $column, $user_id);
+                    <div class='col l-9 field-user__account field-user__account--active'>
+                        <div class='header-user__account'>
+                            <div class = 'header__text-field' >Lịch sử mua hàng</div>
+                        </div>
+                        <div class='list-info-order'>
+                            <div class='header-info-order'>
+                                <div class='header-text-order__item id-order__item'  >Mã đơn hàng</div>
+                                <div class='header-text-order__item product-order__item'  >Sản phẩm</div>
+                                <div class='header-text-order__item date-order__item'  >Ngày đặt</div>
+                                <div class='header-text-order__item address-order__item'  >Địa chỉ</div>
+                                <div class='header-text-order__item price-order__item'  >Tổng tiền</div>
+                                <div class='header-text-order__item status-order__item'  >Trạng thái</div>
+                            </div>
+                            <?php   
+                                $tableTransaction = 'transaction';
+                                $column = 'user_id';
+                                $getTransactiontRow = getAllRowWithValue($tableTransaction, $column, $user_id);
+                            
+                                foreach ($row = $getTransactiontRow->fetchAll() as $value => $row){
+                                    echo "<div class='info-order__item'>
+                                        <a class='text-order__item id-order__item' href='submit-checkout.php?id_transaction=" . $row['transaction_id'] . "'>
+                                        ". $row["transaction_id"] ."
+                                        </a>
+                                        <span class='text-order__item product-order__item' >May tinh Asusdsadasd sadasdas asdasd</span>";
+                                        $dateTime = explode( ' ', $row["date"]);
+                                        echo "<span class='text-order__item date-order__item' >". dayOfDate($dateTime[0]).", ".$dateTime[1]."  ". dateFormat($dateTime[0])."</span>
+                                        <span class='text-order__item address-order__item' >". displayAddress($row['address'])."</span>
+                                        <span class='text-order__item price-order__item' >". number_format($row["payment"], 0, ',', '.') ." đ</span>
+                                        <a class='text-order__item status-order__item' >Xem</a>
+                                    </div>";
+                                }
+                            ?>
+                            
 
-                                                foreach ($row = $getTransactiontRow->fetchAll() as $value => $row){
-                                                    echo "<tr>";
-                                                    echo "<td>". $row["transaction_id"] ."</td>";
-                                                    echo "<td><a class ='btn' href='submit-checkout.php?id_transaction=" . $row['transaction_id'] . "'>Xem</a></td>";
-                                                    $dateTime = explode( ' ', $row["date"]);
-                                                    echo "<td>". dayOfDate($dateTime[0]).", ". dateFormat($dateTime[0]).", ".$dateTime[0]."</td>";
-                                                    echo "<td>". $row['address']."</td>";
-                                                    echo "<td>". $row["payment"] ."đ</td>";
-                                                    echo "<td>". approveStatus($row["status"]) ."</td>";
-                                                    if($row['status']<2){
-                                                        echo "<td style='border-color: white white white white;'><a href='cancel-transaction.php?id=". $row['transaction_id'] ." 'class = 'fail-auth__form btn'>Hủy đơn</a></td>";
-                                                    }
-                                                    
-                                                    
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>               
-                                    </table>
+                        </div> 
+                    </div>
+                    <div class='col l-9 field-user__account'>
+                        <div class='field-user__account--info'>
+                            <div class='l-7 '>
+                                <div class='header-user__account'>
+                                    <div class = 'header__text-field' >Thông tin tài khoản</div>
+                                </div>
+                                <div class='info-account'>
+                                    <?php
+                                        $tableUser = 'user';
+                                        $column = 'user_id';
+                                        $userRow = getRowWithValue( $tableUser, $column, $user_id);
+                                    echo "<div class = 'one-field-checkout'>
+                                        <p class = 'title-checkout-text'>Họ và tên</p>
+                                        <input id = 'user-name' name = 'user-name' class = 'auth-form__input' type='text' disabled placeholder='".$userRow['user_name']."'>
+                                    </div>
+                                    <div class = 'one-field-checkout'>
+                                        <p class = 'title-checkout-text'>Email</p>
+                                        <input id = 'user-email' name = 'user-email' class = 'auth-form__input' type='text' disabled placeholder='".$userRow['user_email']."'>
+                                    </div>
+                                    <div class = 'one-field-checkout'>
+                                        <p class = 'title-checkout-text'>Số điện thoại</p>
+                                        <input id = 'user-phone' name = 'user-phone' class = 'auth-form__input' type='text' disabled placeholder='".$userRow['user_phone']."'>
+                                    </div>";
+                                    ?>
                                 </div>
                             </div>
+                            <?php 
+                                if(!isset($_SESSION['img_url'])){
+                                    echo "
+                                    <div class='l-5' style='margin-left: 12px;'>
+                                        <div class='header-user__account' style='justify-content: space-between;'>
+                                            <div class = 'header__text-field' >Đổi mật khẩu</div>
+                                            <div id='password-change__notify-text'></div>
+                                        </div>
+                                        <div class='info-account'>
+                                            <form id='change-password-form'>
+                                                <div class = 'one-field-checkout'>
+                                                    <p class = 'title-checkout-text'>Mật khẩu cũ <span class = 'must-input-icon'>(*)</span></p>
+                                                    <input id = 'current-password' name = 'current-password' class = 'auth-form__input' type='password' required onkeyup='checkedPassword();'>
+                                                </div>
+                                                <div class = 'one-field-checkout'>
+                                                    <p class = 'title-checkout-text'>Mật khẩu mới <span class = 'must-input-icon'>(*)</span></p>
+                                                    <input id = 'new-password' name = 'new-password' class = 'auth-form__input' type='password' required minlength='8' placeholder='Phải có độ dài lớn hơn 7 kí tự' onkeyup='checkedPassword();'>
+                                                </div>
+                                                <div class = 'one-field-checkout '>
+                                                    <div class='with-spacebetween-icon'>
+                                                        <p class = 'title-checkout-text'>Nhập lại mật khẩu mới <span class = 'must-input-icon'>(*)</span></p>
+                                                        <div class='status-icon'>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <input id = 'new-password-checked' name = 'new-password-checked' class = 'auth-form__input' type='password' required autocomplete='on' placeholder='Phải có độ dài lớn hơn 7 kí tự' onkeyup='checkedPassword();' minlength='8'>
+                                                </div>
+                                                <div class='update-input__field'>
+                                                    <div id='change-password' class='btn btn--disabled' disabled type='submit' onclick='changePasswordStatus();'>Đổi mật khẩu</div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>";
+                                }
+                            ?>
                             
-                            <div class="tab-pane fade" id="account-tab" role="tabpanel" aria-labelledby="account-nav">
-                                <h5>Đổi mật khẩu</h5>
-                                <form action = "database/changePassword.php" method="POST">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <input class="form-control" type="password" name = "password" id = "password" placeholder="Mật khẩu hiện tại" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input class="form-control" type="password" name = "newPassword" id = "newPassword" placeholder="Mật khẩu mới" required>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button type = "submit" class="btn">Lưu thay đổi</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
                         </div>
                     </div>
+                   
+                    
                     
                 </div>
             </div>
         </div>
-        <!-- My Account End -->
         
         <!-- Footer Start -->
-        <div class="footer">
-            <div class="container-fluid">
+        <footer class="footer">
+            <div class="grid wide">
                 <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Liên lạc</h2>
-                            <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
-                                <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
-                                <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Chăm sóc khách hàng</h3>
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Trung tâm trợ giúp</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Hướng dẫn mua hàng</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Chính sách thanh toán</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Chính sách giao hàng</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Chính sách hoàn trả</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Liên lạc</h3>
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fas fa-map-marked-alt"></i><?php echo SHOP_ADDRESS ?>
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="mailto:<?php echo SHOP_EMAIL ?>" class="footer-item__link">
+                                    <i class="footer-item__icon fas fa-envelope"></i><?php echo SHOP_EMAIL ?>
+                            </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="tel:<?php echo SHOP_PHONE ?>" class="footer-item__link">
+                                    <i class="footer-item__icon fa fa-phone"></i><?php echo SHOP_PHONE ?>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Về Dystopia</h3>
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Giới thiệu</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Tuyển dụng</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Chính sách bảo mật</a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">Điều khoản</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Theo dõi</h3>
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-twitter-square"></i> Twitter
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-facebook-square"></i> Facebook
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-linkedin"></i> LinkedIn
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-instagram"></i> Instagram
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="" class="footer-item__link">
+                                    <i class="footer-item__icon fab fa-youtube-square"></i> Youtube
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col l-10-2">
+                        <h3 class="footer__heading">Vào cửa hàng trên ứng dụng</h3>
+                        <div class="footer__download">
+                            <img src="./img/download/qr_code.png" alt="QR Code" class="footer__download-qr">
+                            <div class="footer__download-apps">
+                                <a href="" class="footer__download-app-link">
+                                    <img src="./img/download/google_play.png" alt="Google play" class="footer__download-app-img">
+                                </a>
+                                <a href="" class="footer__download-app-link">
+                                    <img src="./img/download/app_store.png" alt="App store" class="footer__download-app-img">
+                                </a>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Theo dõi chúng tôi</h2>
-                            <div class="contact-info">
-                                <div class="social">
-                                    <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-facebook-f"></i></a>
-                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
-                                    <a href=""><i class="fab fa-instagram"></i></a>
-                                    <a href=""><i class="fab fa-youtube"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Thông tin về công ty</h2>
-                            <ul>
-                                <li><a href="#">Về chúng tôi</a></li>
-                                <li><a href="#">Chính sách bảo mật</a></li>
-                                <li><a href="#">Điều khoản và điều kiện</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Thông tin mua hàng</h2>
-                            <ul>
-                                <li><a href="#">Chính sách thanh toán</a></li>
-                                <li><a href="#">Chính sách giao hàng</a></li>
-                                <li><a href="#">Chính sách hoàn trả</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row payment align-items-center">
-                    <div class="col-md-6">
-                        <div class="payment-method">
-                            <h2>Chấp nhận thanh toán</h2>
-                            <img src="img/payment-method.png" alt="Payment Method" />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Footer End --> 
-        
+            <div class="footer__bottom">
+                <div class="grid wide">
+                    <p class="footer__text">© 2021 Bản quyền thuộc về Team ... </p>
+                </div>
+            </div>
+            <!-- Footer End -->
     
         
         <!-- Back to Top -->
@@ -285,6 +397,62 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
         <script src="lib/easing/easing.min.js"></script>
         <script src="lib/slick/slick.min.js"></script>
+        <script src="js/changePassword.js"></script>
+        <script>
+
+            const $ = document.querySelector.bind(document);
+            const $$ = document.querySelectorAll.bind(document);
+
+            const fields = $$('.field-user__account');
+            const items = $$('.user-nav__item');
+
+            items.forEach((item, index) => {
+                const field = fields[index];
+
+                item.onclick = function () {
+
+                    $('.user-nav__item.user-nav__item-active').classList.remove('user-nav__item-active');
+                    $('.field-user__account.field-user__account--active').classList.remove('field-user__account--active');
+
+                    field.classList.add('field-user__account--active');
+                    this.classList.add('user-nav__item-active');
+                }
+            });
+
+            function checkedPassword(){
+                var currentPassword = document.getElementById('current-password');
+                var newPassword = document.getElementById('new-password');
+                var newCheckedPassword = document.getElementById('new-password-checked');
+                var minLengthPw = 8;
+
+
+                if(passwordForm(currentPassword, minLengthPw) && 
+                    passwordForm(newPassword, minLengthPw) && 
+                    passwordForm(newCheckedPassword, minLengthPw)) {
+
+                    if(newPassword.value === newCheckedPassword.value) {
+                        document.getElementsByClassName('status-icon')[0].innerHTML = '<i class="fas fa-check-circle succes-auth__form"></i>';
+
+                        document.getElementById("change-password").removeAttribute("disabled");
+                        document.getElementById("change-password").classList.remove('btn--disabled');
+                    }
+                    else{
+                        document.getElementsByClassName('status-icon')[0].innerHTML = '';
+                        document.getElementById("change-password").classList.add('btn--disabled');
+                    }
+                }
+                else {
+
+                    document.getElementById("change-password").classList.add('btn--disabled');
+                }
+            }
+
+            function passwordForm(password, minLength){
+                if (password.value.length >= minLength) return true;
+                return false;
+            }
+                
+        </script>
         
         <!-- Template Javascript -->
         <script src="js/main.js"></script>

@@ -73,7 +73,7 @@
                         </div>
                         <div class="auth-form__group">
                             <div class = "instruction-box" id = "instruction-box__password">
-                                <p>Mật khẩu phải có độ dài hơn 5 kí tự</p>
+                                <p>Mật khẩu phải có độ dài hơn 7 kí tự</p>
                             </div>
                             <input id="password" name="password" type="password" onfocus="clearWarningInput('password')" onfocusout="checkUserPassword()" class="auth-form__input form_data" placeholder="Mật khẩu của bạn" required>
                         </div>
@@ -99,43 +99,6 @@
         </div>
     </div>
 
-
-
-    <!-- MAP & FEATURE -->
-    <!-- Cần fix giao diện :( -->
-    <div class="map-and-feature">
-        <div class="grid wide">
-            <div class="row">
-                <div class="col l-9">
-                    <!-- Google Map Start -->
-                    <div class="contact-map-wrap">
-                        <iframe title="google-map" class="contact-map" src="<?php echo ADDRESS_GOOGLE_URL ?>"></iframe>
-                    </div>
-                    <!-- Google Map End -->
-                </div>
-                <div class="col l-3">
-                    <div class="features">
-                        <div class="feature-content">
-                            <i class="fab fa-cc-mastercard"></i>
-                            Thanh toán an toàn
-                        </div>
-                        <div class="feature-content">
-                            <i class="fa fa-truck"></i>
-                            Giao hàng toàn quốc
-                        </div>
-                        <div class="feature-content">
-                            <i class="fa fa-sync-alt"></i>
-                            Đổi trả trong vòng 7 ngày
-                        </div>
-                        <div class="feature-content">
-                            <i class="fa fa-comments"></i>
-                            Hổ trợ 24/7
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer Start -->
     <footer class="footer">
