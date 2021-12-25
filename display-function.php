@@ -1,19 +1,43 @@
 <?php
-    function displayDiscountTagWithHtml( $discount){
+    function showDiscountTag($discount){
         echo "<div class='product-item__sale-off'>";
         echo "<span class = 'product-item__sale-off-percent'>".$discount."%</span>";
         echo "</div>";
     }
 
-    function dayOfDate($date){
+    function daysOfWeek($date){
         $timestamp = strtotime($date);
         $day = date('w', $timestamp);
+<<<<<<< Updated upstream
         if($day == '8'){
             return 'Chủ nhật ';
         }
         else {
             return 'Thứ ' . $day;
         }
+=======
+        $daysOfWeekArray = [
+            'Chủ nhật',
+            'Thứ hai',
+            'Thứ ba',
+            'Thứ tư',
+            'Thứ năm',
+            'Thứ sáu',
+            'Thứ bảy'
+        ];
+        return $daysOfWeekArray[$day];
+    }
+
+    function displayAddress($address){
+        $addressForm = explode( '-', $address);
+
+        $City = $addressForm[0];
+        $District = $addressForm[1];
+        $Ward = $addressForm[2];
+        $specificAddress = $addressForm[3];
+
+        return $City . ", " . $District . ", " . $Ward .", ". $specificAddress;
+>>>>>>> Stashed changes
     }
 
     function approveStatus($status){
@@ -21,16 +45,16 @@
             return '<div>Chưa xác nhận</div>';
         }
         elseif($status == 1){
-            return '<div class="succes-auth__form">Đã xác nhận</div>';
+            return '<div class="auth__form--success">Đã xác nhận</div>';
         } 
         elseif ($status == 2) {
             return '<div class="progress-auth__form">Đang giao hàng</div>';
         }
         elseif ($status == 3) {
-            return '<div class="succes-auth__form">Đã giao hàng</div>';
+            return '<div class="auth__form--success">Đã giao hàng</div>';
         }
         else{
-        	return '<div class="fail-auth__form">Đã hủy đơn</div>';
+        	return '<div class="auth__form--fail">Đã hủy đơn</div>';
         }
     }
 
@@ -39,7 +63,7 @@
             return '<div class="not-submit-auth__form">Xác nhận</div>';
         }
         elseif($status == 1){
-            return '<div class="succes-auth__form">Giao hàng</div>';
+            return '<div class="auth__form--success">Giao hàng</div>';
         } 
         elseif ($status == 2) {
             return '<div class="progress-auth__form">Giao hàng thành công</div>';
@@ -55,28 +79,6 @@
         echo "<div class='notify-cart'>";
         echo "<span style='color: var(--white-color); font-size: 10px;'>".$productInCart."</span>";
         echo "</div>";
-    }
-
-    function displayDescribeDropdownTag($sort){
-        if (isset($_GET['sort'])) {
-            $sort_name = "";
-            if ($sort == 1) {
-                $sort_name = "Mới nhất";
-            }
-            elseif ($sort == 3) {
-                $sort_name = "Giá từ thấp đến cao";
-            }
-            elseif ($sort == 4) {
-                $sort_name = "Giá từ cao đến thấp";
-            }
-            else {
-                $sort_name = "Bán chạy nhất";
-            }
-            echo "<div class='dropdown-toggle' data-toggle='dropdown'>". $sort_name ."</div>";
-        }
-        else {
-            echo "<div class='dropdown-toggle' data-toggle='dropdown'>Sắp xếp theo</div>";
-        }
     }
 
     function displayDropdownTagPriceArea($price_from){
@@ -150,12 +152,6 @@
             $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
         }
         return $name;
-    }
-
-    
-
-    function headToIndexPage(){
-        header('Location: index.php');
     }
 
     function headToPage($url){

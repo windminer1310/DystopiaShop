@@ -34,7 +34,7 @@
 			SELECT
 				*
 			FROM
-				' . $tableName . '
+				`' . $tableName . '`
 			WHERE
 				' . $column . ' = :' . $column
 		);
@@ -66,7 +66,7 @@
 			SELECT
 				*
 			FROM
-				user
+				`user`
 			WHERE
                 user_email = :user_email
 		' );
@@ -133,7 +133,7 @@
 	 * Redirect to homepage
 	 */
 	function loggedInRedirect() {
-		header( 'location: user-login.php' );
+		header( 'location: index.php' );
 	}
 
 

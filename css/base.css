@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 * {
     margin: 0;
     padding: 0;
@@ -31,4 +32,131 @@ html {
 
 .no-padding {
     padding: 0;
+=======
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: 'Roboto', sans-serif;
+    scroll-behavior: smooth;
+}
+
+input,
+button {
+    font-family: 'Roboto', sans-serif;
+}
+
+:root {
+    --border-color: #dbdbdb;
+    --text-color: #333;
+    --primary-color: #e92525;
+    --white-color: #fff;
+    --icon-color: #666;
+    --header-height: 90px;
+    --background-color: #f5f5f5;
+    --body-color: #f3f6ff;
+    --form-label-color: #434343;
+    --footer-height: 247px;
+}
+
+.must-input-icon {
+    color: red;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+
+/*Button*/
+
+.btn {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    height: 40px;
+    min-width: 230px;
+    border: 1px solid var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn.btn--full-width {
+    width: 100%;
+    min-width: unset;
+}
+
+.btn.btn--white {
+    background-color: var(--white-color);
+    color: var(--primary-color);
+}
+
+.btn.btn--disabled {
+    color: #949494;
+    cursor: default;
+    background-color: #c3c3c3;
+    border: none;
+}
+
+.btn.btn--size-s {
+    height: 30px;
+    font-size: 13px;
+}
+
+.btn.btn--text-size {
+    height: 36px;
+    min-width: unset;
+    font-weight: unset;
+    padding: 0 24px;
+}
+
+
+/* Heading */
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 16px;
+    color: var(--text-color);
+}
+
+.heading__text,
+.heading__text--primary {
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: 600;
+}
+
+.heading__text--primary {
+    color: var(--primary-color);
+}
+
+
+/* Scrollbar */
+
+#scrollbar::-webkit-scrollbar {
+    width: 10px;
+}
+
+#scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #999;
+}
+
+#scrollbar::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #d6d6d6;
+>>>>>>> Stashed changes
 }

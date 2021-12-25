@@ -1,6 +1,13 @@
 <?php  
+<<<<<<< Updated upstream
     function searchProductWithDescribeDropdownTag($price_from, $search){
         $link = "view-product-list.php?id=1";
+=======
+    function searchProductWithDescribeDropdownTag($price_from, $search, $isLogin){
+        if(!$isLogin) $link = "product-list.php?id=1";
+        else $link = "product-list.php?id=1";
+
+>>>>>>> Stashed changes
         if (isset($_GET['price_from'])) {
             $link = $link . "&price_from=" . $price_from;
             if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
@@ -19,8 +26,15 @@
         echo "<a href='" . $link . "&sort=4' class='dropdown-item'>Giá từ cao đến thấp</a>";
     }
 
+<<<<<<< Updated upstream
     function searchProductWithDropdownTagPriceArea($sort, $search){
         $link2 = "view-product-list.php?id=1";
+=======
+    function searchProductWithDropdownTagPriceArea($sort, $search, $isLogin){
+        if(!$isLogin) $link2 = "product-list.php?id=1";
+        else $link2 = "product-list.php?id=1";
+
+>>>>>>> Stashed changes
         if (isset($_GET['sort'])) {
             $link2  = $link2 . "&sort=" . $sort;
             if (isset($_GET['search']) && strlen($_GET['search']) > 0) {

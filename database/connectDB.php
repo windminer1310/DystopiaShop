@@ -1,10 +1,10 @@
 <?php
-    
     function getDatabaseConnection() {
         $host = 'localhost';
         $db_name = 'database';
         $db_user = 'root';
         $db_password = '';
+
         try { // connect to database and return connections
             $conn = new PDO( 'mysql:host=' . $host . ';dbname=' . $db_name, $db_user, $db_password );
             $conn->exec("set names utf8");
@@ -16,14 +16,14 @@
 
     function getRowWithValue( $tableName, $column, $value ) {
 		// get database connection
-		$databaseConnection = getDatabaseConnection();
+		$conn = getDatabaseConnection();
 
 		// create our sql statment
-		$statement = $databaseConnection->prepare( '
+		$statement = $conn->prepare( '
 			SELECT
 				*
 			FROM
-				' . $tableName . '
+				`' . $tableName . '`
 			WHERE
 				' . $column . ' = :' . $column
 		);
@@ -41,23 +41,23 @@
     
 	function getAllRowWithValue( $tableName, $column, $value ){
 		// get database connection
-		$databaseConnection = getDatabaseConnection();
+		$conn = getDatabaseConnection();
 
 		// create our sql statment
-		$statement = $databaseConnection->prepare( '
+		$statement = $conn->prepare('
 			SELECT
 				*
 			FROM
-				' . $tableName . '
+				`' . $tableName . '`
 			WHERE
 				' . $column . ' = :' . $column
-		);
+			);
 
 		// execute sql with actual values
-		$statement->setFetchMode( PDO::FETCH_ASSOC );
-		$statement->execute( array(
-			$column => trim( $value )
-		) );
+		$statement->setFetchMode(PDO::FETCH_ASSOC);
+		$statement->execute(array(
+			$column => trim($value)
+		));
 
 		// get and return user
 		return $statement;
@@ -65,14 +65,14 @@
 
 	function getRowWithNFeaturedProducts( $tableName, $column, $numberOfValues) {
 		// get database connection
-		$databaseConnection = getDatabaseConnection();
+		$conn = getDatabaseConnection();
 
 		// create our sql statment
-		$statement = $databaseConnection->prepare('
+		$statement = $conn->prepare('
 			SELECT
 				*
 			FROM
-				' . $tableName . '
+				`' . $tableName . '`
 			ORDER BY
 				' . $column . ' DESC LIMIT ' . $numberOfValues
 		);
@@ -86,14 +86,14 @@
 
 	function getRowWithTable($tableName){
 		// get database connection
-		$databaseConnection = getDatabaseConnection();
+		$conn = getDatabaseConnection();
 
 		// create our sql statment
-		$statement = $databaseConnection->prepare( '
+		$statement = $conn->prepare( '
 			SELECT
 				*
 			FROM
-				' . $tableName
+				`' . $tableName .'`'
 		);
 
 		// execute sql with actual values
@@ -107,13 +107,13 @@
 
     function deleteRowWithTwoValue($tableName, $firstColumn, $firstValue , $secondColumn, $secondValue ) {
 		// get database connection
-		$databaseConnection = getDatabaseConnection();
+		$conn = getDatabaseConnection();
 
 		// create our sql statment
-		$statement = $databaseConnection->prepare( '
+		$statement = $conn->prepare( '
 			DELETE
 			FROM
-				' . $tableName . '
+				`' . $tableName . '`
 			WHERE
 				' . $firstColumn . ' = :' . $firstColumn . ' AND ' 
                   . $secondColumn . ' = :' . $secondColumn
@@ -135,14 +135,14 @@
 
     function getRowWithTwoValue($tableName, $firstColumn, $firstValue , $secondColumn, $secondValue ) {
 		// get database connection
-		$databaseConnection = getDatabaseConnection();
+		$conn = getDatabaseConnection();
 
 		// create our sql statment
-		$statement = $databaseConnection->prepare( '
+		$statement = $conn->prepare( '
 			SELECT
 				*
 			FROM
-				' . $tableName . '
+				`' . $tableName . '`
 			WHERE
 				' . $firstColumn . ' = :' . $firstColumn . ' AND ' 
                   . $secondColumn . ' = :' . $secondColumn
@@ -165,14 +165,14 @@
 	// Lấy sản phẩm đang giảm giá
 	function getDiscountProducts() {
 		// get database connection
-		$databaseConnection = getDatabaseConnection();
+		$conn = getDatabaseConnection();
 
 		// create our sql statment
-		$statement = $databaseConnection->prepare('
+		$statement = $conn->prepare('
 			SELECT
 				*
 			FROM
-				product
+				`product`
 			WHERE
 				discount > 0
 		');
@@ -183,5 +183,52 @@
 		$statement->execute();
 		return $statement;
 	}
+<<<<<<< Updated upstream
     
+=======
+	
+	function getDiscountProductsInPage($start, $totalProductInPage) {
+		// get database connection
+		$conn = getDatabaseConnection();
+
+		// create our sql statment
+		$statement = $conn->prepare('
+			SELECT
+				*
+			FROM
+				`product`
+			WHERE
+				discount > 0
+			LIMIT ' . $start . ' , ' . $totalProductInPage
+		);
+
+		// execute sql with actual values
+		$statement->setFetchMode( PDO::FETCH_ASSOC );
+
+		$statement->execute();
+		return $statement;
+	}
+    
+	function getProductsInPage($start, $totalProductInPage) {
+		// get database connection
+		$conn = getDatabaseConnection();
+
+		// create our sql statment
+		$statement = $conn->prepare('
+			SELECT
+				*
+			FROM
+				`product`
+			LIMIT ' . $start . ' , ' . $totalProductInPage
+		);
+
+		// execute sql with actual values
+		$statement->setFetchMode( PDO::FETCH_ASSOC );
+
+		$statement->execute();
+		return $statement;
+	}
+
+
+>>>>>>> Stashed changes
     
