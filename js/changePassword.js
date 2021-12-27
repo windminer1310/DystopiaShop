@@ -41,10 +41,6 @@ function changePasswordAdminStatus($id) {
     ajax_request.send(form_data);
     ajax_request.onreadystatechange = function() {
         if (ajax_request.readyState == 4 && ajax_request.status == 200) {
-            // document.getElementById('password-change__notify-text').innerHTML = ajax_request.responseText;
-            // setTimeout(function() {
-            //     document.getElementById('password-change__notify-text').innerHTML = '';
-            // }, 10000);
             alert(ajax_request.responseText);
             
             location.reload();

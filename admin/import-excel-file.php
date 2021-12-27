@@ -27,10 +27,6 @@
     <head>
         <meta charset="utf-8">
         <title>Dystopia</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="database" name="keywords">
-        <meta content="database" name="description">
-
 
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,9 +38,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
         <!-- Template Stylesheet -->
-        <link rel="stylesheet" href="../css/grid.css">
-
-
+        <link href="../css/grid.css" rel="stylesheet" >
         <link href="../css/home.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
         <link href="../css/admin.css" rel="stylesheet">
@@ -60,28 +54,25 @@
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="admin.php" class="header__link">
+                        <a href="./admin.php" class="header__link">
                             QUẢN LÝ NHÂN SỰ
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="transaction-management.php" class="header__link">
+                        <a href="./transaction-management.php" class="header__link">
                             QUẢN LÝ ĐƠN HÀNG
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="product-management.php" class="header__link header__link--active">
+                        <a href="./product-management.php" class="header__link header__link--active">
                             QUẢN LÝ SẢN PHẨM
                         </a>
                     </div>
-                    
                     <div class="header__item header__user">
                         <a class='header__icon-link' href=''>
                             <i class='header__icon bi bi-person'></i>
                         </a>
                         <a href='' class='header__link header__user-login'><?php echo $name;?></a>
-                        
-
                         <ul class="header__user-menu">
                             <li class="header__user-item">
                                 <a href="./logout.php" >Đăng xuất</a>

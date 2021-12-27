@@ -1,9 +1,7 @@
 <?php
     require_once('../display-function.php');
     require_once('../database/connectDB.php');
-
     session_start();
-
 
     if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
         $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
@@ -21,8 +19,6 @@
         header('Location: admin-login.html');
     }
 
-
-    
 ?>
 
 <!DOCTYPE html>
@@ -30,12 +26,6 @@
     <head>
         <meta charset="utf-8">
         <title>Dystopia</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="database" name="keywords">
-        <meta content="database" name="description">
-
-        <!-- Favicon -->
-        <link href="img/favicon.ico" rel="icon">
 
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,9 +39,7 @@
         <link href="lib/slick/slick-theme.css" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link rel="stylesheet" href="../css/grid.css">
-
-
+        <link href="../css/grid.css" rel="stylesheet" >
         <link href="../css/home.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
         <link href="../css/admin.css" rel="stylesheet">
@@ -69,28 +57,25 @@
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="admin.php" class="header__link">
+                        <a href="./admin.php" class="header__link">
                             QUẢN LÝ NHÂN SỰ
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="transaction-management.php" class="header__link header__link--active">
+                        <a href="./transaction-management.php" class="header__link header__link--active">
                             QUẢN LÝ ĐƠN HÀNG
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="product-management.php" class="header__link">
+                        <a href="./product-management.php" class="header__link">
                             QUẢN LÝ SẢN PHẨM
                         </a>
                     </div>
-                    
                     <div class="header__item header__user">
                         <a class='header__icon-link' href=''>
                             <i class='header__icon bi bi-person'></i>
                         </a>
                         <a href='' class='header__link header__user-login'><?php echo $name;?></a>
-                        
-
                         <ul class="header__user-menu">
                             <li class="header__user-item">
                                 <a href="./my-account.php">Tài khoản của tôi</a>
@@ -109,7 +94,7 @@
         <div class="homepage">
             <div class="grid wide">
                 <ul class="path-homepage">
-                    <li class="path-link"><a href="">Quản trị viên</a></li>
+                    <li class="path-link"><a href="">QUẢN LÝ ĐƠN HÀNG</a></li>
                 </ul>
             </div>
         </div>
@@ -170,11 +155,9 @@
                                                     echo "<option value='transaction-management.php?order_status=".
                                                     $arrayOrderStatusFilter[$i]."&sort_day=".$_GET['sort_day']."'>".$arrayOrderNameFilter[$i]."</option>";
                                                 }
-                                                
                                             }
                                         }
                                     ?>
-                                    
                                 </select>
                                 <select onchange="location = this.value;">
                                     <option value="transaction-management.php">Thời gian</option>
@@ -247,9 +230,6 @@
                                 if(isset($_GET['sort_day']) && isset($_GET['order_status'])){
                                     $getTransactiontRow = getAllTransactionWithStatusAndDate($tableTransaction, $column,$_GET['order_status'], $_GET['sort_day']);
                                 }
-                                
-
-                            
                                 foreach ($row = $getTransactiontRow->fetchAll() as $value => $row){
                                     echo "<div class='info-order__item'>
                                         <a class='text-order__item id-order__item' href='checkout-transaction.php?id_transaction=" . $row['transaction_id'] . "'>
@@ -264,7 +244,6 @@
                                     </div>";
                                 }
                             ?>
-                            
                         </div> 
                     </div>
                     
@@ -272,14 +251,6 @@
                 </div>
             </div>
         </div>
-
-
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="../lib/easing/easing.min.js"></script>
-        <script src="../lib/slick/slick.min.js"></script>
-        
         <script src="../js/main.js"></script>
     </body>
 </html>

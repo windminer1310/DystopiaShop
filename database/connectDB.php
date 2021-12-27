@@ -515,3 +515,25 @@
         ) );
         return $success;
     }
+
+	function updatePasswordWithEmail($user_email , $newPassword) {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+		// create our sql statment adding in password only if change password was checked
+		$statement = $databaseConnection->prepare( '
+			UPDATE
+				user
+			SET
+                user_password = :user_password
+			WHERE
+                user_email = :user_email
+		' );
+
+		$params = array( //params 
+			'user_email' => trim( $user_email ),
+			'user_password' => trim( $newPassword )
+		);
+		// run the sql statement
+		$statement->execute( $params );
+	}

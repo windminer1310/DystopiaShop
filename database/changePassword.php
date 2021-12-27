@@ -17,9 +17,6 @@
         $getNewPassword =  $_POST["new-password"];
     }
 
-
-    
-    
     $options = [
         'cost' => 10,
     ];
@@ -55,8 +52,7 @@
 			SET
                 user_password = :user_password
 			WHERE
-                user_id = :user_id and 
-                user_password = :user_password
+                user_id = :user_id
 		' );
 
 		$params = array( //params 

@@ -35,12 +35,6 @@
     <head>
         <meta charset="utf-8">
         <title>Dystopia</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="database" name="keywords">
-        <meta content="database" name="description">
-
-        <!-- Favicon -->
-        <link href="../img/favicon.ico" rel="icon">
 
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,9 +48,7 @@
         <link href="lib/slick/slick-theme.css" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link rel="stylesheet" href="../css/grid.css">
-
-
+        <link href="../css/grid.css" rel="stylesheet" >
         <link href="../css/home.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
         <link href="../css/admin.css" rel="stylesheet">
@@ -90,14 +82,11 @@
                             QUẢN LÝ SẢN PHẨM
                         </a>
                     </div>
-                    
                     <div class="header__item header__user">
                         <a class='header__icon-link' href=''>
                             <i class='header__icon bi bi-person'></i>
                         </a>
-                        <a href='' class='header__link header__user-login'><?php echo $name;?></a>
-                        
-
+                        <a class='header__link header__user-login'><?php echo $name;?></a>
                         <ul class="header__user-menu">
                             <li class="header__user-item">
                                 <a href="./logout.php" >Đăng xuất</a>
@@ -109,12 +98,11 @@
         </header>
         <!-- Header End -->  
         
-        
         <!-- Breadcrumb Start -->
         <div class="homepage">
             <div class="grid wide">
                 <ul class="path-homepage">
-                    <li class="path-link"><a href="">QUẢN LÝ NHÂN SỰ</a></li>
+                    <li class="path-link"><a href="#">QUẢN LÝ NHÂN SỰ</a></li>
                 </ul>
             </div>
         </div>
@@ -154,7 +142,6 @@
                                         </div>";
                                     }
                                 ?>
-                                
                             </div>
                         </div>
                     </div>
@@ -216,7 +203,7 @@
                                         <input type="password" disabled class = 'input__field' name='new-password-checked__admin' id='new-password-checked__admin' onkeyup='checkedPassword();'>
                                     </div>                                  
                                     <div class='submit-btn' id='btn-form'>
-                                        <div class='btn btn--disabled' id='change-password__admin' disabled type='submit'>Đổi mật khẩu</div>
+                                        <button class='btn btn--disabled' id='change-password__admin' disabled type='submit'>Đổi mật khẩu</button>
                                     </div>
                                 </div>
                             </div> 
@@ -226,26 +213,14 @@
             </div>
         </div>
 
-
-        <!-- Back to Top -->
-        <!-- <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a> -->
-        
-
-        
-        <!-- Template Javascript -->
-        <!-- <script src="../js/main.js"></script> -->
         <script src="../js/changePassword.js"></script>
 
         <script>
-
             const $$ = document.querySelectorAll.bind(document);
-
             const items = $$('.employee__change-Pw');
 
             items.forEach((item, index) => {
-
                 item.onclick = function () {
-
                     document.getElementById('heading-admin-id').innerHTML = this.id;
                     document.getElementById('new-password__admin').removeAttribute("disabled");
                     document.getElementById('new-password-checked__admin').removeAttribute("disabled");
@@ -255,7 +230,6 @@
             });
             
             zoomOutBtn = document.getElementById('zoom-out--form');
-
             zoomOutBtn.addEventListener('click', function() {  
                 if(document.getElementsByClassName('add-admin-form')[0].style.display == 'none'){
                     document.getElementsByClassName('add-admin-form')[0].style.display = 'block';
@@ -266,8 +240,6 @@
                     zoomOutBtn.innerHTML = '<i class="bi bi-caret-up-fill"></i>';
                 }
             });
-            
         </script>
-        
     </body>
 </html>

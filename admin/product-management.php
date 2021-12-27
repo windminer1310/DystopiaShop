@@ -1,5 +1,4 @@
 <?php
-
     session_start();
     require_once('../display-function.php');
     require_once('../database/connectDB.php');
@@ -8,16 +7,13 @@
     $dbuser = 'root';
     $dbpass = '';
 
-
     $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-
     if ($conn->connect_error) {
         die("Không thể kết nối!");
         exit();
     }
 
     mysqli_set_charset($conn,"utf8");
-
     if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
         $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
         $countName = count($eachPartName);
@@ -40,7 +36,6 @@
     $sort = 0;
     $price_from = 0;
     $search = NULL;
-    $page_number = 1;
     if (isset($_GET['sort'])) {
         $sort = $_GET['sort'];
     }
@@ -52,22 +47,13 @@
     }else if( isset($_GET['search'])){
         $search = $_GET['search'];
     }
-    if (isset($_GET['id'])) {
-        $page_number = $_GET['id'];    
-    }
-    
- ?>
- <!DOCTYPE html>
+
+?>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <title>Dystopia</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="database" name="keywords">
-        <meta content="database" name="description">
-
-        <!-- Favicon -->
-        <link href="img/favicon.ico" rel="icon">
 
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,15 +67,13 @@
         <link href="../lib/slick/slick-theme.css" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link rel="stylesheet" href="../css/grid.css">
-
+        <link href="../css/grid.css" rel="stylesheet" >
         <link href="../css/base.css" rel="stylesheet">
         <link href="../css/home.css" rel="stylesheet">
         <link href="../css/admin.css" rel="stylesheet">
     </head>
 
     <body>
-        
          <!-- Header Start -->
         <header class="header">
             <div class="grid wide">
@@ -106,28 +90,25 @@
                         </button>
                     </form>
                     <div class="header__item">
-                        <a href="admin.php" class="header__link">
+                        <a href="./admin.php" class="header__link">
                             QUẢN LÝ NHÂN SỰ
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="transaction-management.php" class="header__link">
+                        <a href="./transaction-management.php" class="header__link">
                             QUẢN LÝ ĐƠN HÀNG
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="product-management.php.php" class="header__link header__link--active">
+                        <a href="./product-management.php" class="header__link header__link--active">
                             QUẢN LÝ SẢN PHẨM
                         </a>
                     </div>
-                    
                     <div class="header__item header__user">
                         <a class='header__icon-link' href=''>
                             <i class='header__icon bi bi-person'></i>
                         </a>
                         <a href='' class='header__link header__user-login'><?php echo $name;?></a>
-                        
-
                         <ul class="header__user-menu">
                             <li class="header__user-item">
                                 <a href="./logout.php" >Đăng xuất</a>
@@ -143,7 +124,7 @@
         <div class="homepage">
             <div class="grid wide">
                 <ul class="path-homepage">
-                    <li class="path-link "><a href="user-login.php">Quản lý sản phẩm</a></li>
+                    <li class="path-link "><a href="user-login.php">QUẢN LÝ SẢN PHẨM</a></li>
                 </ul>
             </div>
         </div>
@@ -151,7 +132,7 @@
 
         <!-- Product List Start -->
         <div id="product-view">
-            <?php 
+        <?php 
             $numProductInAPage = 20;
             $count_product = 0;
 
@@ -223,7 +204,7 @@
 
                                     foreach ($conn->query($sql . " LIMIT ". $count_product . " , " .$numProductInAPage)->fetch_all(MYSQLI_ASSOC) as $value => $row) {
                                             echo "<div class='col l-10-2'>";
-                                                echo "<a class='product-item' href='update-product.php?id=" . $row['product_id'] . "'>";  
+                                                echo "<a class='product-item' href='update-product.php?product_id=" . $row['product_id'] . "'>";  
                                                     if ($row['discount'] != 0) {
                                                         displayDiscountTagWithHtml($row['discount']);
                                                     }                                          
@@ -265,15 +246,9 @@
                 </div>
             </div>                        
         </div>
-
-
        
         <!-- Back to Top -->
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-        
-        <!-- JavaScript Libraries -->
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/slick/slick.min.js"></script>
+        <!-- <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a> -->
         
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
@@ -288,7 +263,6 @@
                 const tab = tabs[index];
 
                 page.onclick = function () {
-
                     $('.page-item.active').classList.remove('active');
                     $('.sale-product.product-page__active').classList.remove('product-page__active');
 

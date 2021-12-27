@@ -2,12 +2,11 @@
     session_start();
     require_once('../database/connectDB.php');
 
-	if(isset($_GET['id'])){
-        $id = $_GET['id'];
+	if(isset($_GET['product_id'])){
+        $product_id = $_GET['product_id'];
     };
-
     
-    $productInfo = getRowWithValue('product', 'product_id', $id);
+    $productInfo = getRowWithValue('product', 'product_id', $product_id);
 
     if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
         $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
@@ -33,9 +32,6 @@
     <head>
         <meta charset="utf-8">
         <title>Dystopia</title>
-
-        <!-- Favicon -->
-        <link href="img/favicon.ico" rel="icon">
 
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,17 +62,17 @@
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="admin.php" class="header__link">
+                        <a href="./admin.php" class="header__link">
                             QUẢN LÝ NHÂN SỰ
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="transaction-management.php" class="header__link">
+                        <a href="./transaction-management.php" class="header__link">
                             QUẢN LÝ ĐƠN HÀNG
                         </a>
                     </div>
                     <div class="header__item">
-                        <a href="product-management.php" class="header__link header__link--active">
+                        <a href="./product-management.php" class="header__link header__link--active">
                             QUẢN LÝ SẢN PHẨM
                         </a>
                     </div>
@@ -207,7 +203,7 @@
                                     <div class='submit-btn'>
                                         <input id='' class='btn' type='submit' value="Cập nhật">
                                         <?php 
-                                            echo "<div onclick='notifyDeleteProduct(".$productInfo['product_id'].")' id='' class='btn' >Xóa</div>";
+                                            echo "<div onclick='deleteProductWarning(".$productInfo['product_id'].")' id='' class='btn' >Xóa</div>";
                                         ?>
                                         <a href="import-excel-file.php" class='btn btn--white'>Nhập từ Excel</a>
                                     </div>
@@ -301,16 +297,6 @@
             </div>
         </div>
 
-
-        <!-- Back to Top -->
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-        
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="../lib/easing/easing.min.js"></script>
-        <script src="../lib/slick/slick.min.js"></script>
-        
         <!-- Template Javascript -->
         <script src="../js/main.js"></script>
         <script>
@@ -324,7 +310,6 @@
                 const field = fields[index];
 
                 item.onclick = function () {
-
                     $('.user-nav__item.user-nav__item-active').classList.remove('user-nav__item-active');
                     $('.field-user__account.field-user__account--active').classList.remove('field-user__account--active');
 
@@ -333,12 +318,11 @@
                 }
             });
 
-            function notifyDeleteProduct($id){
+            function deleteProductWarning($id){
                 if (confirm('Bạn có muốn tiếp tục xóa sản phẩm '+ $id)) {
                     window.location.href = './delete-product.php?product_id='+$id;
                 }
             }
-
         </script>
     </body>
 </html>
