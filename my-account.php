@@ -136,7 +136,7 @@
         </div>
         <!-- Breadcrumb End -->
         
-        <div class='product featured-product padding__map'>
+        <div class='featured-product padding__map'>
             <div class='grid wide'>
                 <div class=' row'>
                     <div class='col l-3'>
@@ -246,9 +246,7 @@
                                                 <div class = 'one-field-checkout '>
                                                     <div class='with-spacebetween-icon'>
                                                         <p class = 'title-checkout-text'>Nhập lại mật khẩu mới <span class = 'must-input-icon'>(*)</span></p>
-                                                        <div class='status-icon'>
-                                                            
-                                                        </div>
+                                                        <div class='status-icon'></div>
                                                     </div>
                                                     <input id = 'new-password-checked' name = 'new-password-checked' class = 'auth-form__input' type='password' required autocomplete='on' placeholder='Phải có độ dài lớn hơn 7 kí tự' onkeyup='checkedPassword();' minlength='8'>
                                                 </div>
@@ -263,9 +261,6 @@
                             
                         </div>
                     </div>
-                   
-                    
-                    
                 </div>
             </div>
         </div>

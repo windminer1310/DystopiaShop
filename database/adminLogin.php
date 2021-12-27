@@ -1,41 +1,53 @@
 <?php
-session_start();
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "database";
+    session_start();
+    include('connectDB.php');
 
-if (isset($_POST["phone"])){
-    $getPhone =  $_POST["phone"];
-}
+    if (isset($_POST["phone"])){
+        $getPhone =   $_POST["phone"];
+    }
 
-if (isset($_POST["password"])){
-    $getPassword =  $_POST["password"];
-}
+    if (isset($_POST["password"])){
+        $getPassword =  $_POST["password"];
+    }
 
 
-$md5Password = md5($getPassword);
+    $databaseNameTable = 'admin';
+    $column = 'admin_phone';
+    $userInfoWithPhone = getRowWithValue($databaseNameTable, $column, $getPhone );
 
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+    displayStatusAfterLoginWithPassword($userInfoWithPhone, $getPassword);
 
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
 
-mysqli_set_charset($conn,"utf8");
+    function displayStatusAfterLoginWithPassword($userInfoWithPhone, $getPassword){
+        if($userInfoWithPhone) {
+            $passHash = $userInfoWithPhone['admin_password'];
+            if(password_verify($getPassword, $passHash)){
+                setLoginValueToSession($userInfoWithPhone);
+                echo '';
+            }
+            else{
+                displayFailPassword();
+            }
+        }
+        else{
+            displayFailInfomation();
+        }
+    }
 
-$sql = "SELECT * FROM admin WHERE admin_phone = '$getPhone' AND admin_password = '$md5Password' ";
-$result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $_SESSION['name'] = $row['admin_name'];
-    $_SESSION['id'] = $row['admin_id'];
-    $_SESSION['authority'] = $row['authority'];
-    echo $row['authority'];
-} else {
-    echo '<div class="fail-auth__form">Đăng nhập thất bại, vui lòng kiểm tra lại các thông tin!</div>';
-}
-$conn->close();
- 
+    function setLoginValueToSession($userInfoWithPhone){
+        $_SESSION['admin_name'] = $userInfoWithPhone['admin_name'];
+        $_SESSION['admin_id'] = $userInfoWithPhone['admin_id'];
+        $_SESSION['authority'] = $userInfoWithPhone['authority'];
+    }
+
+    function displayFailInfomation(){
+        echo '<div class="fail-auth__form">Đăng nhập thất bại, vui lòng kiểm tra lại các thông tin!</div>';
+    }
+
+    function displayFailPassword(){
+        echo '<div class="fail-auth__form">Đăng nhập thất bại, vui lòng kiểm tra lại mật khẩu đăng nhập!</div>';
+    }
+
+
 ?>

@@ -2,8 +2,8 @@
     session_start();
 
     
-    if(isset($_SESSION['name']) && isset($_SESSION['id']) && isset($_SESSION['authority'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
+    if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
+        $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
         $countName = count($eachPartName);
         if($countName == 1){
             $name = $eachPartName[$countName-1];
@@ -11,7 +11,7 @@
         else{
             $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
         }
-        $user_id = $_SESSION['id'];
+        $user_id = $_SESSION['admin_id'];
     }
     else{
         header('Location: admin-login.html');

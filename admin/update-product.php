@@ -1,30 +1,16 @@
 <?php
     session_start();
-	$id = $_GET['id'];
-	$dbhost = 'localhost ';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
+    require_once('../database/connectDB.php');
 
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
-	$sql = "SELECT * FROM `product` WHERE product_id='" . $id . "'";
-	$rs = $conn->query($sql);
+	if(isset($_GET['id'])){
+        $id = $_GET['id'];
+    };
 
-	if (!$rs) {
-	    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-	    exit();
-	}
-	$info = NULL;
-	while ($row = $rs->fetch_array(MYSQLI_ASSOC)) {
-		$info = $row;
-	}
     
-    if(isset($_SESSION['name']) && isset($_SESSION['id']) && isset($_SESSION['authority'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
+    $productInfo = getRowWithValue('product', 'product_id', $id);
+
+    if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
+        $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
         $countName = count($eachPartName);
         if($countName == 1){
             $name = $eachPartName[$countName-1];
@@ -32,7 +18,7 @@
         else{
             $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
         }
-        $user_id = $_SESSION['id'];
+        $user_id = $_SESSION['admin_id'];
     }
     else{
         header('Location: admin-login.html');
@@ -52,202 +38,268 @@
         <link href="img/favicon.ico" rel="icon">
 
         <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
         <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="../lib/slick/slick.css" rel="stylesheet">
-        <link href="../lib/slick/slick-theme.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <link href="lib/slick/slick.css" rel="stylesheet">
+        <link href="lib/slick/slick-theme.css" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link href="../css/style.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
+        <link href="../css/grid.css" rel="stylesheet">
+        <link href="../css/home.css" rel="stylesheet">
+        <link href="../css/admin.css" rel="stylesheet">
     </head>
 
     <body>        
-        <!-- Nav Bar Start -->
-        <div class="nav">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a href="#" class="navbar-brand">MENU</a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto">
-                            <a href="admin.php" class="nav-item nav-link active">TRANG CHỦ</a>
-                            <a href="product-management.php" class="nav-item nav-link">QUẢN LÝ SẢN PHẨM</a>
-                        </div>
-                        <div class="navbar-nav ml-auto">
-                            <div class="header__navbar-item header__navbar-user">
-                                <img class = "avatar-img" src="../img/avatar.jpg"/>
-                                <span class="header__navbar-user-name"><?php echo $name;?></span>
-
-                                <ul class="header__navbar-user-menu">
-                                    <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                        <a href="logout.php" >Đăng xuất</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+        <!-- Header Start -->
+        <header class="header">
+            <div class="grid wide">
+                <div class="header-with-search">
+                    <div class="header__logo">
+                        <a href="./admin.php" class="header__logo-link">
+                            <img src="../img/logo.png" alt="Logo" class="header__logo-img">
+                        </a>
                     </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Nav Bar End -->      
-        
-        <!-- Bottom Bar Start -->
-        <div class="bottom-bar">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="admin.php">
-                                <img src="../img/logo.png" alt="Logo">
-                            </a>
-                        </div>
+                    <div class="header__item">
+                        <a href="admin.php" class="header__link">
+                            QUẢN LÝ NHÂN SỰ
+                        </a>
+                    </div>
+                    <div class="header__item">
+                        <a href="transaction-management.php" class="header__link">
+                            QUẢN LÝ ĐƠN HÀNG
+                        </a>
+                    </div>
+                    <div class="header__item">
+                        <a href="product-management.php" class="header__link header__link--active">
+                            QUẢN LÝ SẢN PHẨM
+                        </a>
+                    </div>
+                    <div class="header__item header__user">
+                        <a class='header__icon-link' href=''>
+                            <i class='header__icon bi bi-person'></i>
+                        </a>
+                        <a href='' class='header__link header__user-login'><?php echo $name;?></a>
+                        <ul class="header__user-menu">
+                            <li class="header__user-item">
+                                <a href="./logout.php" >Đăng xuất</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Bottom Bar End --> 
-        
+        </header>
+        <!-- Header End --> 
+
         <!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
-            <div class="container-fluid">
-                <ul class="breadcrumb" style= "margin-bottom: 30px;">
-                    <li class="header-checkout_text">THÊM</li>
+        <div class="homepage">
+            <div class="grid wide">
+                <ul class="path-homepage">
+                    <li class="path-link"><a href="">CẬP NHẬT SẢN PHẨM</a></li>
                 </ul>
             </div>
         </div>
         <!-- Breadcrumb End -->
-        
-        <!-- Add category Start -->
-        <div class="add">
-            <div class="container-fluid">
-                <div class="row">
-                    <form class="add-item" method="post">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Mã loại sản phẩm</label>
-                                <input class="form-control" type="text" value="<?php echo $info['category_id'] ?>" name="category_id" list="category_list">
-                                <datalist id="category_list">
-                                    <?php 
-                                        $dbhost = 'localhost ';
-                                        $dbuser = 'root';
-                                        $dbpass = '';
-                                        $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-                                        $sql1 = "SELECT * FROM `category` ORDER BY category_id";
-                                        if ($conn->connect_error) {
-                                            echo "<h5>Không thể kết nối cơ sở dữ liệu!</h5>";
-                                        }
-                                        else {
-                                            $rs1 = $conn->query($sql1);
-                                            if (!$rs1) {
-                                                echo "<h5>Không thể thêm vào cơ sở dữ liệu!</h5>";
-                                            }
-                                            else {
-                                                while ($row = $rs1->fetch_array(MYSQLI_ASSOC)) {
-                                                    echo "<option value='" . $row['category_id'] . "'>";
-                                                }
-                                            }
-                                        }
-                                        mysqli_set_charset($conn,"utf8");
-                                    ?>
-                                </datalist>
+
+        <div class='featured-product'>
+            <div class='grid wide'>
+                <div class=' row'>
+                    <div class='col l-3'>
+                        <div class='feild-user__nav'>
+                            <div class='header-user-nav__item'>
+                                <i class="header__icon bi bi-card-list"></i>
+                                <span class='text-user__account'>Quản lý</a></span>
                             </div>
-                            <div class="col-md-6">
-                                <label>Thương hiệu</label>
-                                <input class="form-control" type="text" value="<?php echo $info['brand_id'] ?>" name="brand_id" list="brand_list">
-                                <datalist id="brand_list">
-                                    <?php 
-                                        $dbhost = 'localhost ';
-                                        $dbuser = 'root';
-                                        $dbpass = '';
-                                        $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-                                        $sql1 = "SELECT * FROM brand ORDER BY brand_id";
-                                        if ($conn->connect_error) {
-                                            echo "<h5>Không thể kết nối cơ sở dữ liệu!</h5>";
-                                        }
-                                        else {
-                                            $rs1 = $conn->query($sql1);
-                                            if (!$rs1) {
-                                                echo "<h5>Không thể thêm vào cơ sở dữ liệu!</h5>";
-                                            }
-                                            else {
-                                                while ($row = $rs1->fetch_array(MYSQLI_ASSOC)) {
-                                                    echo "<option value='" . $row['brand_id'] . "'>";
-                                                }
-                                            }
-                                        }
-                                    ?>
-                                </datalist>
+                            <div class='user-nav__item user-nav__item-active'>
+                                <i class="header__icon bi bi-bookmark-dash"></i>
+                                <span class='text-user__account'>Cập nhật sản phẩm</span>
                             </div>
-                            <div class="col-md-6">
-                                <label>Mã sản phẩm</label>
-                                <input class="form-control" type="text" value="<?php echo $info['product_id'] ?>" name="product_id">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Tên sản phẩm</label>
-                                <input class="form-control" type="text" value="<?php echo $info['product_name'] ?>" name="product_name">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Giá (đã có VAT)</label>
-                                <input class="form-control" type="text" value="<?php echo $info['price'] ?>" name="price">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Nội dung</label>
-                                <textarea class="form-control" type="text" value="<?php echo $info['description'] ?>" name="description"></textarea>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Giảm giá (%)</label>
-                                <input class="form-control" type="text" value="<?php echo $info['discount'] ?>" name="discount">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Link ảnh</label>
-                                <input class="form-control" type="text" value="<?php echo $info['image_link'] ?>" name="image_link">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Năm phát hành</label>
-                                <input class="form-control" type="text" value="<?php echo $info['date_first_available'] ?>" name="date_first_available">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Số lượng trong kho</label>
-                                <input class="form-control" type="text" value="<?php echo $info['amount'] ?>" name="amount">
-                            </div>
-                            <div class="col-md-12">
-                                <button class="btn" type="submit">Sửa</button>
+                            <div class='user-nav__item'>
+                                <i class="header__icon bi bi-bookmark-plus"></i>
+                                <span class='text-user__account'>Thêm sản phẩm</span>
                             </div>
                         </div>
-                        <br>
-                        <?php
-                        	if ($_SERVER['REQUEST_METHOD'] == "POST") {
-	                            $sql1 = "UPDATE `product` SET category_id = '" . $_POST['category_id'] . "', 
-                                product_name = '" . $_POST['product_name'] . "', brand_id = '" . $_POST['brand_id'] . "', 
-                                price = " . $_POST['price'] . ", description = '" . $_POST['description'] . "', 
-                                discount = " . $_POST['discount'] . ", image_link = '" . $_POST['image_link'] . "', 
-                                date_first_available = " . $_POST['date_first_available'] . ", amount = " . $_POST['amount'] . ", 
-                                saledate = '" . date("Y-m-d") . "' WHERE product_id = '" . $id . "'";
-	                            $rs1 = $conn->query($sql1);
-                                echo $sql1;
-					            if (!$rs1) {
-					                echo "<script language='javascript'>window.alert('Không thể sửa cơ sở dữ liệu!');</script>";
-					            }
-					            else {
-					                echo "<script>
-                                            alert('Sửa thành công!');
-                                            window.location.href = 'product-management.php';
-                                        </script>";
-					            }
-				            }
-                        ?>
-                    </form>
+                    </div>
+                    <div class='col l-9'>
+                        <div class=" field-user__account field-user__account--active">
+                            <div class='header-user__account'>
+                                <div class = 'header__text-field' >Cập nhật sản phẩm:</div>
+                                <div class = 'header__id-product-field'> <?php echo $productInfo['product_id']; ?></div>
+                            </div>
+                            <form action="./modify-product.php" method="$_GET">
+                                <div class="add-admin-form">
+                                    <div class="row">
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Loại sản phẩm</p>
+                                            <?php
+                                                $categoryName = getRowWithValue('category', 'category_id', $productInfo['category_id']);
+                                                echo "<input class = 'input__field' list='categories' name='category'  value='".$categoryName['category_name']."'>
+                                                <datalist id='categories'>";
+
+                                                $getCategoriesRow = getRowWithColumnOrderBy( 'category', 'category_name');
+                                                foreach ($row = $getCategoriesRow->fetchAll() as $value => $row){
+                                                    echo "<option value='".$row['category_name']."'>";
+                                                }
+                                                echo "</datalist>";
+                                            ?>
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Thương hiệu</p>
+                                            <?php
+                                                $brandName = getRowWithValue('brand', 'brand_id', $productInfo['brand_id']);
+                                                echo "<input class = 'input__field' list='brands' name='brand' id='brand' value='".$brandName['brand_name']."'>
+                                                <datalist id='brands'>";
+
+                                                $getBrandsRow = getRowWithColumnOrderBy( 'brand', 'brand_name');
+                                                foreach ($row = $getBrandsRow->fetchAll() as $value => $row){
+                                                    echo "<option value='".$row['brand_name']."'>";
+                                                }
+                                                echo "</datalist>";
+                                            ?>
+                                        </div>
+
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Mã sản phẩm</p>
+                                            <input class = 'input__field'  id="product_id" name="product_id" required value='<?php echo $productInfo['product_id'] ?>'>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class='input-element col l-4' >
+                                            <p class = 'title-input'>Tên sản phẩm</p>
+                                            <input class = 'input__field'  id="product_name" name="product_name" required value='<?php echo $productInfo['product_name'] ?>'>
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Năm phát hành</p>
+                                            <input class = 'input__field'  id="date_first_available" name="date_first_available" required value='<?php echo $productInfo['date_first_available'] ?>'>
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Giá (đã có VAT)</p>
+                                            <input class = 'input__field'  id="price" name="price" required value='<?php echo $productInfo['price'] ?>'>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Giảm giá (%)</p>
+                                            <input class = 'input__field'  id="discount" name="discount" required value='<?php echo $productInfo['discount'] ?>'>
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Số lượng trong kho</p>
+                                            <input class = 'input__field'  id="amount" name="amount" required value='<?php echo $productInfo['amount'] ?>'>
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Nguồn ảnh</p>
+                                            <input class = 'input__field'  id="image_link" name="image_link" required value='<?php echo $productInfo['image_link'] ?>'>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class='input-element col l-8'>
+                                            <p class = 'title-input'>Mô tả sản phẩm</p>
+                                            <textarea class = 'textarea__field'  id="description" name="description" ><?php echo $productInfo['description'] ?></textarea>
+                                        </div>
+                                    </div>
+                                    <div class='submit-btn'>
+                                        <input id='' class='btn' type='submit' value="Cập nhật">
+                                        <?php 
+                                            echo "<div onclick='notifyDeleteProduct(".$productInfo['product_id'].")' id='' class='btn' >Xóa</div>";
+                                        ?>
+                                        <a href="import-excel-file.php" class='btn btn--white'>Nhập từ Excel</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class=" field-user__account">
+                            <div class='header-user__account'>
+                                <div class = 'header__text-field' >Thêm sản phẩm</div>
+                            </div>
+                            <div class="add-admin-form">
+                                <form action="add-new-product.php" method="$_GET">
+                                    <div class="row">
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Loại sản phẩm</p>
+                                            <?php
+                                                echo "<input class = 'input__field' list='categories' name='category' id='category' required>
+                                                <datalist id='categories'>";
+
+                                                $getCategoriesRow = getRowWithColumnOrderBy( 'category', 'category_name');
+                                                foreach ($row = $getCategoriesRow->fetchAll() as $value => $row){
+                                                    echo "<option value='".$row['category_name']."'>";
+                                                }
+                                                echo "</datalist>";
+                                            ?>
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Thương hiệu</p>
+                                            <?php
+                                                echo "<input class = 'input__field' list='brands' name='brand' id='brand' required>
+                                                <datalist id='brands'>";
+
+                                                $getBrandsRow = getRowWithColumnOrderBy( 'brand', 'brand_name');
+                                                foreach ($row = $getBrandsRow->fetchAll() as $value => $row){
+                                                    echo "<option value='".$row['brand_name']."'>";
+                                                }
+                                                echo "</datalist>";
+                                            ?>
+                                        </div>
+
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Mã sản phẩm</p>
+                                            <input class = 'input__field'  id="product_id" name="product_id" required>
+                                        </div>
+                                     </div>
+
+                                    <div class="row">
+                                        <div class='input-element col l-4' >
+                                            <p class = 'title-input'>Tên sản phẩm</p>
+                                            <input class = 'input__field'  id="product_name" name="product_name" required >
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Năm phát hành</p>
+                                            <input class = 'input__field'  id="date_first_available" name="date_first_available" required >
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Giá (đã có VAT)</p>
+                                            <input class = 'input__field'  id="price" name="price" required >
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Giảm giá (%)</p>
+                                            <input class = 'input__field'  id="discount" name="discount" required >
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Số lượng trong kho</p>
+                                            <input class = 'input__field'  id="amount" name="amount" required >
+                                        </div>
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Nguồn ảnh</p>
+                                            <input class = 'input__field'  id="image_link" name="image_link" required >
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class='input-element col l-8'>
+                                            <p class = 'title-input'>Mô tả sản phẩm</p>
+                                            <textarea class = 'textarea__field'  id="description" name="description" ></textarea>
+                                        </div>
+                                    </div>
+                                    <div class='submit-btn'>
+                                        <input class='btn' type='submit' value="Thêm">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Add category End -->
 
 
         <!-- Back to Top -->
@@ -261,5 +313,32 @@
         
         <!-- Template Javascript -->
         <script src="../js/main.js"></script>
+        <script>
+            const $ = document.querySelector.bind(document);
+            const $$ = document.querySelectorAll.bind(document);
+
+            const fields = $$('.field-user__account');
+            const items = $$('.user-nav__item');
+
+            items.forEach((item, index) => {
+                const field = fields[index];
+
+                item.onclick = function () {
+
+                    $('.user-nav__item.user-nav__item-active').classList.remove('user-nav__item-active');
+                    $('.field-user__account.field-user__account--active').classList.remove('field-user__account--active');
+
+                    field.classList.add('field-user__account--active');
+                    this.classList.add('user-nav__item-active');
+                }
+            });
+
+            function notifyDeleteProduct($id){
+                if (confirm('Bạn có muốn tiếp tục xóa sản phẩm '+ $id)) {
+                    window.location.href = './delete-product.php?product_id='+$id;
+                }
+            }
+
+        </script>
     </body>
 </html>

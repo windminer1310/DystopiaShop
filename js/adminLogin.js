@@ -48,11 +48,8 @@ function login()
             document.getElementById('submit').classList.remove('btns--disabled');
             document.getElementById('login-form').reset();
 
-            if(ajax_request.responseText == 1){
+            if(ajax_request.responseText == ''){
                 window.location.href = "admin.php";
-            }
-            if(ajax_request.responseText == 2){
-                window.location.href = "transaction-management.php";
             }
             else{
                 document.getElementById('auth-form__notify-text').innerHTML = ajax_request.responseText;

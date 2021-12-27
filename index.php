@@ -2,11 +2,17 @@
     session_start();
     require_once('display-function.php');
     require_once('database/connectDB.php');
-    require_once('session.php');
     require_once('shop_info/shop-info.php');
 
+
     if(isset($_SESSION['name']) && isset($_SESSION['id'])){
-        headToPage('user-login.php');
+        $name = displayUserName($_SESSION['name']);
+        $user_id = $_SESSION['id'];
+
+        $tableCart = 'cart';
+        $column = 'user_id';
+        $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
+        $productInCart = $getCartRow->rowCount();
     }
 
 ?>
@@ -41,66 +47,153 @@
 
 <body>
 
-    <!-- Header Start -->
-    <header class="header">
-        <div class="grid wide">
-            <div class="header-with-search">
-                <div class="header__logo">
-                    <a href="#" class="header__logo-link">
-                        <img src="img/logo.png" alt="Logo" class="header__logo-img">
-                    </a>
-                </div>
-                <form class="header__search" method="get" action="view-product-list.php?">
-                    <input type="text" class="header__search-input" placeholder="Tìm kiếm sản phẩm" name="search">
-                    <button class="header__search-btn">
-                        <i class="header__search-btn-icon bi bi-search" type="submit"></i>
-                    </button>
-                </form>
-                <div class="header__item">
-                    <a href="#sale" class="header__icon-link">
-                        <i class="header__icon bi bi-tags"></i>
-                    </a>
-                    <a href="#sale" class="header__link">
-                        Khuyến mãi
-                    </a>
-                </div>
-                <div class="header__item">
-                    <a href="" class="header__icon-link">
-                        <i class="header__icon bi bi-pc-display"></i>
-                    </a>
-                    <a href="" class="header__link">
-                        Cấu hình PC
-                    </a>
-                </div>
+    <header id="header">
+            <div class="grid wide">
+                <div class="header-with-search">
+                    <div class="header__logo">
+                        <a href="#" class="header__logo-link">
+                            <img src="img/logo.png" alt="Logo" class="header__logo-img">
+                        </a>
+                    </div>
+                    <form class="header__search" method="get" action="view-product-list.php?">
+                        <input type="text" class="header__search-input" placeholder="Tìm kiếm sản phẩm" name="search">
+                        <button class="header__search-btn">
+                            <i class="header__search-btn-icon bi bi-search" type="submit"></i>
+                        </button>
+                    </form>
+                    <div class="header__item">
+                        <a href="#sale" class="header__icon-link">
+                            <i class="header__icon bi bi-tags"></i>
+                        </a>
+                        <a href="#sale" class="header__link">
+                            Khuyến mãi
+                        </a>
+                    </div>
+                    <div class="header__item">
+                        <a href="" class="header__icon-link">
+                            <i class="header__icon bi bi-pc-display"></i>
+                        </a>
+                        <a href="" class="header__link">
+                            Cấu hình PC
+                        </a>
+                    </div>
+                    
+                    <?php
+                    if(isset($_SESSION['name']) && isset($_SESSION['id'])){
+                        echo "
+                        <div class='header__item'>
+                            <a class='header__icon-link' href='./my-account.php'>
+                                <i class='header__icon bi bi-clipboard-check'></i>
+                            </a>
+                            <a href='./my-account.php' class='header__link header__user-orders'>Đơn hàng</a>
+                        </div>
+                        <div class='header__item header__user'>
+                            <a class='header__icon-link' href='./my-account.php'>"; 
+                                if(!isset($_SESSION['img_url'])){
+                                    echo "<i class='header__icon bi bi-person'></i>";
+                                }
+                                else {
+                                    echo "<img class = 'header__avatar-img' src=". $_SESSION['img_url'] .">";
+                                }
+                            echo "
+                            </a>
+                            <a href='' class='header__link header__user-login'>". $name ."</a>
+                            <ul class='header__user-menu'>
+                                <li class='header__user-item'>
+                                    <a href='./my-account.php'>Tài khoản của tôi</a>
+                                </li>
+                                <li class='header__user-item'>
+                                    <a href='./logout.php' >Đăng xuất</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class='header__item header__cart-wrap'>
+                            <a href='./cart.php' class='header__icon-link'>
+                                <i class='header__icon bi bi-cart3'></i>";
+                            if($productInCart > 0){
+                                echo "<span class='header__cart-notice'>".$productInCart."</span>";
+                            }
+                            echo "
+                            </a>
+                            <a href='./cart.php' class='header__link'>Giỏ hàng</a>";
+                            $count = $getCartRow->rowCount();
+                            if(cartIsEmpty($count)){
+                                //No cart: header__cart--no-item
+                                echo '<div class="header__cart-list header__cart--no-item">
+                                    <img src="./img/emptycart.svg" alt="" class="header__cart-no-cart-img">
+                                    <span class="header__cart-list-no-cart-msg">
+                                                Chưa có sản phẩm
+                                    </span>
+                                <?div>';
+                            }
+                            else{
+                                echo "
+                                <div class='header__cart-list'>
+                                    <h4 class='header__cart-heading'>Sản phẩm đã thêm</h4>
+                                    <ul class='header__cart-list-item' id='scrollbar'>";
+                                    $totalPrice = 0;
+                                    foreach ($row = $getCartRow->fetchAll() as $value => $row) {
+                                        $id_product = $row['product_id'];
+                                        $tableName = 'product';
+                                        $column = 'product_id';
+                                        $productInfo = getRowWithValue( $tableName, $column, $id_product);
+                                        $productLink = 'product-detail.php?id='.$productInfo['product_id'];
+                                        $img = $productInfo['image_link'];
+                                        $productName = $productInfo['product_name'];
+                                        $quantity = $row['qty'];
+                                        $price = $productInfo['price'] * (100 - $productInfo['discount']) / 100;
+                                        $totalPrice += $price*$quantity;
 
-                <!-- Chưa đăng nhập -->
-                <div class="header__item">
-                    <a class="header__icon-link" href="./register.php">
-                        <i class="header__icon bi bi-person-plus"></i>
-                    </a>
-                    <a href="./register.php" class="header__link header__user-register">Đăng ký</a>
-                </div>
-
-                <div class="header__item">
-                    <a class="header__icon-link" href="./login.php">
-                        <i class="header__icon bi bi-person"></i>
-                    </a>
-                    <a href="./login.php" class="header__link header__user-login">Đăng nhập</a>
-                </div>
-
-                <div class="header__item header__cart-wrap">
-                    <a href="" class="header__icon-link" onclick="mustInput();">
-                        <i class="header__icon bi bi-cart3"></i>
-                    </a>
-                    <a href="" class="header__link" onclick="mustInput();">
-                        Giỏ hàng
-                    </a>
+                                        echo "
+                                        <li class='header__cart-item'>
+                                            <a href='".$productLink."' class='header__cart-img-link'><img src='".$img."' alt='Ảnh sản phẩm' class='header__cart-img'></a>
+                                                <div class='header__cart-item-info'>
+                                                <a href='".$productLink."' class='header__cart-item-name'>".$productName."</a>
+                                                    <span class='header__cart-item-qnt'>Số lượng: ".$quantity."</span>
+                                                    <span class='header__cart-item-price'>Đơn giá: ".number_format($price, 0, ',', '.')."đ</span>                  
+                                                </div>
+                                            </li>
+                                        ";
+                                    }
+                                    echo "
+                                    </ul>
+                                    <div class='header__cart-footer'>
+                                        <h4 class='cart-footer__title'>Tổng tiền sản phẩm</h4>
+                                        <div class='cart-footer__total-price'>".number_format($totalPrice, 0, ',', '.')."đ</div>
+                                    </div>
+                                    <a href='./cart.php' class='header__cart-view-cart'>Xem giỏ hàng</a>
+                                </div>";
+                            }
+                        echo "
+                        </div>";
+                    }else{
+                        echo "
+                        <div class='header__item'>
+                            <a class='header__icon-link' href='./register.php'>
+                                <i class='header__icon bi bi-person-plus'></i>
+                            </a>
+                            <a href='./register.php' class='header__link header__user-register'>Đăng ký</a>
+                        </div>
+                        <div class='header__item'>
+                            <a class='header__icon-link' href='./login.php'>
+                                <i class='header__icon bi bi-person'></i>
+                            </a>
+                            <a href='./login.php' class='header__link header__user-login'>Đăng nhập</a>
+                        </div>
+                        <div class='header__item header__cart-wrap'>
+                            <a href='#' class='header__icon-link' onclick='mustInput()'>
+                                <i class='header__icon bi bi-cart3'></i>
+                            </a>
+                            <a href='#' class='header__link' onclick='mustInput()'>
+                                Giỏ hàng
+                            </a>   
+                        </div>";
+                    }
+                    ?>
                     
                 </div>
             </div>
-        </div>
-    </header>
-    <!-- Header End -->
+        </header>
     
     <!-- Main Slider Start -->
     <div class="homepage grid wide">
@@ -473,7 +566,7 @@
         const tabs = $$('.sale-product');
         const pages = $$('.page-item');
 
-        pages.forEach((page, index, ) => {
+        pages.forEach((page, index) => {
             const tab = tabs[index];
 
             page.onclick = function () {

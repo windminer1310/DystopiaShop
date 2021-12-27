@@ -1,13 +1,11 @@
 <?php
     session_start();
-    require_once('../moneyPoint.php');
-    $servername = "localhost ";
-    $username = "root";
-    $password = "";
-    $dbname = "database";
+    
+    require_once('../database/connectDB.php');
+    require_once('../display-function.php');
 
-    if(isset($_SESSION['name']) && isset($_SESSION['id']) && isset($_SESSION['authority'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
+    if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
+        $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
         $countName = count($eachPartName);
         if($countName == 1){
             $name = $eachPartName[$countName-1];
@@ -15,36 +13,17 @@
         else{
             $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
         }
-        $user_id = $_SESSION['id'];
+        $user_id = $_SESSION['admin_id'];
     }
     else{
         header('Location: admin-login.html');
     }
 
-
     $id_transaction = $_GET['id_transaction'];
-    
-    $dbhost = 'localhost ';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
+    $transactionTable = 'transaction';
+    $transactionColumn = 'transaction_id';
+    $transaction = getRowWithValue($transactionTable, $transactionColumn, $id_transaction);
 
-    $sqlTransaction = "SELECT * FROM `transaction` WHERE transaction_id = $id_transaction";
-    $rs = $conn->query($sqlTransaction);
-    if (!$rs) {
-        die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-        exit();
-    }
-    $row = $rs->fetch_array(MYSQLI_ASSOC);
-
-    $amountArray = explode( '-', $row['amount']);
-    $productArray = explode( '-', $row['product_id']);
-    $totalPrice = $row['payment'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -55,149 +34,181 @@
         <!-- Favicon -->
         <link href="../img/favicon.ico" rel="icon">
 
-        <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
+         <!-- Google Fonts -->
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
         <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="../lib/slick/slick.css" rel="stylesheet">
-        <link href="../lib/slick/slick-theme.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <link href="lib/slick/slick.css" rel="stylesheet">
+        <link href="lib/slick/slick-theme.css" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link href="../css/style.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/grid.css">
+
+        <!-- <link href="css/style.css" rel="stylesheet"> -->
+        <link href="../css/home.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
     </head>
 
     <body>
         
-     <!-- Nav Bar Start -->
-     <div class="nav">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                <a href="#" class="navbar-brand">MENU</a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav mr-auto">
-                        <a href="transaction-management.php" class="nav-item nav-link">QUẢN LÝ ĐƠN HÀNG</a>
+        <!-- Header Start -->
+        <header class="header">
+            <div class="grid wide">
+                <div class="header-with-search">
+                    <div class="header__logo">
+                        <a href="./user-login.php" class="header__logo-link">
+                            <img src="../img/logo.png" alt="Logo" class="header__logo-img">
+                        </a>
                     </div>
-                    <div class="navbar-nav ml-auto">
-                        <div class="header__navbar-item header__navbar-user">
-                            <img class = "avatar-img" src="../img/avatar.jpg"/>
-                            <span class="header__navbar-user-name"><?php echo $name; ?></span>
+                    <div class="header__item">
+                        <a href="admin.php" class="header__link">
+                            QUẢN LÝ NHÂN SỰ
+                        </a>
+                    </div>
+                    <div class="header__item">
+                        <a href="transaction-management.php" class="header__link header__link--active">
+                            QUẢN LÝ ĐƠN HÀNG
+                        </a>
+                    </div>
+                    <div class="header__item">
+                        <a href="product-management.php" class="header__link">
+                            QUẢN LÝ SẢN PHẨM
+                        </a>
+                    </div>
                     
-                            <ul class="header__navbar-user-menu">
-                                <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                    <a href="logout.php">Đăng xuất</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <!-- Nav Bar End -->     
-        
-        <!-- Bottom Bar Start -->
-        <div class="bottom-bar">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="admin.php">
-                                <img src="../img/logo.png" alt="Logo">
-                            </a>
-                        </div>
+                    <div class="header__item header__user">
+                        <a class='header__icon-link' href=''>
+                            <i class='header__icon bi bi-person'></i>
+                        </a>
+                        <a href='' class='header__link header__user-login'><?php echo $name;?></a>
+                        
+
+                        <ul class="header__user-menu">
+                            <li class="header__user-item">
+                                <a href="./my-account.php">Tài khoản của tôi</a>
+                            </li>
+                            <li class="header__user-item">
+                                <a href="./logout.php" >Đăng xuất</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Bottom Bar End -->
-        
+        </header>
+        <!-- Header End -->  
+
         <!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
-            <div class="container-fluid">
+        <div class="homepage">
+            <div class="grid wide">
+                <ul class="path-homepage">
+                    <li class="path-link "><a href="transaction-management.php">QUẢN LÝ ĐƠN HÀNG</a></li>
+                    <li class="path-link ">></li>
+                    <li class="path-link " >CHI TIẾT ĐƠN HÀNG: <?php echo $id_transaction; ?></a></li>
+                </ul>
             </div>
         </div>
         <!-- Breadcrumb End -->
         
-        <!-- Cart Start -->
-        <div class="cart-page">
-            <?php
-                echo "<div class='container-fluid'>";
-                    echo "<div class='row'>";
-                        echo "<div class='col-lg-8'>";
-                        echo "<div class='cart-page-inner-title'>";
-                        echo "<h4 style= 'text-align: center; font-size: 18px;
-                        font-weight: 600; margin-bottom: 0px;'>
-                        Mã đơn hàng:  ".$id_transaction."</h4 class = 'text-align: center'>";
+        <div class='product featured-product'>
+            <div class='grid wide'>
+                <div class='row'>
+                <div class='col l-7'>
+                    <div>
+                        <div class='header-product-cart'>
+                            <span class = 'header__text-field' >Thông tin Sản phẩm</span>
+                            <span class = 'product-item__current-price totalPrice'></span>
+                        </div>
+                        <?php
+                            echo "<div class='list-product-cart'>";
+                            $productsID = explode( '-', $transaction["product_id"]);  
+                            $amountOfProducts = explode( '-', $transaction["amount"]); 
+                            $totalPrice = 0;
+                            for ($i = 0; $i < count($productsID) ; $i++){
+                                $id_product = $productsID[$i];
+                                $tableName = 'product';
+                                $column = 'product_id';
+
+                                $productInfo = getRowWithValue( $tableName, $column, $id_product);
+                                echo "<div class='product-cart__item'>
+                                    <a href='update-product.php?id=".$productInfo['product_id']."'><img class='product-img__cart-page' src='../" . $productInfo['image_link'] . "' alt='Image'></a>
+                                    <div class='product-info__cart-page'>
+                                        <a class='product-name__cart-page' href='update-product.php?id=".$productInfo['product_id']."'>
+                                            ".$productInfo['product_name']."
+                                        </a>";
+                                        echo "<div class='product-brand__cart-page'>Thương hiệu<a href='' class='product-brand__text'>".$productInfo['brand_id']."</a></div>
+                                    </div>
+                                    <div class='product-quantity__cart-page'>".$amountOfProducts[$i]."</div>
+                                    <div class='product-price__cart-page'>";
+                                            $totalPrice += $productInfo['price']*$amountOfProducts[$i];
+                                            echo "<span class = 'product-cart__current-price'>" . number_format($productInfo['price'], 0, ',', '.') . " ₫</span>";
+                                    echo "</div>
+                                </div>";
+                            }
                         echo "</div>";
-                        echo "</div>";
-                        echo "<div class='col-lg-8'>";
-                            echo "<div class='cart-page-inner'>";
-                                    echo "<div class='table-responsive'>";
-                                        echo "<table class='table table-bordered'>";
-                                            echo "<thead class='thead-dark'>";
-                                                echo "<tr>";
-                                                    echo "<th class ='header-checkout_text'>Sản phẩm</th>";
-                                                    echo "<th class ='header-checkout_text'>Đơn giá</th>";
-                                                    echo "<th class ='header-checkout_text'>Số lượng</th>";
-                                                    echo "<th class ='header-checkout_text'>Thành tiền</th>";
-                                                echo "</tr>";
-                                            echo "</thead>";
-                                            echo "<tbody class='align-middle'>";
-                                                    for($count = 0; $count < count($productArray); $count++){
-                                                    echo "<tr>";
-                                                    echo "<td>";
-                                                    echo "<div class='img'>";
-                                                    $qslProduct = "SELECT * FROM `product` WHERE product_id = '$productArray[$count]'";
-                                                    $rs1 = $conn->query($qslProduct);
-                                                    if (!$rs1) {
-                                                        die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                        exit();
-                                                    }
-                                                    $productInfo = $rs1->fetch_array(MYSQLI_ASSOC);
-                                                    echo "<a href='product-detail.php?id=".$productInfo['product_id']."'><img src='../" . $productInfo['image_link'] . "' alt='Image'></a>";
-                                                    echo "<p>" . $productInfo['product_name'] . "</p>";
-                                                    echo "</div>";
-                                                    echo "</td>";
-                                                    $price = 0;
-                                                    if ($productInfo['discount'] == 0){
-                                                        $price = $productInfo['price']; 
-                                                    }else{
-                                                        $price = ($productInfo['price'] - ($productInfo['price'] * $productInfo['discount'] * 0.01));
-                                                    }
-                                                    echo "<td>" . number_format($row['price'], 0, ',', '.') . "đ". "</td>";
-                                                    $amountOfProduct = $amountArray[$count];
-                                                    echo "<td>" . $amountOfProduct ."</td>";
-                                                    $sumPrice = $price * $amountOfProduct;
-                                                    echo "<td>" . moneyPoint($sumPrice) . "đ</td>";
-                                                    }  
-                                                    echo "<tr>";
-                                                    echo "<td></td>";
-                                                    echo "<td></td>";
-                                                    echo "<td class = 'header-checkout_text'>Tổng</td>";
-                                                    $shipCost = 35000;
-                                                    echo "<td><p class = 'title-checkout-text' style = 'margin: 5px 0px;'>(Ship: ".moneyPoint($shipCost)."đ)</p>
-                                                    <h5 style ='font-size: 18px; font-weight: 600;  color: rgb(235, 33, 1);'>". moneyPoint($totalPrice) ."đ</h5></td>";
-                                                    echo "</tr>";
-                                            echo "</tbody>";
-                                        echo "</table>";
-                                    echo "</div>";
-                                echo "</div>";
-                            echo "</div>";
-                            echo "</div>";
-                        echo "</div>";
-                    echo "</div>";
-                        
-            ?>
-        </div>
-        <!-- Cart End -->
-        
+                        ?>
+                    </div>
+                </div>
+                <div class='col l-5'>
+                    <div >
+                        <div class='header-product-cart'>
+                            <span class = 'header__text-field' >Thông tin đơn hàng</span>
+                        </div>
+                        <div class='user-info__order'> 
+                            <?php
+                                echo "<div class='info__order'>
+                                <span class = 'header-text-order__item'>Trạng thái đơn hàng:</span>
+                                <span class='text-order__item'>".$transaction['status']."</span>
+                                </div>
+                                <div class='info__order'>
+                                    <span class = 'header-text-order__item'>Thời gian:</span>";
+                                    $dateTime = explode( ' ', $transaction["date"]);
+                                    echo "<span class='text-order__item'>". dayOfDate($dateTime[0]).", ".$dateTime[1]."  ". dateFormat($dateTime[0])."</span>
+                                </div>
+                                <div class='info__order'>
+                                    <span class = 'header-text-order__item'>Giảm giá:</span>";
+                                    $totalDiscountPrice = $totalPrice - $transaction['payment'];
+                                    echo "<span class='text-order__item'>-".number_format($totalDiscountPrice, 0, ',', '.')." ₫</span>
+                                </div>
+                                <div class='info__order'>
+                                    <span class = 'header-text-order__item'>Thành tiền:</span>
+                                    <span class='text-order__item product-cart__current-price'>".number_format($transaction['payment'], 0, ',', '.')." ₫</span>
+                                </div>";
+                            ?>
+                        </div>
+                    </div>
+                    <div>
+                        <div class='header-product-cart'>
+                            <span class = 'header__text-field' >Thông tin người nhận</span>
+                        </div>
+                        <?php
+                            echo "<div class='user-info__order'> 
+                                <div class='info__order'>
+                                    <span class = 'header-text-order__item'>Họ tên người nhận:</span>
+                                    <span class='text-order__item'>".$transaction['user_name']."</span>
+                                </div>
+                                <div class='info__order'>
+                                    <span class = 'header-text-order__item'>Hình thức giao hàng:</span>
+                                    <span class='text-order__item'>Viet hoang</span>
+                                </div>
+                                <div class='info__order'>
+                                    <span class = 'header-text-order__item'>Địa chỉ:</span>
+                                    <span class='text-order__item'>".displayAddress($transaction['address'])."</span>
+                                </div>
+                                <div class='info__order'>
+                                    <span class = 'header-text-order__item'>Số điện thoại:</span>
+                                    <span class='text-order__item'>".$transaction['user_phone']."</span>
+                                </div>
+                            </div>";
+                        ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>           
            
         
         <!-- Back to Top -->

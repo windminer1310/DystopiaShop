@@ -1,22 +1,23 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <?php
-    	$dbhost = 'localhost ';
-        $dbuser = 'root';
-        $dbpass = '';
-        $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-        $id = $_GET['id'];
-        if ($conn->connect_error) {
-            die("Lỗi không thể kết nối!");
-            exit();
-        }
+<?php
+    require_once('../database/connectDB.php');
 
-        $sql = "DELETE FROM `product` WHERE product_id = '" . $id . "';";
+    $product_id = $_GET['product_id'];
 
-        $rs = $conn->query($sql);
-        header("Location: product-management.php");
-        exit();
-    ?>
-</body>
-</html>
+
+    $tableName = 'product';
+    $productColumn = 'product_id';
+
+    $deleteProduct = deleteRowWithValue($tableName, $productColumn, $product_id);
+
+    if($deleteProduct) {
+        echo "<script>alert('Xóa sản phẩm thành công!')
+        window.location.href = 'product-management.php'
+        </script>";
+    }
+    else{
+        echo "<script>alert('Xóa sản phẩm thất bại!')
+        window.location.href = 'update-product.php?id=" . $product_id ."'
+        </script>";
+    }
+
+?>

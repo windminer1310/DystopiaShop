@@ -1864,14 +1864,12 @@ p.minus-button {
     margin-right: 12px;
 }
 
-.info-order__item .id-order__item ,
-.info-order__item .status-order__item {
+.info-order__item .id-order__item  {
     text-decoration: none;
     color: var(--primary-color);
 }
 
-.info-order__item .id-order__item:hover,
-.info-order__item .status-order__item:hover {
+.info-order__item .id-order__item:hover {
     color: #b10303;
 }
 
@@ -1885,10 +1883,7 @@ p.minus-button {
     justify-content: space-between;
 }
 
-.with-spacebetween-icon .status-icon{
-    margin-top: 20px;
-    margin-bottom: -10px;
-}
+
  
 .field-user__account {
     display: none;

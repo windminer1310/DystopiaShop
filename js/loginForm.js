@@ -52,7 +52,7 @@ function login()
             // document.getElementById('login-form').reset();
 
             if(ajax_request.responseText == ""){
-                window.location.href = "user-login.php";
+                window.location.href = "index.php";
             }
             else{
                 document.getElementById('auth-form__notify-text').innerHTML = ajax_request.responseText;
