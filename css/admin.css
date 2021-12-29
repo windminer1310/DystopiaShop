@@ -207,13 +207,13 @@ th {
     outline-color: red;
 }
 
-#product-data--list {
+#product-qty {
     border: 1px solid;
     border-radius: 5px;
     padding: 5px 10px;
 }
 
-.lable-data--list {
+.label__data-list {
     font-size: 15px;
     margin-right: 12px;
 }

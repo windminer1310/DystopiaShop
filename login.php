@@ -7,7 +7,6 @@
 		// try and log the user in with $_GET vars from facebook 
 		$fbLogin = tryAndLoginWithFacebook( $_GET );
 	}
-    
 ?>
 
 <!DOCTYPE html>

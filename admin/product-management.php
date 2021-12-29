@@ -33,15 +33,7 @@
         header('Location: transaction-management.php');
     }
 
-    $sort = 0;
-    $price_from = 0;
     $search = NULL;
-    if (isset($_GET['sort'])) {
-        $sort = $_GET['sort'];
-    }
-    if (isset($_GET['price_from'])) {
-        $price_from = $_GET['price_from'];
-    }
     if (isset($_GET['search']) && strlen($_GET['search']) == 0) {
         header('Location: product-management.php');
     }else if( isset($_GET['search'])){
@@ -70,7 +62,6 @@
         <link href="../css/grid.css" rel="stylesheet" >
         <link href="../css/base.css" rel="stylesheet">
         <link href="../css/home.css" rel="stylesheet">
-        <link href="../css/admin.css" rel="stylesheet">
     </head>
 
     <body>
@@ -158,47 +149,10 @@
                         <div class='product__list-item'>
                             <div class='row'> ";                            
                                     $sql = "SELECT * FROM `product`";
-                                    if (isset($_GET['price_from'])) {
-                                        $currentPrice = 'price*(1 - 0.01*discount)';
-                                        if ($_GET['price_from'] == 1) {
-                                            $sql = $sql . " WHERE ".$currentPrice." <= 1000000";
-                                        }
-                                        elseif ($_GET['price_from'] == 2) {
-                                            $sql = $sql . " WHERE ".$currentPrice." > 1000000 AND ".$currentPrice." <= 10000000";
-                                        }
-                                        elseif ($_GET['price_from'] == 3) {
-                                            $sql = $sql . " WHERE ".$currentPrice." > 10000000 AND ".$currentPrice." <= 50000000";
-                                        }
-                                        else {
-                                            $sql = $sql . " WHERE ".$currentPrice." > 50000000";
-                                        }
-                                        if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
-                                            $sql = $sql . " AND (product_name LIKE '%" . $search . "%' OR category_id = 
-                                            (SELECT category_id FROM `category` WHERE category_name LIKE '%" . $search . "%') OR brand_id = 
-                                            (SELECT brand_id FROM `brand` WHERE brand_name LIKE '%" . $search . "%') OR description LIKE '%" . $search . "%')";
-                                        }
-                                    }
-                                    else {
-                                        if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
-                                            $sql = $sql . " WHERE product_name LIKE '%" . $search . "%' OR category_id = 
-                                            (SELECT category_id FROM `category` WHERE category_name LIKE '%" . $search . "%') OR brand_id = 
-                                            (SELECT brand_id FROM `brand` WHERE brand_name LIKE '%" . $search . "%') OR description LIKE '%" . $search . "%'";
-                                        }
-                                    }
-                                    if (isset($_GET['sort'])) {
-                                        $currentPrice = 'price*(1 - 0.01*discount)';
-                                        if ($_GET['sort'] == 1) {
-                                            $sql = $sql . " ORDER BY saledate DESC";
-                                        }
-                                        elseif ($_GET['sort'] == 3) {
-                                            $sql = $sql . " ORDER BY ".$currentPrice." ASC";
-                                        }
-                                        elseif ($_GET['sort'] == 4) {
-                                            $sql = $sql . " ORDER BY ".$currentPrice." DESC";
-                                        }
-                                        else {
-                                            $sql = $sql . " ORDER BY sold DESC";
-                                        }
+                                    if (isset($_GET['search']) && strlen($_GET['search']) > 0) {
+                                        $sql = $sql . " WHERE product_name LIKE '%" . $search . "%' OR category_id = 
+                                        (SELECT category_id FROM `category` WHERE category_name LIKE '%" . $search . "%') OR brand_id = 
+                                        (SELECT brand_id FROM `brand` WHERE brand_name LIKE '%" . $search . "%') OR description LIKE '%" . $search . "%'";
                                     }
                                     $rs = $conn->query($sql);
 

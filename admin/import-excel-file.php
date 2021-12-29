@@ -1,7 +1,7 @@
 <?php
     session_start();
     require_once('../database/connectDB.php');
-
+    
     if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
         $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
         $countName = count($eachPartName);
@@ -103,9 +103,9 @@
                                 <div class="heading__text">Số lượng sản phẩm trong kho</div>
                             </div>
                             <div class="list-info-order">
-                                <label class='lable-data--list' for="productQtys">Chọn xem sản phẩm</label>
-                                <input list="productQtys" name="product-data--list" id="product-data--list">
-                                <datalist id="productQtys">
+                                <label class='label__data-list' for="product-qty">Chọn xem sản phẩm</label>
+                                <input list="product-qty" name="product__data-list" id="product__data-list">
+                                <datalist id="product-qty">
                                 <?php 
                                     $tableProduct = 'product';
                                     $getProductRow = getRowWithTable($tableProduct);
@@ -121,7 +121,7 @@
                     <div class='col l-8'>
                         <div>
                             <div class='heading-with-btn'>
-                                <input type="file" id="input" accept=".xls, .xlsx">
+                                <input type="file" id="input__file-location" accept=".xls, .xlsx">
                                 <div class="btn btn--white" id="choose-file">Nhập</div>
                                 <div class="btn" id='submit'>Cập nhật</div>
                             </div>
@@ -133,7 +133,7 @@
                 </div>
             </div>
         </div>
-        <div id='line-error' style="display: none;"></div>
+        <div id='product__error-line' style="display: none;"></div>
     </body>
 </html>
 

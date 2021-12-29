@@ -158,7 +158,6 @@
                                                 echo "</datalist>";
                                             ?>
                                         </div>
-
                                         <div class='input-element col l-4'>
                                             <p class = 'title-input'>Mã sản phẩm</p>
                                             <input class = 'input__field'  id="product_id" name="product_id" required value='<?php echo $productInfo['product_id'] ?>'>

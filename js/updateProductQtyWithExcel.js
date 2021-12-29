@@ -1,5 +1,5 @@
 const $ = document.querySelector.bind(document);
-var input = document.getElementById('input');
+var input = document.getElementById('input__file-location');
 
 input.addEventListener('click', function() {
     deletePreviousTable();
@@ -10,19 +10,18 @@ chosse.addEventListener('click', function() {
     deletePreviousTable();
     readXlsxFile(input.files[0]).then(function(data) {
         data.map((row, index) => {
+            let table = document.getElementById('table-data');
             if(index == 0){
-                let table = document.getElementById('table-data');
                 generateTableHead(table, row);
             }
             else {
-                let table = document.getElementById('table-data');
                 generateTableRows(table, row);
             }
         })
     });
 });
 
-btnSubmitClickEvt();
+updateTableStatus();
 
 function deletePreviousTable(){
     if($("#table-data thead") != null){
@@ -53,23 +52,23 @@ function generateTableRows(table, data){
     });
 }
 
-function btnSubmitClickEvt(){
+function updateTableStatus(){
     var submit = document.getElementById('submit');
     submit.addEventListener('click', function() { 
         var elements = document.getElementsByClassName('tbl--data-item');    
         var header = document.getElementsByClassName('tbl--data-heading');
         
         totalColumn = 2;
-        if(header.length == totalColumn){
-            updateTableStatus(elements, header.length); 
+        if(header.length != totalColumn){
+            errorInHeadingLine();
         }
         else{
-            errorHeadingLine();
+            errorInItemLine(elements, header.length); 
         }
     })
 }
 
-function updateTableStatus(elements, totalColumn){
+function errorInItemLine(elements, totalColumn){
     product = []
     productId = []
     qtyErrorLine = []
@@ -78,7 +77,7 @@ function updateTableStatus(elements, totalColumn){
     for(i = 0; i < elements.length; i+=totalColumn){
         productId.push(elements[i].innerText);
 
-        if(checkValidQty(elements[i+1].innerText)){
+        if(isValidQuantity(elements[i+1].innerText)){
             if(!hasErrorInFile){
                 product[index] = { product_id:elements[i].innerText, quantity:elements[i+1].innerText }
             }
@@ -89,12 +88,10 @@ function updateTableStatus(elements, totalColumn){
         }
         index++;
     }
-
-    checkInvalidProductId(productId);
+    displayListInvalidProductId(productId);
     
     setTimeout(function(){
         var productIdErrorLine =  arrProductIdErrorLine();
-        
         let mySet = [...new Set(productIdErrorLine.concat(qtyErrorLine))];
         let errorLine = Array.from(mySet);
 
@@ -112,7 +109,7 @@ function updateTableStatus(elements, totalColumn){
     }, 100);
 }
 
-function checkValidQty(quantity){
+function isValidQuantity(quantity){
     parseQtyToNumber = Number(quantity);
     if(!isNaN(parseQtyToNumber) && parseQtyToNumber >= 0) return true;
     return false;
@@ -120,13 +117,13 @@ function checkValidQty(quantity){
 
 function errorItemLine(errorLine){
     var list = document.getElementsByTagName('tr');
-    alert('Mã phản phẩm không tồn tại hoặc thông tin không đúng định dạng!');
+    alert('Mã phản phẩm không tồn tại hoặc thông tin không đúng định dạng, vui lòng kiểm tra lại các dòng được in đậm!');
     errorLine.map(
         x => list[x+1].setAttribute('class', 'error-line')
     );
 }
 
-function errorHeadingLine(){
+function errorInHeadingLine(){
     var list = document.getElementsByTagName('tr');
     alert('Số lượng cột trong file hoặc tên cột không đúng định dạng!');
     list[0].setAttribute('class', 'error-line');
@@ -134,9 +131,9 @@ function errorHeadingLine(){
 
 function arrProductIdErrorLine(){
     var productIdErrorLine = []
-    if(document.getElementById('line-error').innerText != '')
+    if(document.getElementById('product__error-line').innerText != '')
         {
-            productIdErrorLine = document.getElementById('line-error').innerText.split('-');
+            productIdErrorLine = document.getElementById('product__error-line').innerText.split('-');
             productIdErrorLine = productIdErrorLine.map(function (x) { 
                 return parseInt(x, 10); 
             });
@@ -144,7 +141,7 @@ function arrProductIdErrorLine(){
     return productIdErrorLine;
 }
 
-function checkInvalidProductId(arrProductId){
+function displayListInvalidProductId(arrProductId){
     productIdString = arrProductId.join('-')
 
     var form_data = new FormData();
@@ -158,7 +155,7 @@ function checkInvalidProductId(arrProductId){
     {
         if(ajax_request.readyState == 4 && ajax_request.status == 200)
         {
-            document.getElementById('line-error').innerHTML = ajax_request.responseText;
+            document.getElementById('product__error-line').innerHTML = ajax_request.responseText;
         }
     }
 }

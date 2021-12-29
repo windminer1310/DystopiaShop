@@ -84,18 +84,18 @@
 
 					$databaseNameTable = 'user';
 					// check for user with facebook id
-					$userInfoWithId = getRowWithValue( $databaseNameTable, 'fb_user_id', $fbUserInfo['fb_response']['id'] );
+					$userInfoWithFbId = getRowWithValue( $databaseNameTable, 'fb_user_id', $fbUserInfo['fb_response']['id'] );
 
 					// check for user with email
 					$userInfoWithEmail = getRowWithValue( $databaseNameTable, 'user_email', $fbUserInfo['fb_response']['email'] );
 
-					if ( !$userInfoWithId || !$userInfoWithEmail) { // user hasn't logged in with facebook before
+					if ( !$userInfoWithFbId || !$userInfoWithEmail) { // user hasn't logged in with facebook before
 						$info = $fbUserInfo['fb_response'];
 						insertRow($info);
-                        $userInfoWithId = getRowWithValue( $databaseNameTable, 'fb_user_id', $fbUserInfo['fb_response']['id'] );
+                        $userInfoWithFbId = getRowWithValue( $databaseNameTable, 'fb_user_id', $fbUserInfo['fb_response']['id'] );
 					}
                     
-					$userInfo = getRowWithValue( $databaseNameTable, 'user_id', $userInfoWithId['user_id'] );
+					$userInfo = getRowWithValue( $databaseNameTable, 'user_id', $userInfoWithFbId['user_id'] );
 
 					$_SESSION['name'] = $userInfo['user_name'];
         			$_SESSION['id'] = $userInfo['user_id'];
