@@ -1,5 +1,4 @@
 <?php
-
 define( 'DB_HOST', 'localhost' ); // database host
 define( 'DB_NAME', 'database' ); // database name
 define( 'DB_USER', 'root' ); // database username

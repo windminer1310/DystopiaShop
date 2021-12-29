@@ -183,9 +183,6 @@
 		$statement->execute();
 		return $statement;
 	}
-<<<<<<< Updated upstream
-    
-=======
 	
 	function getDiscountProductsInPage($start, $totalProductInPage) {
 		// get database connection
@@ -230,5 +227,189 @@
 	}
 
 
->>>>>>> Stashed changes
+	function getRowWithColumnOrderBy( $tableName, $column) {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+		// create our sql statment
+		$statement = $databaseConnection->prepare('
+			SELECT
+				*
+			FROM
+				`' . $tableName . '`
+			ORDER BY
+				' . $column 
+		);
+
+		// execute sql with actual values
+		$statement->setFetchMode( PDO::FETCH_ASSOC );
+
+		$statement->execute();
+		return $statement;
+	}
+
+	function updateProduct( $product_id , $category, $brand, $product_name, $date_first_available, $price, $discount, $amount, $img_link, $description) {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+		// create our sql statment adding in password only if change password was checked
+		$statement = $databaseConnection->prepare( '
+			UPDATE
+				product
+			SET
+                product_id = :product_id ,
+				category_id = :category_id ,
+				brand_id = :brand_id ,
+				product_name = :product_name ,
+				date_first_available = :date_first_available ,
+				price = :price ,
+				discount = :discount ,
+				amount = :amount ,
+				image_link = :image_link ,
+				description = :description
+			WHERE
+			product_id = :product_id
+		' );
+		$params = array( //params 
+			'product_id' => trim( $product_id ),
+			'category_id' => trim( $category ),
+			'brand_id' => trim( $brand ),
+			'product_name' => trim( $product_name ),
+			'date_first_available' => trim( $date_first_available ),
+			'price' => trim( $price ),
+			'discount' => trim( $discount ),
+			'amount' => trim( $amount ),
+			'image_link' => trim( $img_link ),
+			'description' => trim( $description )
+		);
+		// run the sql statement
+		$statement->execute( $params );
+		return $statement;
+	}
+
+	function addProduct($product_id , $category, $brand, $product_name, $date_first_available, $price, $discount, $amount, $img_link, $description, $sold) {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+		// create our sql statment adding in password only if change password was checked
+		$statement = $databaseConnection->prepare( '
+			INSERT INTO
+			product (
+				product_id,
+				category_id,
+				brand_id,
+				product_name,
+				date_first_available,
+				price,
+				discount,
+				amount,
+				image_link,
+				description,
+				sold
+			)
+			VALUES (
+				:product_id,
+				:category_id,
+				:brand_id,
+				:product_name,
+				:date_first_available,
+				:price,
+				:discount,
+				:amount,
+				:image_link,
+				:description,
+				:sold
+			)
+		' );
+		$params = array( //params 
+			'product_id' => trim( $product_id ),
+			'category_id' => trim( $category ),
+			'brand_id' => trim( $brand ),
+			'product_name' => trim( $product_name ),
+			'date_first_available' => trim( $date_first_available ),
+			'price' => trim( $price ),
+			'discount' => trim( $discount ),
+			'amount' => trim( $amount ),
+			'image_link' => trim( $img_link ),
+			'description' => trim( $description ) ,
+			'sold' => trim( $sold )
+		);
+		// run the sql statement
+		$statement->execute( $params );
+		return $statement;
+	}
+
+	function updateProductQuantity( $product_id , $quantity, $totalProduct) {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+
+		$statement = $databaseConnection->prepare( '
+			UPDATE
+				product
+			SET
+                amount = :amount 
+			WHERE
+				product_id = :product_id
+		' );
+
+		for($i = 0; $i < $totalProduct; $i++){
+			$params[$i] = array( //params 
+				'product_id' => trim( $product_id[$i] ),
+				'amount' => trim( $quantity[$i] )
+			);
+			// run the sql statement
+	
+			$statement->execute( $params[$i] );
+		}
+		
+		return $statement;
+	}
+
+	function addTableWithTwoValue($table, $firstColumn, $firstValue, $secondColumn, $secondValue ){
+        $databaseConnection = getDatabaseConnection();
+
+        // create our sql statment
+        $statement = $databaseConnection->prepare( '
+            INSERT INTO
+            '.$table.' (
+                '.$firstColumn.',
+                '.$secondColumn.'
+            )
+            VALUES (
+                :firstValue,
+                :secondValue
+            )
+        ' );
+
+        // execute sql with actual values
+        $success = $statement->execute( array(
+            'firstValue' => trim( $firstValue ),
+            'secondValue' => trim( $secondValue  )
+        ) );
+        return $success;
+    }
+
+	function updatePasswordWithEmail($user_email , $newPassword) {
+		// get database connection
+		$databaseConnection = getDatabaseConnection();
+
+		// create our sql statment adding in password only if change password was checked
+		$statement = $databaseConnection->prepare( '
+			UPDATE
+				user
+			SET
+                user_password = :user_password
+			WHERE
+                user_email = :user_email
+		' );
+
+		$params = array( //params 
+			'user_email' => trim( $user_email ),
+			'user_password' => trim( $newPassword )
+		);
+		// run the sql statement
+		$statement->execute( $params );
+	}
+
     

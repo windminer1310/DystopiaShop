@@ -1,6 +1,5 @@
 <?php
     session_start();
-
     // fb defines
     define( 'FB_GRAPH_VERSION', 'v12.0' ); // facebook graph version
     define( 'FB_GRAPH_DOMAIN', 'https://graph.facebook.com/' ); // base domain for api

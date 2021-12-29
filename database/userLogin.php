@@ -1,30 +1,24 @@
-<<<<<<< Updated upstream
 <?php
     session_start();
     include('connectDB.php');
-
+    
     if (isset($_POST["phone"])){
         $getPhone =   $_POST["phone"];
     }
-
     if (isset($_POST["password"])){
         $getPassword =  $_POST["password"];
     }
 
-    $databaseNameTable = 'user';
+    $userTable = 'user';
     $column = 'user_phone';
-    $userInfoWithPhone = getRowWithValue( $databaseNameTable, $column, $getPhone );
+    $userInfo = getRowWithValue( $userTable, $column, $getPhone);
+    displayStatus($userInfo, $getPassword);
 
-    displayStatusAfterLoginWithPassword($userInfoWithPhone, $getPassword);
-
-
-
-
-    function displayStatusAfterLoginWithPassword($userInfoWithPhone, $getPassword){
-        if($userInfoWithPhone) {
-            $passHash = $userInfoWithPhone['user_password'];
+    function displayStatus($userInfo, $getPassword){
+        if($userInfo) {
+            $passHash = $userInfo['user_password'];
             if(password_verify($getPassword, $passHash)){
-                setLoginValueToSession($userInfoWithPhone);
+                setLoginValueToSession($userInfo);
                 echo '';
             }
             else{
@@ -36,67 +30,18 @@
         }
     }
 
-    function setLoginValueToSession($userInfoWithPhone){
-        $_SESSION['name'] = $userInfoWithPhone['user_name'];
-        $_SESSION['id'] = $userInfoWithPhone['user_id'];
-    }
-
-    function displayFailInfomation(){
-        echo '<div class="fail-auth__form">Đăng nhập thất bại, vui lòng kiểm tra lại các thông tin!</div>';
-    }
-
-    function displayFailPassword(){
-        echo '<div class="fail-auth__form">Đăng nhập thất bại, vui lòng kiểm tra lại mật khẩu đăng nhập!</div>';
-    }
-
-?>
-=======
-<?php
-    session_start();
-    include('connectDB.php');
-
-    if (isset($_POST["phone"])){
-        $getPhone =   $_POST["phone"];
-    }
-
-    if (isset($_POST["password"])){
-        $getPassword =  $_POST["password"];
-    }
-
-    $databaseNameTable = 'user';
-    $column = 'user_phone';
-    $userInfoWithPhone = getRowWithValue( $databaseNameTable, $column, $getPhone);
-    displayStatusAfterLoginWithPassword($userInfoWithPhone, $getPassword);
-
-    function displayStatusAfterLoginWithPassword($userInfoWithPhone, $getPassword){
-        if($userInfoWithPhone) {
-            $passHash = $userInfoWithPhone['user_password'];
-            if(password_verify($getPassword, $passHash)){
-                setLoginValueToSession($userInfoWithPhone);
-                echo '';
-            }
-            else{
-                displayFailPassword();
-            }
-        }
-        else{
-            displayFailInfomation();
-        }
-    }
-
-    function setLoginValueToSession($userInfoWithPhone){
-        $_SESSION['name'] = $userInfoWithPhone['user_name'];
-        $_SESSION['id'] = $userInfoWithPhone['user_id'];
+    function setLoginValueToSession($userInfo){
+        $_SESSION['name'] = $userInfo['user_name'];
+        $_SESSION['id'] = $userInfo['user_id'];
         
     }
 
     function displayFailInfomation(){
-        echo '<div class="auth__form--fail">Đăng nhập thất bại, vui lòng kiểm tra lại các thông tin!</div>';
+        echo 'Không tìm thấy thông tin tài khoản';
     }
 
     function displayFailPassword(){
-        echo '<div class="auth__form--fail">Đăng nhập thất bại, vui lòng kiểm tra lại mật khẩu đăng nhập!</div>';
+        echo 'Đăng nhập thất bại, vui lòng kiểm tra lại mật khẩu';
     }
 
 ?>
->>>>>>> Stashed changes

@@ -1,17 +1,23 @@
-<?php 
+<?php
     session_start();
-    require_once('./database/connectDB.php');
-    require_once('./display.php');
+    require_once('database/connectDB.php');
+    require_once('display.php');
 
     if(isset($_SESSION['name']) && isset($_SESSION['id'])){
         $name = displayUserName($_SESSION['name']);
         $user_id = $_SESSION['id'];
+        $orderTable = 'order';
         $tableCart = 'cart';
         $column = 'user_id';
+        $orderColumn = 'order_id';
+        $orderId = $_GET['order_id'];
         $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
         $productInCart = $getCartRow->rowCount();
-    }
-    else{
+        $userHaveOrder = getRowWithTwoValue($orderTable, $column, $user_id , $orderColumn, $orderId);
+        if(!$userHaveOrder) {
+            header('Location: ./account.php');
+        }
+    }else{
         header('Location: ./index.php');
     }
 ?>
@@ -33,8 +39,7 @@
         <link rel="stylesheet" href="./css/base.css">
         <link rel="stylesheet" href="./css/home.css">
     </head>
-    <body>
-        <div id="toast"></div>
+    <body>     
         <div id="page-container">
             <!-- Header Start -->
             <header id="header">
@@ -42,7 +47,7 @@
                     <div class="header-with-search">
                         <div class="header__logo">
                             <a href="./index.php" class="header__logo-link">
-                                <img src="img/logo.png" alt="Logo" class="header__logo-img">
+                                <img src="./img/logo.png" alt="Logo" class="header__logo-img">
                             </a>
                         </div>
                         <form class="header__search" method="get" action="./product-list.php?">
@@ -60,13 +65,14 @@
                             </a>
                         </div>
                         <div class="header__item">
-                            <a href="" class="header__icon-link">
+                            <a href="#" class="header__icon-link">
                                 <i class="header__icon bi bi-pc-display"></i>
                             </a>
-                            <a href="" class="header__link">
+                            <a href="#" class="header__link">
                                 Cấu hình PC
                             </a>
                         </div>
+
                         <div class="header__item">
                             <a href="./account.php" class="header__icon-link">
                                 <i class="header__icon bi bi-clipboard-check"></i>
@@ -95,22 +101,21 @@
                                     <a href="./logout.php" >Đăng xuất</a>
                                 </li>
                             </ul>
-                        </div>      
+                        </div>
                         <div class="header__item header__cart-wrap">
-                            <a href="#" class="header__icon-link">
+                            <a href="./cart.php" class="header__icon-link">
                                 <i class="header__icon bi bi-cart3"></i>
                                 <?php 
                                     if($productInCart > 0) echo "<span class='header__cart-notice'>".$productInCart." </span>";
                                 ?>
                             </a>
-                            <a href="#" class="header__link">
+                            <a href="./cart.php" class="header__link">
                                 Giỏ hàng
                             </a>
                             <?php
                                 $tableCart = 'cart';
                                 $column = 'user_id';
                                 $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
-                            
                                 $count = $getCartRow->rowCount();
                                 if($count <= 0){
                                     //No cart: header__cart--no-item
@@ -170,118 +175,128 @@
                         <ul class="list-path-link">
                             <li class="path-link "><a href="index.php">Trang chủ</a></li>
                             <li class="path-link "><i class="bi bi-chevron-right"></i></li>
-                            <li class="path-link active">Giỏ hàng</li>
+                            <li class="path-link "><a href="./account.php">Tài khoản cá nhân</a></li>
+                            <li class="path-link "><i class="bi bi-chevron-right"></i></li>
+                            <li class="path-link " >CHI TIẾT ĐƠN HÀNG: <?php echo $orderId; ?></a></li>
                         </ul>
                     </div>
                 </div>
                 <!-- Breadcrumb End -->
-                <!-- Product Detail Start -->
-                <?php 
-                    $tableCart = 'cart';
-                    $column = 'user_id';
-                    $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
-                
-                    $count = $getCartRow->rowCount();
-                    if($count > 0){
-                        echo "<div class='grid wide'>
-                            <div class='last-section'>
-                                <div class='row'>
-                                    <div class='col l-8'>
-                                        <div class='product-cart-wrap'>
-                                            <div class='heading'>
-                                                <span class = 'heading__text' >Danh sách sản phẩm</span>
-                                                <span class = 'heading__text--primary totalPrice'></span>
-                                            </div>
-                                            <div class='cart__list-item' id='scrollbar'>";
+                <div class='last-section'>
+                    <div class='grid wide'>
+                        <div class='row'>
+                            <div class='col l-7'>
+                                <div class="order-detail__products">
+                                    <div class='heading'>
+                                        <span class = 'heading__text' >Thông tin sản phẩm</span>
+                                        <span class = 'heading__text--primary totalPrice'></span>
+                                    </div>
+                                    <div class='cart__list-item' id="scrollbar">
+                                        <?php
+                                            $productsID = explode( '-', $userHaveOrder["list_product"]);  
+                                            $QtyOfProducts = explode( '-', $userHaveOrder["list_qty"]); 
                                             $totalPrice = 0;
-                                            foreach ($row = $getCartRow->fetchAll() as $value => $row){
-                                                $id_product = $row['product_id'];
+                                            for ($i = 0; $i < count($productsID) ; $i++){
+                                                $id_product = $productsID[$i];
                                                 $tableName = 'product';
                                                 $column = 'product_id';
-
                                                 $productInfo = getRowWithValue( $tableName, $column, $id_product);
-
+                                                $totalPrice += $productInfo['price']*$QtyOfProducts[$i];
                                                 echo "<div class='cart-item'>
                                                     <a href='product-detail.php?product_id=".$productInfo['product_id']."'><img class='cart-item__img' src='" . $productInfo['image_link'] . "' alt='Image'></a>
                                                     <div class='cart-item__info'>
-                                                        <a class='cart-item__name' href='product-detail.php?product_id=".$productInfo['product_id']."'>
-                                                            ".$productInfo['product_name']."
-                                                        </a>
+                                                        <a class='cart-item__name' href='product-detail.php?product_id=".$productInfo['product_id']."'>".$productInfo['product_name']."</a>
                                                         <div class='cart-item__brand'>Thương hiệu<a href='' class='brand__text'>".$productInfo['brand_id']."</a></div>
                                                     </div>
-                                                    <div class='cart-item__quantity'>
-                                                        <form id = 'cart-item__quantity--change'>
-                                                            <div onclick = 'minusQtyInCart(".$productInfo['product_id'].");' class = 'btn-minus'><i class='fa fa-minus'></i></div>
-                                                            <input onchange='inputQtyInCart(".$productInfo['product_id'].");' class = 'quantity-input' type='text' value='".$row['qty']."' name='".$productInfo['product_id']."' id ='".$productInfo['product_id']."'>
-                                                            <div onclick = 'plusQtyInCart(".$productInfo['product_id'].");' class = 'btn-plus'><i class='fas fa-plus'></i></div>
-                                                        </form>
-                                                        <a class='cart-item__delete' href='database/deleteCartItem.php?user_id=". $row['user_id']."&product_id=".$row['product_id']."'>Xoá</a>
+                                                    <div class='cart-item__quantity'>Số lượng: ".$QtyOfProducts[$i]."</div>
+                                                    <div class='cart-item__price'>                             
+                                                        <span class = 'cart-item__current-price'>" . number_format($productInfo['price'], 0, ',', '.') . " ₫</span>
                                                     </div>
-                                                    
-                                                    <div class='cart-item__price'>";
-                                                        if($productInfo['discount'] == 0){
-                                                            $totalPrice += $productInfo['price']*$row['qty'];
-                                                            echo "<span class = 'cart-item__current-price'>" . number_format($productInfo['price'], 0, ',', '.') . " ₫</span>";
-                                                        }
-                                                        else{
-                                                            $discountPrice = $productInfo['price'] - ($productInfo['price'] * $productInfo['discount'] * 0.01);
-                                                            $totalPrice += $discountPrice*$row['qty'];
-
-                                                            echo "<span class = 'cart-item__current-price'>" . number_format($discountPrice, 0, ',', '.') . " ₫</span>
-                                                            <span class = 'cart-item__original-price'>" . number_format($productInfo['price'], 0, ',', '.') . " ₫</span>";
-                                                        }
-
-                                                    echo "</div>
                                                 </div>";
                                             }
-                                        echo "</div>
-                                        </div>
+                                            echo "<script type=\"text/javascript\">
+                                            var totalPrice = document.getElementsByClassName('totalPrice');
+                                            
+                                            totalField = totalPrice.length;
+                                            for( var i = 0; i < totalField; i++)
+                                            {
+                                                totalPrice[i].innerHTML = '" . number_format($totalPrice, 0, ',', '.') . " ₫';
+                                            }
+                                        </script>";
+                                        ?>
                                     </div>
-                                    <div class='col l-4'>
-                                        <div class='cart_checkout'>
-                                            <div class='heading'>
-                                                <div class='heading__text'>Thành tiền</div>
-                                                <span class = 'heading__text--primary totalPrice'></span>
-                                            </div>
-                                            <a class='btn btn--full-width' href='./checkout.php'>TIẾP TỤC THANH TOÁN</a>
-                                        </div>
-                                    </div>  
-                                </div>          
+                                </div>
                             </div>
-                        </div>";
-                        echo "<script type=\"text/javascript\">
-                                var totalPrice = document.getElementsByClassName('totalPrice');
-                            
-                                totalField = totalPrice.length;
-                                for( var i = 0; i < totalField; i++)
-                                {
-                                    totalPrice[i].innerHTML = '" . number_format($totalPrice, 0, ',', '.') . " ₫';
-                                }
-                            </script>";
-                    }
-                    else{
-                        echo "<div class='last-section'>
-                            <div class='grid wide'>
-                                <div class='row'>
-                                    <div class='col l-8 l-o-2'>";
-                                    echo "<div class='cart-page-inner'>
+                            <div class='col l-5'>
+                                <div class="order-detail__info">
+                                    <div class='heading'>
+                                        <span class = 'heading__text--primary' >Thông tin đơn hàng</span>
+                                    </div>
+                                    <div class='user-info__order'> 
+                                            <div class='info__order'>
+                                            <span class = 'form__title'>Trạng thái: </span>
+                                            <span class='text-order__item'><?php statusOrder($userHaveOrder['order_status']);?></span>
+                                            </div>
+                                            <div class='info__order'>
+                                                <span class = 'form__title'>Thời gian đặt hàng:</span>
+                                                <span class='text-order__item'><?php echo date("d-m-Y h:i A", strtotime($userHaveOrder['order_date'])); ?></span>
+                                            </div>
+                                            <div class='info__order'>
+                                                <span class = 'form__title'>Phương thức giao hàng:</span>
+                                                <span class='text-order__item'>Giao hàng tận nơi</span>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="order-detail__receiver">
+                                    <div class='heading'>
+                                        <span class = 'heading__text--primary' >Thông tin người nhận</span>
+                                    </div>
+                                    <?php
+                                        echo "<div class='user-info__order'> 
+                                            <div class='info__order'>
+                                                <span class = 'form__title'>Họ tên người nhận:</span>
+                                                <span class='text-order__item'>".$userHaveOrder['ship_name']."</span>
+                                            </div>
+                                            <div class='info__order'>
+                                                <span class = 'form__title'>Địa chỉ:</span>
+                                                <span class='text-order__item' id='address' style='display:none'>".displayAddress($userHaveOrder['ship_address'])."</span>
+                                            </div>
+                                            <div class='info__order'>
+                                                <span class = 'form__title'>Số điện thoại:</span>
+                                                <span class='text-order__item'>".$userHaveOrder['ship_phone']."</span>
+                                            </div>
+                                        </div>";
+                                    ?>
+                                </div>
+                                <?php
+                                    $tranInfo = getRowWithValue('transaction','transaction_id', $userHaveOrder['transaction_id']);
+                                    if($tranInfo){
+                                        echo"
+                                        <div class='order-detail__transaction'>
                                             <div class='heading'>
-                                                <span class = 'heading__text' >GIỎ HÀNG TRỐNG</span>
-                                            </div>";
-                                            echo "<div class='empty-cart__img'>";
-                                                echo "<img src='img/emptycart.svg' alt=''>";
-                                            echo "</div>";
-                                            echo "<p id='text-cart__empty'>Chưa có sản phẩm trong giỏ hàng của bạn!</p>
-                                            <div style='text-align: center;'>
-                                                <a class='btn' name = 'submit' id='submit' type='submit' href='product-list.php#product-view'><span class='' >MUA SẮM NGAY</span></a>
-                                            </div>";
-                                    echo "</div>";
-                                echo "</div>";
-                            echo "</div>";
-                        echo "</div>";
-                        echo "</div>";    
-                    }
-                ?>
+                                                <span class = 'heading__text--primary' >Thông tin thanh toán</span>
+                                            </div>
+                                            <div class='user-info__order'> 
+                                                <div class='info__order'>
+                                                    <span class = 'form__title'>Mã giao dịch:</span>
+                                                    <span class='text-order__item'>".$tranInfo['transaction_id']."</span>
+                                                </div>
+                                                <div class='info__order'>
+                                                    <span class = 'form__title'>Phương thức thanh toán:</span>
+                                                    <span class='text-order__item'>Chuyển khoản Momo</span>
+                                                </div>
+                                                <div class='info__order'>
+                                                    <span class = 'form__title'>Số tiền:</span>
+                                                    <span class='text-order__item'>".number_format($tranInfo['tran_amount'], 0, ',', '.')." VND</span>
+                                                </div>
+                                            </div> 
+                                        </div>";
+                                    }
+                                ?>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
             </div>
             <!-- Footer Start -->
             <footer id="footer">
@@ -307,6 +322,7 @@
                                 </li>
                             </ul>
                         </div>
+
                         <div class="col l-10-2">
                             <h3 class="footer__heading">Liên lạc</h3>
                             <ul class="footer-list">
@@ -327,6 +343,7 @@
                                 </li>
                             </ul>
                         </div>
+
                         <div class="col l-10-2">
                             <h3 class="footer__heading">Về Dystopia</h3>
                             <ul class="footer-list">
@@ -344,6 +361,7 @@
                                 </li>
                             </ul>
                         </div>
+
                         <div class="col l-10-2">
                             <h3 class="footer__heading">Theo dõi</h3>
                             <ul class="footer-list">
@@ -374,6 +392,7 @@
                                 </li>
                             </ul>
                         </div>
+
                         <div class="col l-10-2">
                             <h3 class="footer__heading">Vào cửa hàng trên ứng dụng</h3>
                             <div class="footer__download">
@@ -395,13 +414,22 @@
                         <p class="footer__text">© 2021 Bản quyền thuộc về Team Error 404 </p>
                     </div>
                 </div>
+                <!-- <div class="row payment align-items-center">
+                    <div class="col-md-6">
+                        <div class="payment-method">
+                            <h2>Chấp nhận thanh toán</h2>
+                            <img src="img/payment-method.png" alt="Payment Method" />
+                        </div>
+                    </div>
+                </div> -->
             </footer>
             <!-- Footer End -->
         </div>
         <!-- Back to Top -->
-        <a id="back-to-top"><i class="fa fa-chevron-up"></i></a>  
+        <a id="back-to-top"><i class="fa fa-chevron-up"></i></a>
     </body>
     <!-- Template Javascript -->
-    <script src="js/display.js"></script>
-    <script src="js/cart.js"></script>
+    <script src='js/display.js'></script>
+    <script src='js/getAddress.js'></script>
+    <script>getAddressWithCode(getFullAddress, getAddressCode())</script>
 </html>

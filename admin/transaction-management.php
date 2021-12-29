@@ -1,18 +1,10 @@
-<<<<<<< Updated upstream
 <?php
-    require_once('../moneyPoint.php');
+    require_once('../display.php');
+    require_once('../database/connectDB.php');
     session_start();
-	$dbhost = 'localhost:33066';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
-    if(isset($_SESSION['name']) && isset($_SESSION['id']) && isset($_SESSION['authority'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
+
+    if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
+        $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
         $countName = count($eachPartName);
         if($countName == 1){
             $name = $eachPartName[$countName-1];
@@ -20,444 +12,254 @@
         else{
             $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
         }
-        $user_id = $_SESSION['id'];
+        $user_id = $_SESSION['admin_id'];
         $author = $_SESSION['authority'];
     }
     else{
         header('Location: admin-login.html');
     }
 
+    $day = "";
+    $status = "";
+    $sqlArray = [];
+    $filterQuery = "SELECT * FROM `order` ";
 
-    
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Dystopia</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="database" name="keywords">
-        <meta content="database" name="description">
-
-        <!-- Favicon -->
-        <link href="img/favicon.ico" rel="icon">
-
-        <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
-
-        <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="../lib/slick/slick.css" rel="stylesheet">
-        <link href="../lib/slick/slick-theme.css" rel="stylesheet">
-
-        <!-- Template Stylesheet -->
-        <link href="../css/style.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
-    </head>
-
-    <body>        
-        <!-- Nav Bar Start -->
-        <div class="nav">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a href="#" class="navbar-brand">MENU</a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto">
-                            <?php
-                                if($author == 1){
-                                    echo "<a href='admin.php' class='nav-item nav-link'>QUẢN LÝ THÔNG TIN</a>";
-                                    echo "<a href='transaction-management.php' class='nav-item nav-link active'>QUẢN LÝ ĐƠN HÀNG</a>";
-                                    echo "<a href='product-management.php' class='nav-item nav-link'>QUẢN LÝ SẢN PHẨM</a>";
-                                    echo "<a href='add-item.php' class='nav-item nav-link'>THÊM SẢN PHẨM</a>";
-                                }else{
-                                    echo "<a href='transaction-management.php' class='nav-item nav-link active'>QUẢN LÝ ĐƠN HÀNG</a>";
-                                }
-                            ?>
-                        </div>
-                        <div class="header__navbar-item header__navbar-user">
-                            <img class = "avatar-img" src="../img/avatar.jpg"/>
-                            <span class="header__navbar-user-name"><?php echo $name;?></span>
-
-                            <ul class="header__navbar-user-menu">
-                                <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                    <a href="logout.php" >Đăng xuất</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Nav Bar End -->      
-        
-        <!-- Bottom Bar Start -->
-        <div class="bottom-bar">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="admin.php">
-                                <img src="../img/logo.png" alt="Logo">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Bottom Bar End --> 
-        
-        <!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
-            <div class="container-fluid">
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item active">QUẢN LÝ ĐƠN HÀNG</li>
-                </ul>
-            </div>
-        </div>
-        <!-- Breadcrumb End -->
-
-
-        <div class="my-account">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="incompleted-nav" data-toggle="pill" href="#incompleted-tab" role="tab"><i class="fa fa-shopping-bag"></i>Đơn hàng chưa hoàn thành</a>
-                            <a class="nav-link " id="completed-nav" data-toggle="pill" href="#completed-tab" role="tab"><i class="fa fa-shopping-bag"></i>Đơn hàng đã xử lý</a>
-                            
-                        </div>
-                    </div>
-                    
-                    <div class="col-12">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="incompleted-tab" role="tabpanel" aria-labelledby="incompleted-nav">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>Mã đơn hàng</th>
-                                                <th>Sản phẩm</th>
-                                                <th>Ngày đặt</th>
-                                                <th>Địa chỉ</th>
-                                                <th>Tổng tiền</th>
-                                                <th>Trạng thái</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                $sqlTransaction = "SELECT * FROM `transaction` WHERE status != 4 and status != 3";
-                                                $rs1 = $conn->query($sqlTransaction);
-                                                if (!$rs1) {
-                                                    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                    exit();
-                                                }
-                                                while($row = $rs1->fetch_assoc()){
-                                                    echo "<tr>";
-                                                    echo "<td>". $row["transaction_id"] ."</td>";
-                                                    echo "<td><a class ='btn' href='checkout-transaction.php?id_transaction=" . $row['transaction_id'] . "'>Xem</a></td>";
-                                                    $dateTime = explode( ' ', $row["date"]);
-                                                    echo "<td>". dayOfDate($dateTime[0]).", ". dateFormat($dateTime[0]).", ".$dateTime[0]."</td>";
-                                                    echo "<td>". $row['address']."</td>";
-                                                    echo "<td>". moneyPoint($row["payment"]) ."đ</td>";
-                                                    echo "<td><a href='update-status.php?id=". $row['transaction_id'] ."&status=progress' class = 'btn'>". changeStatus($row['status']) . "</a>
-                                                    <a href='update-status.php?id=". $row['transaction_id'] ."&status=cancel' class = 'fail-auth__form btn'>Hủy đơn</a>
-                                                    </td>";
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="completed-tab" role="tabpanel" aria-labelledby="completed-nav">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>Mã đơn hàng</th>
-                                                <th>Sản phẩm</th>
-                                                <th>Ngày đặt</th>
-                                                <th>Địa chỉ</th>
-                                                <th>Tổng tiền</th>
-                                                <th>Trạng thái</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                $sqlTransaction = "SELECT * FROM `transaction` WHERE status = 4 or status = 3";
-                                                $rs1 = $conn->query($sqlTransaction);
-                                                if (!$rs1) {
-                                                    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                    exit();
-                                                }
-                                                while($row = $rs1->fetch_assoc()) {
-                                                    echo "<tr>";
-                                                    echo "<td>". $row["transaction_id"] ."</td>";
-                                                    echo "<td><a class ='btn' href='checkout-transaction.php?id_transaction=" . $row['transaction_id'] . "'>Xem</a></td>";
-                                                    $dateTime = explode( ' ', $row["date"]);
-                                                    echo "<td>". dayOfDate($dateTime[0]).", ". dateFormat($dateTime[0]).", ".$dateTime[0]."</td>";
-                                                    echo "<td>". $row['address']."</td>";
-                                                    echo "<td>". moneyPoint($row["payment"]) ."đ</td>";
-                                                    echo "<td>". approveStatus($row["status"]) ."</td>";
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="../lib/easing/easing.min.js"></script>
-        <script src="../lib/slick/slick.min.js"></script>
-        
-        <!-- Template Javascript -->
-        <script src="../js/main.js"></script>
-    </body>
-=======
-<?php
-    require_once('../moneyPoint.php');
-    session_start();
-	$dbhost = 'localhost ';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
-    if(isset($_SESSION['name']) && isset($_SESSION['id']) && isset($_SESSION['authority'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
-        $countName = count($eachPartName);
-        if($countName == 1){
-            $name = $eachPartName[$countName-1];
+    if (isset($_GET['status']) && strlen(trim($_GET['status'])) == 1 ) {
+        $status = $_GET['status'];
+        if($status != "" && (int)$status >= 0 && (int)$status <= 4){
+            $sqlStatus = " `order_status` = ".$status." ";
+            array_push($sqlArray, $sqlStatus);
+            $filterQuery = "SELECT * FROM `order` WHERE ";
         }
-        else{
-            $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
-        }
-        $user_id = $_SESSION['id'];
-        $author = $_SESSION['authority'];
-    }
-    else{
-        header('Location: admin-login.html');
     }
 
-
+    if (isset($_GET['day'])) {
+        $day = $_GET['day'];
+        if($day == "1" || $day == "7" || $day == "30"){
+            $currentDate = date('Y-m-d h:i:s');
+            $startDate = date('Y-m-d h:i:s', strtotime('-'.(int)$day.' day', strtotime($currentDate)));
+            $sqlDate = " `order_date` BETWEEN \"".$startDate."\" AND \"".$currentDate."\"";
+            array_push($sqlArray, $sqlDate);
+            $filterQuery = "SELECT * FROM `order` WHERE ";
+        };
+    }
     
-?>
 
+    $sqlArray = join(" AND ", $sqlArray);
+    $filterQuery = $filterQuery.$sqlArray;
+
+?>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="utf-8">
         <title>Dystopia Store</title>
-        <link rel="icon" href="./img/favicons/favicon-32x32.png">
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="database" name="keywords">
-        <meta content="database" name="description">
-
-         
-         
-
+        <link rel="icon" href="../img/favicons/favicon-32x32.png">
         <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
-
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
         <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="../lib/slick/slick.css" rel="stylesheet">
-        <link href="../lib/slick/slick-theme.css" rel="stylesheet">
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <!-- Template Stylesheet -->
-        <link href="../css/style.css" rel="stylesheet">
+        <link href="../css/grid.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
+        <link href="../css/home.css" rel="stylesheet">
     </head>
-
-    <body>        
-        <!-- Nav Bar Start -->
-        <div class="nav">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a href="#" class="navbar-brand">MENU</a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto">
-                            <?php
-                                if($author == 1){
-                                    echo "<a href='admin.php' class='nav-item nav-link'>QUẢN LÝ THÔNG TIN</a>";
-                                    echo "<a href='transaction-management.php' class='nav-item nav-link active'>QUẢN LÝ ĐƠN HÀNG</a>";
-                                    echo "<a href='product-management.php' class='nav-item nav-link'>QUẢN LÝ SẢN PHẨM</a>";
-                                    echo "<a href='add-item.php' class='nav-item nav-link'>THÊM SẢN PHẨM</a>";
-                                }else{
-                                    echo "<a href='transaction-management.php' class='nav-item nav-link active'>QUẢN LÝ ĐƠN HÀNG</a>";
-                                }
-                            ?>
+    <body>
+        <div id="page-container">
+            <!-- Header Start -->
+            <header id="header">
+                <div class="grid wide">
+                    <div class="header-with-search">
+                        <div class="header__logo">
+                            <a href="./admin.php" class="header__logo-link">
+                                <img src="../img/logo.png" alt="Logo" class="header__logo-img">
+                            </a>
                         </div>
-                        <div class="header__navbar-item header__navbar-user">
-                            <img class = "avatar-img" src="../img/avatar.jpg"/>
-                            <span class="header__navbar-user-name"><?php echo $name;?></span>
-
-                            <ul class="header__navbar-user-menu">
-                                <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                    <a href="logout.php" >Đăng xuất</a>
+                        <div class="header__item">
+                            <a href="./admin.php" class="header__link">
+                                QUẢN LÝ NHÂN SỰ
+                            </a>
+                        </div>
+                        <div class="header__item">
+                            <a href="./transaction-management.php" class="header__link header__link--active">
+                                QUẢN LÝ ĐƠN HÀNG
+                            </a>
+                        </div>
+                        <div class="header__item">
+                            <a href="./product-management.php" class="header__link">
+                                QUẢN LÝ SẢN PHẨM
+                            </a>
+                        </div>
+                        <div class="header__item header__user">
+                            <a class='header__icon-link' href=''>
+                                <i class='header__icon bi bi-person'></i>
+                            </a>
+                            <a href='' class='header__link header__user-login'><?php echo $name;?></a>
+                            <ul class="header__user-menu">
+                                <li class="header__user-item">
+                                    <a href="./my-account.php">Tài khoản của tôi</a>
+                                </li>
+                                <li class="header__user-item">
+                                    <a href="./logout.php" >Đăng xuất</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Nav Bar End -->      
-        
-        <!-- Bottom Bar Start -->
-        <div class="bottom-bar">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="admin.php">
-                                <img src="../img/logo.png" alt="Logo">
-                            </a>
-                        </div>
+                </div>
+            </header>
+            <!-- Header End --> 
+            <div id="content-wrap">
+                <!-- Breadcrumb Start -->
+                <div id="breadcrumb">
+                    <div class="grid wide">
+                        <ul class="list-path-link">
+                            <li class="path-link"><a href="">QUẢN LÝ ĐƠN HÀNG</a></li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Bottom Bar End --> 
-        
-        <!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
-            <div class="container-fluid">
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item active">QUẢN LÝ ĐƠN HÀNG</li>
-                </ul>
-            </div>
-        </div>
-        <!-- Breadcrumb End -->
-
-
-        <div class="my-account">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="incompleted-nav" data-toggle="pill" href="#incompleted-tab" role="tab"><i class="fa fa-shopping-bag"></i>Đơn hàng chưa hoàn thành</a>
-                            <a class="nav-link " id="completed-nav" data-toggle="pill" href="#completed-tab" role="tab"><i class="fa fa-shopping-bag"></i>Đơn hàng đã xử lý</a>
-                            
-                        </div>
-                    </div>
-                    
-                    <div class="col-12">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="incompleted-tab" role="tabpanel" aria-labelledby="incompleted-nav">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>Mã đơn hàng</th>
-                                                <th>Sản phẩm</th>
-                                                <th>Ngày đặt</th>
-                                                <th>Địa chỉ</th>
-                                                <th>Tổng tiền</th>
-                                                <th>Trạng thái</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                $sqlTransaction = "SELECT * FROM `transaction` WHERE status != 4 and status != 3";
-                                                $rs1 = $conn->query($sqlTransaction);
-                                                if (!$rs1) {
-                                                    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                    exit();
-                                                }
-                                                while($row = $rs1->fetch_assoc()){
-                                                    echo "<tr>";
-                                                    echo "<td>". $row["transaction_id"] ."</td>";
-                                                    echo "<td><a class ='btn' href='checkout-transaction.php?id_transaction=" . $row['transaction_id'] . "'>Xem</a></td>";
-                                                    $dateTime = explode( ' ', $row["date"]);
-                                                    echo "<td>". daysOfWeek($dateTime[0]).", ". dateFormat($dateTime[0]).", ".$dateTime[0]."</td>";
-                                                    echo "<td>". $row['address']."</td>";
-                                                    echo "<td>". moneyPoint($row["payment"]) ."đ</td>";
-                                                    echo "<td><a href='update-status.php?id=". $row['transaction_id'] ."&status=progress' class = 'btn'>". changeStatus($row['status']) . "</a>
-                                                    <a href='update-status.php?id=". $row['transaction_id'] ."&status=cancel' class = 'auth__form--fail btn'>Hủy đơn</a>
-                                                    </td>";
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                <!-- Breadcrumb End -->
+                <div class='last-section'>
+                    <div class='grid wide'>
+                        <div class=' row'>
+                            <div class='col l-3'>
+                                <div class='user__nav'>
+                                    <div class='user-nav__item user-nav__item--active'>
+                                        <i class="header__icon bi bi-card-list"></i>
+                                        <span class='user-nav__text'>Quản lý đơn hàng</a></span>
+                                    </div>
+                                    <div class="user-nav__item-fake">
+                                        <div class="user-nav__text">Trạng thái</div>
+                                        <select id="order-status" onchange="selectOrderStatus()">
+                                            <option value="">Tất cả đơn hàng</option>
+                                            <option value="0">Chờ xử lý</option>
+                                            <option value="1">Đã được xác nhận</option>
+                                            <option value="2">Đang vận chuyển</option>
+                                            <option value="3">Đã hoàn thành</option>
+                                            <option value="4">Đã huỷ đơn</option>
+                                        </select>
+                                    </div>
+                                    <div class="user-nav__item-fake">
+                                        <div class="user-nav__text">Thời gian</div>
+                                        <select id="order-date" onchange="selectOrderDate()">
+                                            <option value="" >Tất cả</option>
+                                            <option value="1">Hôm nay</option>
+                                            <option value="7">7 ngày qua</option>
+                                            <option value="30">30 ngày qua</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="tab-pane fade" id="completed-tab" role="tabpanel" aria-labelledby="completed-nav">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>Mã đơn hàng</th>
-                                                <th>Sản phẩm</th>
-                                                <th>Ngày đặt</th>
-                                                <th>Địa chỉ</th>
-                                                <th>Tổng tiền</th>
-                                                <th>Trạng thái</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                $sqlTransaction = "SELECT * FROM `transaction` WHERE status = 4 or status = 3";
-                                                $rs1 = $conn->query($sqlTransaction);
-                                                if (!$rs1) {
-                                                    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                    exit();
-                                                }
-                                                while($row = $rs1->fetch_assoc()) {
-                                                    echo "<tr>";
-                                                    echo "<td>". $row["transaction_id"] ."</td>";
-                                                    echo "<td><a class ='btn' href='checkout-transaction.php?id_transaction=" . $row['transaction_id'] . "'>Xem</a></td>";
-                                                    $dateTime = explode( ' ', $row["date"]);
-                                                    echo "<td>". daysOfWeek($dateTime[0]).", ". dateFormat($dateTime[0]).", ".$dateTime[0]."</td>";
-                                                    echo "<td>". $row['address']."</td>";
-                                                    echo "<td>". moneyPoint($row["payment"]) ."đ</td>";
-                                                    echo "<td>". approveStatus($row["status"]) ."</td>";
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                            <div class='col l-9'>
+                                <div class='user-account__content user-account__content--active'>
+                                    <div class="user-account__order">
+                                            <div class='heading'>
+                                                <div class="grid">
+                                                    <div class="row no-gutters">
+                                                        <div class='table__col-title col l-2'  >Mã đơn hàng</div>
+                                                        <div class='table__col-title col l-4'  >Danh sách sản phẩm</div>
+                                                        <div class='table__col-title col l-2'  >Ngày đặt hàng</div>
+                                                        <div class='table__col-title col l-2'  >Tổng tiền</div>
+                                                        <div class='table__col-title col l-2'  >Trạng thái</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="order__list-item" id="scrollbar">
+                                                <?php
+                                                    $conn = getDatabaseConnection();
+                                                    $stmt = $conn->prepare($filterQuery);
+                                                    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                                                    $stmt->execute();
+                                                    foreach ($row = $stmt->fetchAll() as $value => $row){
+                                                        echo "<div class='row no-gutters info-order__item'>
+                                                            <a class='col l-2' href='checkout-transaction.php?id_transaction=" . $row['order_id'] . "'>
+                                                            ". $row["order_id"] ."</a>
+                                                            <p class='col l-4'>". $row['list_product'] ."</p>
+                                                            <p class='col l-2'>". date("d-m-Y h:i A", strtotime($row['order_date']))."</p>
+                                                            <p class='col l-2'>". number_format($row["amount"], 0, ',', '.') ." đ</p>
+                                                            <p class='col l-2'>".$row['order_status']."</p>
+                                                        </div>";
+                                                    }
+                                                ?>
+                                            </div>
+                                        </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="../lib/easing/easing.min.js"></script>
-        <script src="../lib/slick/slick.min.js"></script>
-        
-        <!-- Template Javascript -->
-        <script src="../js/main.js"></script>
+        </div>              
     </body>
->>>>>>> Stashed changes
+    <script>
+        function updateSelection(){
+            var parts = window.location.search.substr(1).split("&");
+            var $_GET = {};
+            for (var i = 0; i < parts.length; i++) {
+                var temp = parts[i].split("=");
+                $_GET[decodeURIComponent(temp[0])] = decodeURIComponent(temp[1]);
+            }
+            
+            var statusSelect = document.getElementById("order-status").options;
+            if($_GET['status'] == 0) statusSelect[1].setAttribute("selected","selected"); 
+            else if($_GET['status'] == 1) statusSelect[2].setAttribute("selected","selected"); 
+            else if($_GET['status'] == 2) statusSelect[3].setAttribute("selected","selected"); 
+            else if($_GET['status'] == 3) statusSelect[4].setAttribute("selected","selected"); 
+            else if($_GET['status'] == 4) statusSelect[5].setAttribute("selected","selected"); 
+            else statusSelect[0].setAttribute("selected","selected"); 
+
+            var daySelect = document.getElementById("order-date").options;
+            if($_GET['day'] == 1) daySelect[1].setAttribute("selected","selected"); 
+            else if($_GET['day'] == 7) daySelect[2].setAttribute("selected","selected"); 
+            else if($_GET['day'] == 30) daySelect[3].setAttribute("selected","selected"); 
+            else daySelect[0].setAttribute("selected","selected");
+        }
+        updateSelection();
+        function selectOrderStatus(){
+            var e = document.getElementById("order-status");
+            var parts = window.location.search.substr(1).split("&");
+            var $_GET = {};
+            for (var i = 0; i < parts.length; i++) {
+                var temp = parts[i].split("=");
+                $_GET[decodeURIComponent(temp[0])] = decodeURIComponent(temp[1]);
+            }
+            var link = "./transaction-management.php?";
+            var status = "";
+            var day = "";
+
+            if(e.value != "") status = "status="+e.value;
+            if($_GET['day']) day = "day="+$_GET['day'];
+            var filter = [status, day]
+
+            x = filter.join('&');
+            link = link + x;
+
+            window.location.href = link; 
+        }
+        function selectOrderDate(){
+            var e = document.getElementById("order-date");
+
+            var parts = window.location.search.substr(1).split("&");
+            var $_GET = {};
+            for (var i = 0; i < parts.length; i++) {
+                var temp = parts[i].split("=");
+                $_GET[decodeURIComponent(temp[0])] = decodeURIComponent(temp[1]);
+            }
+            var link = "./transaction-management.php?";
+            var status = "";
+            var day = "";
+
+            if(e.value != "") day = "day="+e.value;
+            if($_GET['status']) status = "status="+$_GET['status'];
+            var filter = [status, day]
+
+            x = filter.join('&');
+            link = link + x;
+
+            window.location.href = link; 
+        }
+    </script>
 </html>

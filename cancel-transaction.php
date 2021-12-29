@@ -37,6 +37,6 @@
         $rstemp = $conn->query($temp);
       }
 
-    header("Location: my-account.php");
+    header("Location: account.php");
     exit();
 ?>

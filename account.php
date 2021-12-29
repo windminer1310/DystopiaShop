@@ -1,302 +1,7 @@
-<<<<<<< Updated upstream
 <?php 
     session_start();
-    require_once('display-function.php');
-    require_once('database/connectDB.php');
-    require_once('session.php');
-    require_once('shop_info/shop-info.php');
-
-    if(hasUserInfoSession($_SESSION['name'], $_SESSION['id'])){
-        $name = displayUserName($_SESSION['name']);
-        $user_id = $_SESSION['id'];
-    }
-    else{
-        headToIndexPage();
-    }
-
-
-
-    $tableCart = 'cart';
-    $column = 'user_id';
-    $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
-
-    $productInCart = $getCartRow->rowCount();
-
-?>
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Dystopia</title>
-
-        <!-- Favicon -->
-        <link href="img/favicon.ico" rel="icon">
-
-        <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
-
-        <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="lib/slick/slick.css" rel="stylesheet">
-        <link href="lib/slick/slick-theme.css" rel="stylesheet">
-
-        <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
-    </head>
-
-    <body>
-        <!-- Nav Bar Start -->
-        <div class="nav">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a href="#" class="navbar-brand">MENU</a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto">
-                            <a href="user-login.php" class="nav-item nav-link">Trang chủ</a>
-                            <a href="product-list.php" class="nav-item nav-link">Sản phẩm</a>
-                            <a href="custom-pc.html" class="nav-item nav-link">Xây dựng cấu hình</a>
-                        </div>
-                        <div class="navbar-nav ml-auto">
-                            <div class="header__navbar-item header__navbar-user">
-                                <img class = "avatar-img" src=<?php echo $_SESSION['img_url']; ?> alt="">
-                                <span class="header__navbar-user-name"><?php echo $name;?></span>
-
-                                <ul class="header__navbar-user-menu">
-                                    <li class="header__navbar-user-item">
-                                        <a href="">Tài khoản của tôi</a>
-                                    </li>
-                                    <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                        <a href="logout.php">Đăng xuất</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Nav Bar End -->    
-        
-        <!-- Bottom Bar Start -->
-        <div class="bottom-bar">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="user-login.php">
-                                <img src="img/logo.png" alt="Logo">
-                            </a>
-                        </div>
-                    </div>
-                    <form method="get" action="product-list.php?" class="col-md-6">
-                        <div class="search">
-                            <input type="text" placeholder="Tìm kiếm" name="search">
-                            <button><i class="fa fa-search" type="submit"></i></button>
-                        </div>
-                    </form>
-                    <div class="col-md-3">
-                        <div class="user">
-                        <a href="cart.php" class="btn cart">
-                            <i class="fa fa-shopping-cart"></i>
-                            <?php 
-                            if($productInCart > 0){
-                                notifyCart($productInCart);
-                            }
-                            ?>
-                        </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Bottom Bar End --> 
-        
-        <!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
-            <div class="container-fluid">
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="user-login.php">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a href="product-list.php">Sản phẩm</a></li>
-                    <li class="breadcrumb-item active">Tài khoản của tôi</li>
-                </ul>
-            </div>
-        </div>
-        <!-- Breadcrumb End -->
-        
-        <!-- My Account Start -->
-        <div class="my-account">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="orders-nav" data-toggle="pill" href="#orders-tab" role="tab"><i class="fa fa-shopping-bag"></i>Lịch sử mua hàng</a>
-                            <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Tài khoản</a>
-                            <a class="nav-link" href="logout.php"><i class="fa fa-sign-out-alt"></i>Đăng xuất</a>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-12">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="orders-tab" role="tabpanel" aria-labelledby="orders-nav">
-                                <div class="table-responsive" style="overflow-y: auto; height: 400px;">
-                                    <table class="table table-bordered" style="border-collapse: collapse; width: 100%;">
-                                        <thead class="thead-dark" style="position: sticky; top: 0;">
-                                            <tr>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Mã đơn hàng</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Sản phẩm</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Ngày đặt</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Địa chỉ</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Tổng tiền</th>
-                                                <th style="box-shadow: inset 0 0 2px #000000;">Trạng thái</th>
-                                                <th style = "border-color: white white white white;"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                $tableTransaction = 'transaction';
-                                                $column = 'user_id';
-                                                $getTransactiontRow = getAllRowWithValue($tableTransaction, $column, $user_id);
-
-                                                foreach ($row = $getTransactiontRow->fetchAll() as $value => $row){
-                                                    echo "<tr>";
-                                                    echo "<td>". $row["transaction_id"] ."</td>";
-                                                    echo "<td><a class ='btn' href='submit-checkout.php?id_transaction=" . $row['transaction_id'] . "'>Xem</a></td>";
-                                                    $dateTime = explode( ' ', $row["date"]);
-                                                    echo "<td>". dayOfDate($dateTime[0]).", ". dateFormat($dateTime[0]).", ".$dateTime[0]."</td>";
-                                                    echo "<td>". $row['address']."</td>";
-                                                    echo "<td>". $row["payment"] ."đ</td>";
-                                                    echo "<td>". approveStatus($row["status"]) ."</td>";
-                                                    if($row['status']<2){
-                                                        echo "<td style='border-color: white white white white;'><a href='cancel-transaction.php?id=". $row['transaction_id'] ." 'class = 'fail-auth__form btn'>Hủy đơn</a></td>";
-                                                    }
-                                                    
-                                                    
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>               
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div class="tab-pane fade" id="account-tab" role="tabpanel" aria-labelledby="account-nav">
-                                <h5>Đổi mật khẩu</h5>
-                                <form action = "database/changePassword.php" method="POST">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <input class="form-control" type="password" name = "password" id = "password" placeholder="Mật khẩu hiện tại" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input class="form-control" type="password" name = "newPassword" id = "newPassword" placeholder="Mật khẩu mới" required>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button type = "submit" class="btn">Lưu thay đổi</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-        <!-- My Account End -->
-        
-        <!-- Footer Start -->
-        <div class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Liên lạc</h2>
-                            <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i><?php echo SHOP_ADDRESS ?></p>
-                                <p><i class="fa fa-envelope"></i><?php echo SHOP_EMAIL ?></p>
-                                <p><i class="fa fa-phone"></i><?php echo SHOP_PHONE ?></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Theo dõi chúng tôi</h2>
-                            <div class="contact-info">
-                                <div class="social">
-                                    <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-facebook-f"></i></a>
-                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
-                                    <a href=""><i class="fab fa-instagram"></i></a>
-                                    <a href=""><i class="fab fa-youtube"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Thông tin về công ty</h2>
-                            <ul>
-                                <li><a href="#">Về chúng tôi</a></li>
-                                <li><a href="#">Chính sách bảo mật</a></li>
-                                <li><a href="#">Điều khoản và điều kiện</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Thông tin mua hàng</h2>
-                            <ul>
-                                <li><a href="#">Chính sách thanh toán</a></li>
-                                <li><a href="#">Chính sách giao hàng</a></li>
-                                <li><a href="#">Chính sách hoàn trả</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row payment align-items-center">
-                    <div class="col-md-6">
-                        <div class="payment-method">
-                            <h2>Chấp nhận thanh toán</h2>
-                            <img src="img/payment-method.png" alt="Payment Method" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Footer End --> 
-        
-    
-        
-        <!-- Back to Top -->
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-        
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/slick/slick.min.js"></script>
-        
-        <!-- Template Javascript -->
-        <script src="js/main.js"></script>
-    </body>
-=======
-<?php 
-    session_start();
-    require_once('display-function.php');
-    require_once('database/connectDB.php');
-    require_once('shop_info/shop-info.php');
-    require_once('database/connectDB.php');
+    require_once('./database/connectDB.php');
+    require_once('./display.php');
     if(isset($_SESSION['name']) && isset($_SESSION['id'])){
         $name = displayUserName($_SESSION['name']);
         $user_id = $_SESSION['id'];
@@ -305,7 +10,7 @@
         $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
         $productInCart = $getCartRow->rowCount();
     }else{
-        header('Location: index.php');
+        header('Location: ./index.php');
     }
 ?>
 <!DOCTYPE html>
@@ -327,6 +32,7 @@
         <link rel="stylesheet" href="./css/home.css">
     </head>
     <body>
+        <div id="toast"></div>
         <div id="page-container">
             <!-- Header Start -->
             <header id="header">
@@ -398,7 +104,7 @@
                             <?php
                                 $getCartRow = getAllRowWithValue($tableCart, $column, $user_id);
                                 $count = $getCartRow->rowCount();
-                                if(cartIsEmpty($count)){
+                                if($count <= 0){
                                     echo "<div class='header__cart-list header__cart--no-item'>
                                         <img src='./img/emptycart.svg' alt='Giỏ hàng trống' class='header__cart-no-cart-img'>
                                         <span class='header__cart-list-no-cart-msg'>Chưa có sản phẩm</span>
@@ -413,7 +119,7 @@
                                                 $tableName = 'product';
                                                 $column = 'product_id';
                                                 $productInfo = getRowWithValue( $tableName, $column, $id_product);
-                                                $productLink = 'product-detail.php?id='.$productInfo['product_id'];
+                                                $productLink = 'product-detail.php?product_id='.$productInfo['product_id'];
                                                 $img = $productInfo['image_link'];
                                                 $productName = $productInfo['product_name'];
                                                 $quantity = $row['qty'];
@@ -435,7 +141,7 @@
                                             <h4 class='cart-footer__title'>Tổng tiền sản phẩm</h4>
                                             <div class='cart-footer__total-price'>".number_format($totalPrice, 0, ',', '.')."đ</div>
                                         </div>
-                                        <a href='./cart.php' class='header__cart-view-cart'>Xem giỏ hàng</a>
+                                        <a href='./cart.php' class='btn btn--full-width'>Xem giỏ hàng</a>
                                     </div>";
                                 }  
                             ?>
@@ -446,7 +152,7 @@
             <!-- Header End -->
             <div id="content-wrap">
                 <!-- Breadcrumb Start -->
-                <div class="breadcrumb">
+                <div id="breadcrumb">
                     <div class="grid wide">
                         <ul class="list-path-link">
                             <li class="path-link "><a href="index.php">Trang chủ</a></li>
@@ -521,13 +227,12 @@
                                                             <div class = 'form__item '>
                                                                 <div class='with-spacebetween-icon'>
                                                                     <p class = 'form__label'>Nhập lại mật khẩu mới <span class = 'must-input-icon'>(*)</span></p>
-                                                                    <div class='status-icon'>
-                                                                    </div>
+                                                                    <div class='status-icon'></div>
                                                                 </div>
-                                                                <input id = 'new-password-checked' name = 'new-password-checked' class = 'form__input' type='password' required autocomplete='on' placeholder='Phải có độ dài lớn hơn 7 kí tự' onkeyup='checkedPassword();' minlength='8'>
+                                                                <input id = 'new-password-checked'  name = 'new-password-checked' class = 'form__input' type='password' required autocomplete='on' placeholder='Phải có độ dài lớn hơn 7 kí tự' ; onkeyup='checkedPassword();' minlength='8'>
                                                             </div>
                                                             <div class='update-input__field'>
-                                                                <div id='change-password' class='btn btn--disabled' disabled type='submit' onclick='changePasswordStatus();'>Đổi mật khẩu</div>
+                                                                <button id='change-password' class='btn btn--disabled' type='button' disabled onclick='changePasswordStatus()'>Đổi mật khẩu</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -556,12 +261,12 @@
                                                 foreach ($row = $getOrderRow->fetchAll() as $value => $row){
                                                     echo "
                                                     <div class='row no-gutters info-order__item'>
-                                                        <a class='col l-2' href='submit-checkout.php?order_id=" . $row['order_id'] . "'>
+                                                        <a class='col l-2' href='order-details.php?order_id=" . $row['order_id'] . "'>
                                                         ". $row["order_id"] ."</a>
                                                         <p class='col l-4' >".$row["list_product"]."</p>
                                                         <p class='col l-2' >".date("d-m-Y h:i A", strtotime($row['order_date']))."</p>
                                                         <p class='col l-2' >". number_format($row["amount"], 0, ',', '.') ." đ</p>
-                                                        <p class='col l-2' >Đã được xác nhận</p>
+                                                        <p class='col l-2' >".statusOrder($row['order_status'])."</p>
                                                     </div>"; 
                                                 }
                                             ?>
@@ -686,7 +391,7 @@
                 </div>
                 <div class="footer__bottom">
                     <div class="grid wide">
-                        <p class="footer__text">© 2021 Bản quyền thuộc về Team ... </p>
+                        <p class="footer__text">© 2021 Bản quyền thuộc về Team Error 404 </p>
                     </div>
                 </div>
                 <!-- <div class="row payment align-items-center">
@@ -701,89 +406,9 @@
             <!-- Footer End -->
         </div>    
         <!-- Back to Top -->
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>  
+        <a id="back-to-top"><i class="fa fa-chevron-up"></i></a>
     </body>
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="lib/slick/slick.min.js"></script>
     <!-- Template Javascript -->
-    <script src="js/changePassword.js"></script>
-    <script src="js/main.js"></script>
-    <script>
-        const $ = document.querySelector.bind(document);
-        const $$ = document.querySelectorAll.bind(document);
-        const fields = $$('.user-account__content');
-        const items = $$('.user-nav__item');
-        items.forEach((item, index) => {
-            const field = fields[index];
-            item.onclick = function () {
-                $('.user-nav__item.user-nav__item--active').classList.remove('user-nav__item--active');
-                $('.user-account__content.user-account__content--active').classList.remove('user-account__content--active');
-                field.classList.add('user-account__content--active');
-                this.classList.add('user-nav__item--active');
-            }
-        });
-        function checkedPassword(){
-            var currentPassword = document.getElementById('current-password');
-            var newPassword = document.getElementById('new-password');
-            var newCheckedPassword = document.getElementById('new-password-checked');
-            var minLengthPw = 8;
-
-
-            if(passwordForm(currentPassword, minLengthPw) && 
-                passwordForm(newPassword, minLengthPw) && 
-                passwordForm(newCheckedPassword, minLengthPw)) {
-
-                if(newPassword.value === newCheckedPassword.value) {
-                    document.getElementsByClassName('status-icon')[0].innerHTML = '<i class="fas fa-check-circle auth__form--success"></i>';
-
-                    document.getElementById("change-password").removeAttribute("disabled");
-                    document.getElementById("change-password").classList.remove('btn--disabled');
-                }
-                else{
-                    document.getElementsByClassName('status-icon')[0].innerHTML = '';
-                    document.getElementById("change-password").classList.add('btn--disabled');
-                }
-            }
-            else {
-
-                document.getElementById("change-password").classList.add('btn--disabled');
-            }
-        }
-        function passwordForm(password, minLength){
-            if (password.value.length >= minLength) return true;
-            return false;
-        }
-        document.addEventListener("DOMContentLoaded",function() {
-            // Bắt sự kiện cuộn chuột
-            var trangthai="under120";
-            var menu = document.getElementById('header');
-            var cartList = document.querySelectorAll('div.header__cart-list');
-            cartList = cartList[0];
-            var userMenu = document.querySelectorAll('ul.header__user-menu');
-            userMenu = userMenu[0];
-            window.addEventListener("scroll",function(){
-                var x = pageYOffset;
-                if(x > 120){
-                    if(trangthai == "under120")
-                    {
-                        trangthai="over120";
-                        menu.classList.add('header-shrink');
-                        cartList.classList.add('header__fix-shrink');
-                        userMenu.classList.add('header__fix-shrink');
-                    }
-                }
-                else if(x <= 120){
-                    if(trangthai=="over120"){
-                        menu.classList.remove('header-shrink');
-                        cartList.classList.remove('header__fix-shrink');
-                        userMenu.classList.remove('header__fix-shrink');
-
-                        trangthai="under120";
-                    }
-                }
-            })
-        })        
-    </script>
->>>>>>> Stashed changes
+    <script src="js/display.js"></script>
+    <script src="js/account.js"></script>
 </html>

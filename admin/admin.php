@@ -1,17 +1,9 @@
-<<<<<<< Updated upstream
 <?php
     session_start();
-	$dbhost = 'localhost:33066';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
-    if(isset($_SESSION['name']) && isset($_SESSION['id']) && isset($_SESSION['authority'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
+	require_once('../database/connectDB.php');
+
+    if(isset($_SESSION['admin_name']) && isset($_SESSION['admin_id']) && isset($_SESSION['authority'])){
+        $eachPartName = preg_split("/\ /",$_SESSION['admin_name']);
         $countName = count($eachPartName);
         if($countName == 1){
             $name = $eachPartName[$countName-1];
@@ -19,7 +11,7 @@
         else{
             $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
         }
-        $user_id = $_SESSION['id'];
+        $user_id = $_SESSION['admin_id'];
     }
     else{
         header('Location: admin-login.html');
@@ -34,223 +26,7 @@
             return "Nhân viên";
         }
         else {
-            return "Chủ";
-        }
-    }
-?>
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Dystopia</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="database" name="keywords">
-        <meta content="database" name="description">
-
-        <!-- Favicon -->
-        <link href="../img/favicon.ico" rel="icon">
-
-        <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
-
-        <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="../lib/slick/slick.css" rel="stylesheet">
-        <link href="../lib/slick/slick-theme.css" rel="stylesheet">
-
-        <!-- Template Stylesheet -->
-        <link href="../css/style.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
-    </head>
-
-    <body>        
-        <!-- Nav Bar Start -->
-        <div class="nav">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a href="#" class="navbar-brand">MENU</a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto">
-                            <a href="admin.php" class="nav-item nav-link active">QUẢN LÝ THÔNG TIN</a>
-                            <a href="transaction-management.php" class="nav-item nav-link">QUẢN LÝ ĐƠN HÀNG</a>
-                            <a href="product-management.php" class="nav-item nav-link">QUẢN LÝ SẢN PHẨM</a>
-                            <a href="add-item.php" class="nav-item nav-link">THÊM SẢN PHẨM</a>
-                        </div>
-                        <div class="navbar-nav ml-auto">
-                            <div class="header__navbar-item header__navbar-user">
-                                <img class = "avatar-img" src="../img/avatar.jpg"/>
-                                <span class="header__navbar-user-name"><?php echo $name;?></span>
-
-                                <ul class="header__navbar-user-menu">
-                                    <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                        <a href="logout.php" >Đăng xuất</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Nav Bar End -->      
-        
-        <!-- Bottom Bar Start -->
-        <div class="bottom-bar">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="admin.php">
-                                <img src="../img/logo.png" alt="Logo">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Bottom Bar End --> 
-        
-        
-        <!-- Breadcrumb End --><!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
-            <div class="container-fluid">
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item active">QUẢN LÝ ADMIN</li>
-                </ul>
-            </div>
-        </div>
-        <div class="my-account">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="admin-list-nav" data-toggle="pill" href="#admin-list-tab" role="tab">Danh sách Admin</a>
-                            <a class="nav-link" id="new-admin-nav" data-toggle="pill" href="#new-admin-tab" role="tab">Thêm Admin</a>
-                        </div>
-                    </div>
-
-                    <div class="col-12">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="admin-list-tab" role="tabpanel" aria-labelledby="admin-list-nav">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>Mã admin</th>
-                                                <th>Tên</th>
-                                                <th>Số điện thoại</th>
-                                                <th>Đổi mật khẩu</th>
-                                                <th>Phân quyền</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                $sql1 = "SELECT * FROM `admin`";
-                                                $rs1 = $conn->query($sql1);
-                                                if (!$rs1) {
-                                                    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                    exit();
-                                                }
-                                                while($row = $rs1->fetch_assoc()) {
-                                                    echo "<tr>";
-                                                    echo "<td>". $row["admin_id"] ."</td>";
-                                                    echo "<td>" . $row['admin_name'] . "</td>";
-                                                    echo "<td>". $row["admin_phone"] ."</td>";
-                                                    echo "<td><a class ='btn' href='change-admin-password.php?id=" . $row['admin_id'] . "'><i class='fas fa-cogs'></i></a></td>";
-                                                    echo "<td>" . getAuthority($row['authority']) . "</td>";
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="new-admin-tab" role="tabpanel" aria-labelledby="new-admin-nav">
-                                <form class="add-item" method="post" action="add-admin.php">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label>Tên Admin</label>
-                                            <input class="form-control" type="text" name="name" placeholder="Tên">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label>Số điện thoại</label>
-                                            <input class="form-control" type="text" name="phone" placeholder="Số điện thoại">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label>Mật khẩu</label>
-                                            <input class="form-control" type="password" name="pass">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label>Phân quyền</label>
-                                            <input  class="form-control" type="text" name="authority" placeholder="1: Chủ, 2: Nhân viên">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button class="btn" type="submit">Thêm</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Back to Top -->
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-        
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="../lib/easing/easing.min.js"></script>
-        <script src="../lib/slick/slick.min.js"></script>
-        
-        <!-- Template Javascript -->
-        <script src="../js/main.js"></script>
-    </body>
-=======
-<?php
-    session_start();
-	$dbhost = 'localhost';
-    $dbuser = 'root';
-    $dbpass = '';
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
-    if ($conn->connect_error) {
-        die("Lỗi không thể kết nối!");
-        exit();
-    }
-    mysqli_set_charset($conn,"utf8");
-    if(isset($_SESSION['name']) && isset($_SESSION['id']) && isset($_SESSION['authority'])){
-        $eachPartName = preg_split("/\ /",$_SESSION['name']);
-        $countName = count($eachPartName);
-        if($countName == 1){
-            $name = $eachPartName[$countName-1];
-        }
-        else{
-            $name = $eachPartName[$countName-2] . " " . $eachPartName[$countName-1];
-        }
-        $user_id = $_SESSION['id'];
-    }
-    else{
-        header('Location: admin-login.html');
-    }
-
-    if($_SESSION['authority'] == 2){
-        header('Location: transaction-management.php');
-    }
-    
-    function getAuthority($authority) {
-        if ($authority == 2) {
-            return "Nhân viên";
-        }
-        else {
-            return "Chủ";
+            return "Quản lý";
         }
     }
 ?>
@@ -259,177 +35,202 @@
     <head>
         <meta charset="utf-8">
         <title>Dystopia Store</title>
-        <link rel="icon" href="./img/favicons/favicon-32x32.png">
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="database" name="keywords">
-        <meta content="database" name="description">
-
-         
-        <link href="../img/favicon.ico" rel="icon">
-
+        <link rel="icon" href="../img/favicons/favicon-32x32.png">
         <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
-
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
         <!-- CSS Libraries -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="../lib/slick/slick.css" rel="stylesheet">
-        <link href="../lib/slick/slick-theme.css" rel="stylesheet">
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <!-- Template Stylesheet -->
-        <link href="../css/style.css" rel="stylesheet">
+        <link href="../css/grid.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
+        <link href="../css/home.css" rel="stylesheet">
+        <link href="../css/admin.css" rel="stylesheet">
     </head>
-
-    <body>        
-        <!-- Nav Bar Start -->
-        <div class="nav">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a href="#" class="navbar-brand">MENU</a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto">
-                            <a href="admin.php" class="nav-item nav-link active">QUẢN LÝ THÔNG TIN</a>
-                            <a href="transaction-management.php" class="nav-item nav-link">QUẢN LÝ ĐƠN HÀNG</a>
-                            <a href="product-management.php" class="nav-item nav-link">QUẢN LÝ SẢN PHẨM</a>
-                            <a href="add-item.php" class="nav-item nav-link">THÊM SẢN PHẨM</a>
-                        </div>
-                        <div class="navbar-nav ml-auto">
-                            <div class="header__navbar-item header__navbar-user">
-                                <img class = "avatar-img" src="../img/avatar.jpg"/>
-                                <span class="header__navbar-user-name"><?php echo $name;?></span>
-
-                                <ul class="header__navbar-user-menu">
-                                    <li class="header__navbar-user-item header__navbar-user-item--separate">
-                                        <a href="logout.php" >Đăng xuất</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Nav Bar End -->      
-        
-        <!-- Bottom Bar Start -->
-        <div class="bottom-bar">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="logo">
-                            <a href="admin.php">
-                                <img src="../img/logo.png" alt="Logo">
+    <body>
+        <div id="page-container">
+            <!-- Header Start -->
+            <header id="header">
+                <div class="grid wide">
+                    <div class="header-with-search">
+                        <div class="header__logo">
+                            <a href="./admin.php" class="header__logo-link">
+                                <img src="../img/logo.png" alt="Logo" class="header__logo-img">
                             </a>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Bottom Bar End --> 
-        
-        
-        <!-- Breadcrumb End --><!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
-            <div class="container-fluid">
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item active">QUẢN LÝ ADMIN</li>
-                </ul>
-            </div>
-        </div>
-        <div class="my-account">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="admin-list-nav" data-toggle="pill" href="#admin-list-tab" role="tab">Danh sách Admin</a>
-                            <a class="nav-link" id="new-admin-nav" data-toggle="pill" href="#new-admin-tab" role="tab">Thêm Admin</a>
+                        <div class="header__item">
+                            <a href="admin.php" class="header__link header__link--active">
+                                QUẢN LÝ NHÂN SỰ
+                            </a>
+                        </div>
+                        <div class="header__item">
+                            <a href="transaction-management.php" class="header__link">
+                                QUẢN LÝ ĐƠN HÀNG
+                            </a>
+                        </div>
+                        <div class="header__item">
+                            <a href="product-management.php" class="header__link">
+                                QUẢN LÝ SẢN PHẨM
+                            </a>
+                        </div>
+                        <div class="header__item header__user">
+                            <a class='header__icon-link' href=''>
+                                <i class='header__icon bi bi-person'></i>
+                            </a>
+                            <a class='header__link header__user-login'><?php echo $name;?></a>
+                            <ul class="header__user-menu">
+                                <li class="header__user-item">
+                                    <a href="./logout.php" >Đăng xuất</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-
-                    <div class="col-12">
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="admin-list-tab" role="tabpanel" aria-labelledby="admin-list-nav">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>Mã admin</th>
-                                                <th>Tên</th>
-                                                <th>Số điện thoại</th>
-                                                <th>Đổi mật khẩu</th>
-                                                <th>Phân quyền</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                $sql1 = "SELECT * FROM `admin`";
-                                                $rs1 = $conn->query($sql1);
-                                                if (!$rs1) {
-                                                    die("Lỗi không thể truy xuất cơ sở dữ liệu!");
-                                                    exit();
-                                                }
-                                                while($row = $rs1->fetch_assoc()) {
-                                                    echo "<tr>";
-                                                    echo "<td>". $row["admin_id"] ."</td>";
-                                                    echo "<td>" . $row['admin_name'] . "</td>";
-                                                    echo "<td>". $row["admin_phone"] ."</td>";
-                                                    echo "<td><a class ='btn' href='change-admin-password.php?id=" . $row['admin_id'] . "'><i class='fas fa-cogs'></i></a></td>";
-                                                    echo "<td>" . getAuthority($row['authority']) . "</td>";
-                                                    echo "</tr>";
-                                                }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="new-admin-tab" role="tabpanel" aria-labelledby="new-admin-nav">
-                                <form class="add-item" method="post" action="add-admin.php">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label>Tên Admin</label>
-                                            <input class="form-control" type="text" name="name" placeholder="Tên">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label>Số điện thoại</label>
-                                            <input class="form-control" type="text" name="phone" placeholder="Số điện thoại">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label>Mật khẩu</label>
-                                            <input class="form-control" type="password" name="pass">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label>Phân quyền</label>
-                                            <input  class="form-control" type="text" name="authority" placeholder="1: Chủ, 2: Nhân viên">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button class="btn" type="submit">Thêm</button>
+                </div>
+            </header>
+            <!-- Header End -->  
+            <div id="content-wrap">
+                <!-- Breadcrumb Start -->
+                <div id="breadcrumb">
+                    <div class="grid wide">
+                        <ul class="list-path-link">
+                            <li class="path-link"><a href="#">QUẢN LÝ NHÂN SỰ</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Breadcrumb End -->
+                <div class="grid wide">
+                    <div class='last-section' style="margin-bottom: -247px;">
+                        <div class='row'>
+                            <div class='col l-8'>
+                                <div class="form-admin">
+                                    <div class="heading">
+                                        <div class="grid">
+                                            <div class="row no-gutters">
+                                                <div class='table__col-title col l-2'>Mã nhân viên</div>
+                                                <div class='table__col-title col l-3'>Họ tên</div>
+                                                <div class='table__col-title col l-2'>Số điện thoại</div>
+                                                <div class='table__col-title col l-2'>Vị trí</div>
+                                                <div class="col l-o-3"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </form>
+                                    <div class='admin-account__list'>
+                                        <?php 
+                                            $tableAdmin = 'admin';
+                                            $getAdminRow = getRowWithTable($tableAdmin);
+        
+                                            foreach ($row = $getAdminRow->fetchAll() as $value => $row){
+                                                echo "<div class='row no-gutters admin-account__info'>
+                                                    <span class='info-text col l-2'>".$row['admin_id']."</span>
+                                                    <span class='info-text col l-3'>".$row['admin_name']."</span>
+                                                    <span class='info-text col l-2'>".$row['admin_phone']."</span>
+                                                    <span class='info-text col l-2 info-text--fix'>";
+                                                        if($row['authority'] == 1) echo "Quản lý";
+                                                        else echo "Nhân viên";
+                                                    echo "</span>
+                                                    <a href='#change-password' id='".$row['admin_id']."' class='btn btn--size-s col l-2 margin-auto employee__change-Pw'>Đổi mật khẩu</a>
+                                                    <div  class='btn btn--size-s col l-1' onclick='notifyDeleteAdmin(".$row['admin_id'].");'>Xóa</div>
+                                                </div>";
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l-4">
+                                <div class="form-wrap">
+                                    <div class='heading'>
+                                        <span class = 'heading__text' >Thêm nhân viên</span>
+                                        <div id="zoom-out--form">
+                                            <i class="bi bi-caret-down-fill"></i>
+                                        </div>
+                                    </div>
+                                    <div class='form__add-admin'>
+                                        <form action="../database/addAdmin.php" method="POST">
+                                            <div class='form__item'>
+                                                <p class = 'form__label'>Tên nhân viên</p>
+                                                <input class = 'form__input'  id="admin_name" name="admin_name" required>
+                                            </div>
+                                            <div class='form__item'>
+                                                <p class = 'form__label'>Số điện thoại</p>
+                                                <input class = 'form__input'  id="admin_phone" name="admin_phone" required maxlength="10">
+                                            </div>
+                                            <div class='form__item'>
+                                                <p class = 'form__label'>Mật khẩu</p>
+                                                <input class = 'form__input' type="password" id="admin_password" name="admin_password" required minlength="7">
+                                            </div>
+                                            <div class='form__item'>
+                                                <p class = 'form__label'>Vị trí</p>
+                                                    <div class='radio-input'>
+                                                        <input class='radio-icon' type="radio" id="owner" name="authority" value=1 required>
+                                                        <label class='radio-label' for="owner">Quản lý</label><br>
+                                                    </div>
+                                                    <div class='radio-input'>
+                                                        <input class='radio-icon' type="radio" id="employee" name="authority" value=2>
+                                                        <label class='radio-label' for="employee">Nhân viên</label><br>
+                                                    </div>
+                                            </div>
+                                            <div class='submit-btn'>
+                                                <button id='' class='btn' type='submit'>Thêm nhân viên<button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div id='change-password' class='form-wrap'>        
+                                    <div class='heading'>
+                                        <span class = 'heading__text' >Đổi mật khẩu</span>
+                                        <div class = 'heading__text' >Mã NV: <span class="heading__text--primary" id='admin-id'></span></div>
+                                    </div>
+                                    <div class='form__add-admin'>
+                                        <div class='form__item'>
+                                            <p class = 'form__label'>Mật khẩu mới</p>
+                                            <input type='password' disabled class = 'form__input' name='admin-password--new' id='admin-password--new' onkeyup='checkedPassword();'>
+                                        </div>
+                                        <div class='form__item'>
+                                            <div class='with-spacebetween-icon'>
+                                                <p class = 'form__label'>Nhập lại mật khẩu mới</p>
+                                                <div class='status-icon'></div>
+                                            </div>
+                                            <input type='password' disabled class = 'form__input' name='new-password-checked__admin' id='new-password-checked__admin' onkeyup='checkedPassword();'>
+                                        </div>                                  
+                                        <div class='submit-btn' id='btn-change-pass'>
+                                            <button class='btn btn--disabled' id='change-password__admin' disabled type='submit'>Đổi mật khẩu</button>
+                                        </div>
+                                    </div>
+                                </div>           
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Back to Top -->
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-        
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="../lib/easing/easing.min.js"></script>
-        <script src="../lib/slick/slick.min.js"></script>
-        
-        <!-- Template Javascript -->
-        <script src="../js/main.js"></script>
+        </div>              
     </body>
->>>>>>> Stashed changes
+    <script src="../js/changePassword.js"></script>
+    <script>
+        const $$ = document.querySelectorAll.bind(document);
+        const items = $$('.employee__change-Pw');
+
+        items.forEach((item, index) => {
+            item.onclick = function () {
+                document.getElementById('admin-id').innerHTML = this.id;
+                document.getElementById('admin-password--new').removeAttribute("disabled");
+                document.getElementById('new-password-checked__admin').removeAttribute("disabled");
+                document.getElementById('btn-change-pass').innerHTML = 
+                "<div id='change-password__admin' onclick='changePasswordAdmin(\""+ this.id +"\");' class='btn btn--disabled' type='submit'>Đổi mật khẩu</div>";
+            }
+        });
+        
+        zoomOutBtn = document.getElementById('zoom-out--form');
+        zoomOutBtn.addEventListener('click', function() {  
+            if(document.getElementsByClassName('form__add-admin')[0].style.display == 'none'){
+                document.getElementsByClassName('form__add-admin')[0].style.display = 'block';
+                zoomOutBtn.innerHTML = '<i class="bi bi-caret-down-fill"></i>';
+            }
+            else{
+                document.getElementsByClassName('form__add-admin')[0].style.display = 'none';
+                zoomOutBtn.innerHTML = '<i class="bi bi-caret-up-fill"></i>';
+            }
+        });
+    </script>
 </html>

@@ -1,5 +1,5 @@
 <?php
-    require_once('shop_info/shop-info.php');
+    require_once('./display.php');
 ?>
 
 <!DOCTYPE html>
@@ -35,30 +35,34 @@
         </header>
         <div id="content-wrap">
             <div class="auth-form">
-                <div class="auth-form__container">
-                    <div class="auth-form__header">
-                        <h3 class="auth-form__heading">Đăng ký</h3>
+                <div class="form-log">
+                    <div class="flex--between">
+                        <span class="heading__text">Đăng ký</span>
                         <a href="login.php" class="auth-form__switch-btn">Đăng nhập</a>
                     </div>
                     <div id="auth-form__notify-text"></div>
                     <form id="register-form">
-                        <div class="auth-form__form">
-                            <div class = "instruction-box" id = "instruction-box__name">
-                                <p>Nhập đầy đủ họ tên của bạn, không được chứa kí tự đặc biệt</p>
-                            </div>
-                            <input id="name" name="name" type="text" onfocus="clearWarningInput('name')" onfocusout="checkUserName()" class="auth-form__input form_data" placeholder="Họ và tên" required>
+                        <div class = "instruction-box" id = "instruction-box__name">
+                            <p>Nhập đầy đủ họ tên của bạn, không được chứa kí tự đặc biệt</p>
+                        </div>
+                        <input id="name" name="name" type="text" onfocus="clearWarningInput('name')" onfocusout="checkUserName()" class="form__input form_data" placeholder="Họ và tên" required>
+                        <div class="form__item">
                             <div class = "instruction-box" id = "instruction-box__email">
                                 <p>VD: viethoang@gmail.com</p>
                             </div>
-                            <input id="email" name="email" type="text" onfocus="clearWarningInput('email')" onfocusout="checkUserEmail()" class="auth-form__input form_data" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" placeholder="Email của bạn" required>
+                            <input id="email" name="email" type="text" onfocus="clearWarningInput('email')" onfocusout="checkUserEmail()" class="form__input form_data" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$" placeholder="Email của bạn" required>
+                        </div>
+                        <div class="form__item">
                             <div class = "instruction-box" id = "instruction-box__phone">
                                 <p>SĐT có độ dài từ 10 đến 12 kí tự</p>
                             </div>
-                            <input id="phone" name="phone" type="text" onfocus="clearWarningInput('phone')" onfocusout="checkUserPhone()" class="auth-form__input form_data" placeholder="Số điện thoại" required>
+                            <input id="phone" name="phone" type="text" onfocus="clearWarningInput('phone')" onfocusout="checkUserPhone()" class="form__input form_data" placeholder="Số điện thoại" required>
+                        </div>
+                        <div class="form__item">
                             <div class = "instruction-box" id = "instruction-box__password">
                                 <p>Mật khẩu phải có độ dài hơn 7 kí tự</p>
                             </div>
-                            <input id="password" name="password" type="password" onfocus="clearWarningInput('password')" onfocusout="checkUserPassword()" class="auth-form__input form_data" placeholder="Mật khẩu của bạn" required>
+                            <input id="password" name="password" type="password" onfocus="clearWarningInput('password')" onfocusout="checkUserPassword()" class="form__input form_data" placeholder="Mật khẩu của bạn" required>
                         </div>
                         <div class="auth-form__aside">
                             <p class="auth-form__policy-text">
@@ -69,9 +73,8 @@
                         </div>
 
                         <div class="auth-form__controls">
-                            <input type="button" class="btns auth-form__controls-back btns--normal" onclick="location.href='index.php'" value="TRỞ LẠI">
-                            <!-- <button class="btns btns--primary">ĐĂNG KÝ</button> -->
-                            <input class="btns btns--primary" type="submit" name="submit" id="submit" onclick="success(); return false" value="ĐĂNG KÝ ">
+                            <button class="btn btn--back" onclick="location.href='./index.php'">TRỞ LẠI</button>
+                            <button class="btn btn--log" onclick="success(); return false">ĐĂNG KÝ</button>
                         </div>
                     </form>
                 </div>
@@ -190,7 +193,7 @@
             </div>
             <div class="footer__bottom">
                 <div class="grid wide">
-                    <p class="footer__text">© 2021 Bản quyền thuộc về Team ... </p>
+                    <p class="footer__text">© 2021 Bản quyền thuộc về Team Error 404 </p>
                 </div>
             </div>
             <!-- <div class="row payment align-items-center">
