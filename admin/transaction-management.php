@@ -246,11 +246,17 @@
                             ?>
                         </div> 
                     </div>
-                    
-                    </div>
                 </div>
             </div>
         </div>
-        <script src="../js/main.js"></script>
+        <script>
+            // if(location.search == "?ga"){
+            //     console.log(1);
+            // }
+            // else {
+            //     console.log(2);
+            // }
+            console.log(location.search);
+        </script>
     </body>
 </html>

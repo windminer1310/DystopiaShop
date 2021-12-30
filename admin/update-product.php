@@ -198,6 +198,11 @@
                                             <p class = 'title-input'>Mô tả sản phẩm</p>
                                             <textarea class = 'textarea__field'  id="description" name="description" ><?php echo $productInfo['description'] ?></textarea>
                                         </div>
+
+                                        <div class='input-element col l-4'>
+                                            <p class = 'title-input'>Mô tả sản phẩm</p>
+                                            <!-- <img src="../img/LAPTOP/ACER/1810659/1.png" alt=""> -->
+                                        </div>
                                     </div>
                                     <div class='submit-btn'>
                                         <input id='' class='btn' type='submit' value="Cập nhật">

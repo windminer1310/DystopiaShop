@@ -47,6 +47,9 @@
                         <span class="header__text-field">
                             Khởi động lại mật khẩu
                         </span>
+                        <div id="notify-text">
+
+                        </div>
                     </div>
                     <div class="info-account">
                         <form method="POST" action="">
@@ -54,8 +57,7 @@
                                 <label class="title-checkout-text" class="l-3" for="email">Email</label>
                                 <input class="auth-form__input" type="text" name="email" id="email" />
                             </div>
-                            <input class="btn" type="submit" value="Ok" />
-
+                            <input class="btn" type="submit" value="Ok">
                             <?php
                                 function generateRandomString($length = 20) {
                                     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -66,7 +68,6 @@
                                     }
                                     return $randomString;
                                 }
-
                                 use PHPMailer\PHPMailer\PHPMailer;
                                 use PHPMailer\PHPMailer\Exception;
 
@@ -78,14 +79,26 @@
 
                                 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['email'])) {
                                     $email = $_POST["email"];
-                                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                                        echo "Sai định dạng Email!";
+                                    if($email == ""){
+                                        echo "<script>
+                                                var displayNotifyText = document.getElementById('notify-text');
+                                                displayNotifyText.innerHTML = 'Vui lòng nhập Email!';
+                                            </script>";
+                                    }
+                                    elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                        echo "<script>
+                                                var displayNotifyText = document.getElementById('notify-text');
+                                                displayNotifyText.innerHTML = 'Nhập sai định dạng Email, vui lòng kiểm tra lại';
+                                            </script>";
                                     }
                                     else {
                                         $checkEmailQuerry = getRowWithValue('user', 'user_email', $email);
 
                                         if(!$checkEmailQuerry) {
-                                            echo "Email không tồn tại trong hệ thống, vui lòng kiểm tra lại!";
+                                            echo "<script>
+                                                var displayNotifyText = document.getElementById('notify-text');
+                                                displayNotifyText.innerHTML = 'Email không tồn tại trong hệ thống, vui lòng kiểm tra lại';
+                                            </script>";
                                         }
                                         else {
                                             $email = $_POST['email'];
@@ -117,25 +130,27 @@
                                             
                                                 //Content                     
                                                 $mail->Subject = 'Reset password Dystopia Shop';
-                                                $mail->Body    = "
-                                                                <div>
-                                                                    <h3 style = 'color:#222;'>Đặt lại mật khẩu</h3>
-                                                                    <p style = 'color:#222;'>Xin chào quý khách! Cảm ơn quý khách đã tin tưởng dịch vụ của cửa hàng.</p>
-                                                                    <p style = 'color:#222;'>Mật khẩu đã được đặt lại: </p>
-                                                                    <h3>".$newPassword."</h3>
-                                                                </div>
-                                                                ";
+                                                $mail->Body    = 
+                                                "<div>
+                                                    <h3 style = 'color:#222;'>Đặt lại mật khẩu</h3>
+                                                    <p style = 'color:#222;'>Xin chào quý khách! Cảm ơn quý khách đã tin tưởng dịch vụ của cửa hàng.</p>
+                                                    <p style = 'color:#222;'>Mật khẩu đã được đặt lại: </p>
+                                                    <h3>".$newPassword."</h3>
+                                                </div>";
                                                 $mail->isHTML(true);  
                                             
                                                 if ($mail->send()) {
-                                                    echo 'Tin nhắn đã được gửi đến Gmail: '.$email;
-
+                                                    echo "<script>
+                                                        var displayNotifyText = document.getElementById('notify-text');
+                                                        displayNotifyText.innerHTML = 'Tin nhắn đã được gửi đến Gmail: ".$email."';
+                                                    </script>";
                                                     $resetUserPassword = updatePasswordWithEmail($email , $hashNewtPassword);
-
                                                 }
-                                                
                                             } catch (Exception $e) {
-                                                echo 'Tin nhắn không thể gửi đến Gmail. ', $mail->ErrorInfo;
+                                                echo "<script>
+                                                        var displayNotifyText = document.getElementById('notify-text');
+                                                        displayNotifyText.innerHTML = 'Tin nhắn không thể gửi đến Gmail: ".$email->ErrorInfo."';
+                                                    </script>";
                                             }
                                         }
                                     }

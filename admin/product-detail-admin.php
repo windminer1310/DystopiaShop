@@ -1,6 +1,5 @@
 <?php  
     session_start();
-    require_once('../moneyPoint.php');
 
     if(isset($_GET['id'])){
         $id = $_GET['id'];
@@ -248,5 +247,6 @@
         <!-- Template Javascript -->
         <script src="../js/addCart.js"></script>
         <script src="../js/main.js"></script>
+       
     </body>
 </html>

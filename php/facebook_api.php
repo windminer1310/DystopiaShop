@@ -75,7 +75,7 @@
 				// get facebook user info with the access token
 				$fbUserInfo = getFacebookUserInfo( $_SESSION['fb_access_token'] );
 
-				if ( !$fbUserInfo['has_errors'] && !empty( $fbUserInfo['fb_response']['id'] ) && !empty( $fbUserInfo['fb_response']['email'] ) ) { // facebook gave us the users id/email
+				if ( !$fbUserInfo['has_errors'] && !empty( $fbUserInfo['fb_response']['id'] ) && !empty( $fbUserInfo['fb_response']['email']) ) { // facebook gave us the users id/email
 					// 	all good!
 					$status = 'ok';
 
@@ -87,9 +87,9 @@
 					$userInfoWithFbId = getRowWithValue( $databaseNameTable, 'fb_user_id', $fbUserInfo['fb_response']['id'] );
 
 					// check for user with email
-					$userInfoWithEmail = getRowWithValue( $databaseNameTable, 'user_email', $fbUserInfo['fb_response']['email'] );
-
-					if ( !$userInfoWithFbId || !$userInfoWithEmail) { // user hasn't logged in with facebook before
+					// $userInfoWithEmail = getRowWithValue( $databaseNameTable, 'user_email', $fbUserInfo['fb_response']['email'] );
+					// ( !$userInfoWithFbId || !$userInfoWithEmail)
+					if ( !$userInfoWithFbId ) { // user hasn't logged in with facebook before
 						$info = $fbUserInfo['fb_response'];
 						insertRow($info);
                         $userInfoWithFbId = getRowWithValue( $databaseNameTable, 'fb_user_id', $fbUserInfo['fb_response']['id'] );
