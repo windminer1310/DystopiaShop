@@ -17,7 +17,7 @@
         header('Location: index.php');
     }
 
-    $dbhost = 'localhost:33066';
+    $dbhost = 'localhost';
     $dbuser = 'root';
     $dbpass = '';
     $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");

@@ -9,7 +9,7 @@
         header('Location: view-product-list.php?id=page_num=1');
     }
 
-	$dbhost = 'localhost:33066';
+	$dbhost = 'localhost';
     $dbuser = 'root';
     $dbpass = '';
     $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");

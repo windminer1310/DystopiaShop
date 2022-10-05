@@ -1,7 +1,7 @@
 <?php
     session_start();
     require_once('../moneyPoint.php');
-    $servername = "localhost:33066";
+    $servername = "localhost";
     $username = "root";
     $password = "";
     $dbname = "database";
@@ -24,7 +24,7 @@
 
     $id_transaction = $_GET['id_transaction'];
     
-    $dbhost = 'localhost:33066';
+    $dbhost = 'localhost';
     $dbuser = 'root';
     $dbpass = '';
     $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");

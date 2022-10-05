@@ -23,7 +23,7 @@
         $page_number = 1;
     }
 
-    $dbhost = 'localhost:33066';
+    $dbhost = 'localhost';
     $dbuser = 'root';
     $dbpass = '';
 

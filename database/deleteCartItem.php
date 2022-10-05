@@ -2,7 +2,7 @@
 
     $user_id = $_GET['user_id'];
     $product_id = $_GET['product_id'];
-    $dbhost = 'localhost:33066';
+    $dbhost = 'localhost';
     $dbuser = 'root';
     $dbpass = '';
     $conn = new mysqli($dbhost, $dbuser, $dbpass, "database");
